@@ -6,22 +6,22 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1155</width>
-    <height>763</height>
+    <width>1142</width>
+    <height>789</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_2">
+   <layout class="QGridLayout" name="gridLayout_18">
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="whatsThis">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;gg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -724,7 +724,7 @@ QGroupBox::indicator {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_17">
                     <item>
-                     <widget class="QGraphicsView" name="origional_img"/>
+                     <widget class="QWidget" name="origional_img_1" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -734,7 +734,7 @@ QGroupBox::indicator {
                <item>
                 <layout class="QVBoxLayout" name="verticalLayout_4">
                  <item>
-                  <widget class="QGroupBox" name="groupBox_11">
+                  <widget class="QGroupBox" name="manipulated_img">
                    <property name="maximumSize">
                     <size>
                      <width>16777215</width>
@@ -771,7 +771,7 @@ QGroupBox::indicator {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_18">
                     <item>
-                     <widget class="QGraphicsView" name="filtered_img"/>
+                     <widget class="QWidget" name="manipulated_img_1" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -791,13 +791,13 @@ QGroupBox::indicator {
        <attribute name="title">
         <string>Edge detection</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_15">
+       <layout class="QGridLayout" name="gridLayout_17">
         <item row="0" column="0">
-         <layout class="QGridLayout" name="gridLayout_13">
+         <layout class="QGridLayout" name="gridLayout_16">
           <item row="0" column="0">
-           <layout class="QVBoxLayout" name="verticalLayout_11">
+           <layout class="QVBoxLayout" name="verticalLayout_6">
             <item>
-             <widget class="QGroupBox" name="groupBox_16">
+             <widget class="QGroupBox" name="groupBox_11">
               <property name="maximumSize">
                <size>
                 <width>250</width>
@@ -832,22 +832,16 @@ QGroupBox::indicator {
               <property name="title">
                <string/>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_23">
+              <layout class="QVBoxLayout" name="verticalLayout_19">
                <item>
-                <layout class="QVBoxLayout" name="verticalLayout_12">
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>100</number>
-                 </property>
-                 <item>
-                  <layout class="QGridLayout" name="gridLayout_19">
+                <layout class="QGridLayout" name="gridLayout_2">
+                 <item row="0" column="0">
+                  <layout class="QGridLayout" name="gridLayout_14">
                    <property name="topMargin">
                     <number>0</number>
                    </property>
                    <item row="0" column="0">
-                    <widget class="QFrame" name="frame_9">
+                    <widget class="QFrame" name="frame_7">
                      <property name="maximumSize">
                       <size>
                        <width>16777215</width>
@@ -860,9 +854,15 @@ QGroupBox::indicator {
                      <property name="frameShadow">
                       <enum>QFrame::Raised</enum>
                      </property>
-                     <layout class="QGridLayout" name="gridLayout_20">
+                     <layout class="QGridLayout" name="gridLayout_15">
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
                       <item row="0" column="0">
-                       <widget class="QLabel" name="label_9">
+                       <widget class="QLabel" name="label_8">
                         <property name="maximumSize">
                          <size>
                           <width>16777215</width>
@@ -878,7 +878,7 @@ QGroupBox::indicator {
                          <string notr="true"/>
                         </property>
                         <property name="text">
-                         <string>type</string>
+                         <string>Edge Filter</string>
                         </property>
                         <property name="textFormat">
                          <enum>Qt::AutoText</enum>
@@ -889,7 +889,7 @@ QGroupBox::indicator {
                     </widget>
                    </item>
                    <item row="1" column="0">
-                    <layout class="QHBoxLayout" name="horizontalLayout_29">
+                    <layout class="QHBoxLayout" name="horizontalLayout_26">
                      <property name="leftMargin">
                       <number>5</number>
                      </property>
@@ -900,10 +900,10 @@ QGroupBox::indicator {
                       <number>5</number>
                      </property>
                      <property name="bottomMargin">
-                      <number>0</number>
+                      <number>50</number>
                      </property>
                      <item>
-                      <widget class="QComboBox" name="operation_combobox_3">
+                      <widget class="QComboBox" name="edge_filter_combobox">
                        <property name="minimumSize">
                         <size>
                          <width>0</width>
@@ -956,12 +956,7 @@ QComboBox QAbstractItemView {
                        </property>
                        <item>
                         <property name="text">
-                         <string>Sobal</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>Canny</string>
+                         <string>Sobel</string>
                         </property>
                        </item>
                        <item>
@@ -971,7 +966,12 @@ QComboBox QAbstractItemView {
                        </item>
                        <item>
                         <property name="text">
-                         <string>Prewitte</string>
+                         <string>Canny</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>Prewitt</string>
                         </property>
                        </item>
                       </widget>
@@ -980,35 +980,30 @@ QComboBox QAbstractItemView {
                    </item>
                   </layout>
                  </item>
-                 <item>
-                  <layout class="QGridLayout" name="gridLayout_21">
-                   <property name="topMargin">
-                    <number>20</number>
+                 <item row="1" column="0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_27">
+                   <property name="leftMargin">
+                    <number>5</number>
                    </property>
-                   <item row="0" column="0">
-                    <layout class="QHBoxLayout" name="horizontalLayout_30">
-                     <property name="leftMargin">
-                      <number>5</number>
+                   <property name="topMargin">
+                    <number>50</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>5</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>50</number>
+                   </property>
+                   <item>
+                    <widget class="QComboBox" name="State_combobox">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>40</height>
+                      </size>
                      </property>
-                     <property name="topMargin">
-                      <number>0</number>
-                     </property>
-                     <property name="rightMargin">
-                      <number>5</number>
-                     </property>
-                     <property name="bottomMargin">
-                      <number>0</number>
-                     </property>
-                     <item>
-                      <widget class="QComboBox" name="type_combobox_3">
-                       <property name="minimumSize">
-                        <size>
-                         <width>0</width>
-                         <height>40</height>
-                        </size>
-                       </property>
-                       <property name="styleSheet">
-                        <string notr="true">QComboBox, QFontComboBox {
+                     <property name="styleSheet">
+                      <string notr="true">QComboBox, QFontComboBox {
     border-width: 2px;
     border-radius: 8px;
     border-style: solid;
@@ -1050,25 +1045,23 @@ QComboBox QAbstractItemView {
     color: #272727;
     background: white;
 }</string>
-                       </property>
-                       <item>
-                        <property name="text">
-                         <string>Horizontal</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>Vertical</string>
-                        </property>
-                       </item>
-                      </widget>
+                     </property>
+                     <item>
+                      <property name="text">
+                       <string>Horizontal</string>
+                      </property>
                      </item>
-                    </layout>
+                     <item>
+                      <property name="text">
+                       <string>Vertical</string>
+                      </property>
+                     </item>
+                    </widget>
                    </item>
                   </layout>
                  </item>
-                 <item>
-                  <widget class="QFrame" name="frame_10">
+                 <item row="2" column="0">
+                  <widget class="QFrame" name="frame_6">
                    <property name="maximumSize">
                     <size>
                      <width>16777215</width>
@@ -1081,20 +1074,20 @@ QComboBox QAbstractItemView {
                    <property name="frameShadow">
                     <enum>QFrame::Raised</enum>
                    </property>
-                   <layout class="QGridLayout" name="gridLayout_22">
+                   <layout class="QGridLayout" name="gridLayout_13">
                     <item row="0" column="0">
-                     <layout class="QHBoxLayout" name="horizontalLayout_31">
+                     <layout class="QHBoxLayout" name="horizontalLayout_25">
                       <property name="leftMargin">
                        <number>0</number>
                       </property>
                       <property name="topMargin">
-                       <number>0</number>
+                       <number>20</number>
                       </property>
                       <property name="rightMargin">
                        <number>0</number>
                       </property>
                       <property name="bottomMargin">
-                       <number>0</number>
+                       <number>50</number>
                       </property>
                       <item>
                        <widget class="QPushButton" name="done_btn">
@@ -1138,9 +1131,9 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
            </layout>
           </item>
           <item row="0" column="1">
-           <layout class="QVBoxLayout" name="verticalLayout_13">
+           <layout class="QVBoxLayout" name="verticalLayout_8">
             <item>
-             <widget class="QGroupBox" name="groupBox_17">
+             <widget class="QGroupBox" name="groupBox_12">
               <property name="maximumSize">
                <size>
                 <width>16777215</width>
@@ -1175,11 +1168,11 @@ QGroupBox::indicator {
               <property name="title">
                <string/>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_24">
+              <layout class="QVBoxLayout" name="verticalLayout_20">
                <item>
-                <layout class="QVBoxLayout" name="verticalLayout_14">
+                <layout class="QVBoxLayout" name="verticalLayout_9">
                  <item>
-                  <widget class="QGroupBox" name="groupBox_18">
+                  <widget class="QGroupBox" name="groupBox_13">
                    <property name="maximumSize">
                     <size>
                      <width>16777215</width>
@@ -1214,9 +1207,9 @@ QGroupBox::indicator {
                    <property name="title">
                     <string/>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_25">
+                   <layout class="QVBoxLayout" name="verticalLayout_21">
                     <item>
-                     <widget class="QGraphicsView" name="origional_img_3"/>
+                     <widget class="QWidget" name="origional_img_2" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -1224,9 +1217,9 @@ QGroupBox::indicator {
                 </layout>
                </item>
                <item>
-                <layout class="QVBoxLayout" name="verticalLayout_26">
+                <layout class="QVBoxLayout" name="verticalLayout_10">
                  <item>
-                  <widget class="QGroupBox" name="groupBox_19">
+                  <widget class="QGroupBox" name="groupBox">
                    <property name="maximumSize">
                     <size>
                      <width>16777215</width>
@@ -1261,9 +1254,9 @@ QGroupBox::indicator {
                    <property name="title">
                     <string/>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_27">
+                   <layout class="QVBoxLayout" name="verticalLayout_22">
                     <item>
-                     <widget class="QGraphicsView" name="filtered_img_3"/>
+                     <widget class="QWidget" name="manipulated_img_2" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -1283,6 +1276,299 @@ QGroupBox::indicator {
        <attribute name="title">
         <string>Histograms</string>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout_21">
+        <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QFrame" name="frame_9">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>80</height>
+               </size>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_20">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_10">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>14</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <property name="text">
+                  <string>Histograme</string>
+                 </property>
+                 <property name="textFormat">
+                  <enum>Qt::AutoText</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QFrame" name="frame_8">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>80</height>
+               </size>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_19">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_9">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>14</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <property name="text">
+                  <string>Distribution Curve</string>
+                 </property>
+                 <property name="textFormat">
+                  <enum>Qt::AutoText</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QGroupBox" name="groupBox_14">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:rgb(186, 186, 186) ;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+              </property>
+              <property name="title">
+               <string/>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_23">
+               <item>
+                <layout class="QVBoxLayout" name="verticalLayout_11">
+                 <item>
+                  <widget class="QGroupBox" name="groupBox_15">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+                   </property>
+                   <property name="title">
+                    <string/>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_24">
+                    <item>
+                     <widget class="QWidget" name="histograme_plot" native="true"/>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_12">
+              <item>
+               <widget class="QGroupBox" name="groupBox_16">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:rgb(186, 186, 186);
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+                </property>
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_25">
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_13">
+                   <item>
+                    <widget class="QGroupBox" name="groupBox_18">
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+                     </property>
+                     <property name="title">
+                      <string/>
+                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_27">
+                      <item>
+                       <widget class="QWidget" name="distribution_curve_plot" native="true"/>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_5">
+       <attribute name="title">
+        <string>Page</string>
+       </attribute>
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
@@ -1298,7 +1584,7 @@ QGroupBox::indicator {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1155</width>
+     <width>1142</width>
      <height>26</height>
     </rect>
    </property>

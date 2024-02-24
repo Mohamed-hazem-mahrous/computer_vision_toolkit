@@ -10,16 +10,17 @@ import sys
 import bisect
 import pyqtgraph as pg
 import numpy as np
+import image_processing as img
 
-
-    
 class MainWindow(QtWidgets.QMainWindow):    
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         # Load the UI Page
         uic.loadUi(r'task1.ui', self)
-        
-    
+        # type your code here 
+
+
+
 def main():
     app = QtWidgets.QApplication(sys.argv)
     main = MainWindow()

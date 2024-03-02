@@ -21,7 +21,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;gg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -223,7 +223,7 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
     padding-left: 5px;
 }
 QComboBox:editable, QComboBox:!editable, QComboBox::drop-down:editable, QComboBox:!editable:on, QComboBox::drop-down:editable:on {
-    background: #ffff;
+    background: rgb(255, 255, 255);
 }
 QComboBox::drop-down {
     subcontrol-origin: padding;
@@ -357,7 +357,7 @@ QComboBox QAbstractItemView {
     padding-left: 5px;
 }
 QComboBox:editable, QComboBox:!editable, QComboBox::drop-down:editable, QComboBox:!editable:on, QComboBox::drop-down:editable:on {
-    background: #ffff;
+    background: rgb(255, 255, 255);
 }
 QComboBox::drop-down {
     subcontrol-origin: padding;
@@ -924,7 +924,7 @@ QGroupBox::indicator {
     padding-left: 5px;
 }
 QComboBox:editable, QComboBox:!editable, QComboBox::drop-down:editable, QComboBox:!editable:on, QComboBox::drop-down:editable:on {
-    background: #ffff;
+    background: rgb(255, 255, 255);
 }
 QComboBox::drop-down {
     subcontrol-origin: padding;
@@ -1016,7 +1016,7 @@ QComboBox QAbstractItemView {
     padding-left: 5px;
 }
 QComboBox:editable, QComboBox:!editable, QComboBox::drop-down:editable, QComboBox:!editable:on, QComboBox::drop-down:editable:on {
-    background: #ffff;
+    background: rgb(255, 255, 255);
 }
 QComboBox::drop-down {
     subcontrol-origin: padding;
@@ -1312,7 +1312,7 @@ QGroupBox::indicator {
                  </property>
                  <property name="font">
                   <font>
-                   <pointsize>14</pointsize>
+                   <pointsize>12</pointsize>
                   </font>
                  </property>
                  <property name="styleSheet">
@@ -1360,7 +1360,7 @@ QGroupBox::indicator {
                  </property>
                  <property name="font">
                   <font>
-                   <pointsize>14</pointsize>
+                   <pointsize>12</pointsize>
                   </font>
                  </property>
                  <property name="styleSheet">
@@ -1609,7 +1609,7 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <pointsize>14</pointsize>
+                   <pointsize>12</pointsize>
                   </font>
                  </property>
                  <property name="styleSheet">
@@ -1657,7 +1657,7 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <pointsize>14</pointsize>
+                   <pointsize>12</pointsize>
                   </font>
                  </property>
                  <property name="styleSheet">
@@ -3424,7 +3424,7 @@ QGroupBox::indicator {
     padding-left: 5px;
 }
 QComboBox:editable, QComboBox:!editable, QComboBox::drop-down:editable, QComboBox:!editable:on, QComboBox::drop-down:editable:on {
-    background: #ffff;
+    background: rgb(255, 255, 255);
 }
 QComboBox::drop-down {
     subcontrol-origin: padding;
@@ -3861,7 +3861,7 @@ QGroupBox::indicator {
     padding-left: 5px;
 }
 QComboBox:editable, QComboBox:!editable, QComboBox::drop-down:editable, QComboBox:!editable:on, QComboBox::drop-down:editable:on {
-    background: #ffff;
+    background: rgb(255, 255, 255);
 }
 QComboBox::drop-down {
     subcontrol-origin: padding;

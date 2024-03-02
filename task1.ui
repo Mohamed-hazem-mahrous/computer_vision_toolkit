@@ -6,16 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1172</width>
-    <height>725</height>
+    <width>1096</width>
+    <height>871</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_18">
-    <item row="0" column="1">
+   <layout class="QGridLayout" name="gridLayout_36">
+    <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="whatsThis">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;gg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1567,341 +1567,629 @@ QGroupBox::indicator {
       </widget>
       <widget class="QWidget" name="tab_5">
        <attribute name="title">
-        <string>Page</string>
+        <string>Normalization &amp;&amp; thresholding</string>
        </attribute>
-       <widget class="QLabel" name="label_2">
-        <property name="geometry">
-         <rect>
-          <x>60</x>
-          <y>650</y>
-          <width>49</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>threshold:</string>
-        </property>
-       </widget>
-       <widget class="QWidget" name="layoutWidget">
-        <property name="geometry">
-         <rect>
-          <x>120</x>
-          <y>70</y>
-          <width>1294</width>
-          <height>732</height>
-         </rect>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_22">
-         <item row="2" column="1">
-          <widget class="QSlider" name="local_block_size_slider">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>230</height>
-            </size>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="5">
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="0" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout_14">
-           <item>
-            <widget class="QLabel" name="original_image_label_page3">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-               <horstretch>50</horstretch>
-               <verstretch>50</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>600</width>
-               <height>250</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="Line" name="line">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_3">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>500</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Original Image </string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="0" column="6">
-          <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="0" column="4">
-          <spacer name="horizontalSpacer_5">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="0" column="7">
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="0" column="8">
-          <layout class="QVBoxLayout" name="verticalLayout_26">
-           <item>
-            <widget class="QLabel" name="normalized_image_label_page3">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-               <horstretch>50</horstretch>
-               <verstretch>50</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>600</width>
-               <height>250</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="Line" name="line_2">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_11">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Ignored">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>500</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Normalized Image</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="2" column="8">
-          <layout class="QVBoxLayout" name="verticalLayout_29">
-           <item>
-            <widget class="QLabel" name="global_image_label_page3">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-               <horstretch>50</horstretch>
-               <verstretch>50</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>600</width>
-               <height>250</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSlider" name="global_thresholding_slider">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="Line" name="line_4">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_14">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>500</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Global Thresholding Image </string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="0" column="1">
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="2" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout_28">
-           <item>
-            <widget class="QLabel" name="local_image_label_page3">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-               <horstretch>50</horstretch>
-               <verstretch>50</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>600</width>
-               <height>230</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSlider" name="local_thresholding_slider">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="Line" name="line_3">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_13">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>500</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Local Thresholding Image </string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="label_12">
-           <property name="text">
-            <string>block size</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
+       <layout class="QGridLayout" name="gridLayout_35">
+        <item row="0" column="0">
+         <layout class="QGridLayout" name="gridLayout_34">
+          <item row="0" column="0">
+           <layout class="QGridLayout" name="gridLayout_33">
+            <item row="0" column="0">
+             <widget class="QGroupBox" name="groupBox_17">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+              </property>
+              <property name="title">
+               <string>Original Image</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_18">
+               <item row="0" column="0">
+                <widget class="QGroupBox" name="groupBox_23">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:rgb(255, 255, 255);
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+                 </property>
+                 <property name="title">
+                  <string/>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_27">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="original_image_label_page3">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                      <horstretch>50</horstretch>
+                      <verstretch>50</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QGroupBox" name="groupBox_19">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+              </property>
+              <property name="title">
+               <string>Normalized Image</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_26">
+               <item row="0" column="0">
+                <widget class="QGroupBox" name="groupBox_22">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:rgb(255, 255, 255);
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+                 </property>
+                 <property name="title">
+                  <string/>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_22">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="normalized_image_label_page3">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                      <horstretch>50</horstretch>
+                      <verstretch>50</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <layout class="QGridLayout" name="gridLayout_32">
+            <item row="0" column="0">
+             <widget class="QGroupBox" name="groupBox_24">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+              </property>
+              <property name="title">
+               <string>Local Thresholding Image </string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_28">
+               <item row="0" column="0">
+                <layout class="QGridLayout" name="gridLayout_29">
+                 <item row="0" column="0">
+                  <widget class="QGroupBox" name="groupBox_25">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:rgb(255, 255, 255);
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+                   </property>
+                   <property name="title">
+                    <string/>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_30">
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="local_image_label_page3">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                        <horstretch>50</horstretch>
+                        <verstretch>50</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string/>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_29">
+                   <property name="leftMargin">
+                    <number>5</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>5</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QSlider" name="local_thresholding_slider">
+                     <property name="styleSheet">
+                      <string notr="true">QSlider::groove {
+    border: 1px solid #bbbbbb;
+    background-color: #52595d;
+    border-radius: 4px;
+}
+QSlider::groove:horizontal {
+    height: 6px;
+}
+QSlider::groove:vertical {
+    width: 6px;
+}
+QSlider::handle:horizontal {
+    background: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(207,207,207);
+    width: 12px;
+    margin: -5px 0;
+    border-radius: 7px;
+}
+QSlider::handle:vertical {
+    background: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(207,207,207);
+    height: 12px;
+    margin: 0 -5px;
+    border-radius: 7px;
+}
+QSlider::add-page, QSlider::sub-page {
+    border: 1px transparent;
+    background-color: #52595d;
+    border-radius: 4px;
+}
+QSlider::add-page:horizontal {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #ddd5d5, stop:0.5 #dad3d3, stop:1 #ddd5d5);
+}
+QSlider::sub-page:horizontal {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
+}
+</string>
+                     </property>
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <layout class="QGridLayout" name="gridLayout_31">
+              <item row="0" column="0">
+               <widget class="QSlider" name="local_block_size_slider">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>230</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QSlider::groove {
+    border: 1px solid #bbbbbb;
+    background-color: #52595d;
+    border-radius: 4px;
+}
+QSlider::groove:horizontal {
+    height: 6px;
+}
+QSlider::groove:vertical {
+    width: 6px;
+}
+QSlider::handle:horizontal {
+    background: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(207,207,207);
+    width: 12px;
+    margin: -5px 0;
+    border-radius: 7px;
+}
+QSlider::handle:vertical {
+    background: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(207,207,207);
+    height: 12px;
+    margin: 0 -5px;
+    border-radius: 7px;
+}
+QSlider::add-page, QSlider::sub-page {
+    border: 1px transparent;
+    background-color: #52595d;
+    border-radius: 4px;
+}
+QSlider::sub-page:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #ddd5d5, stop:0.5 #dad3d3, stop:1 #ddd5d5);
+}
+QSlider::add-page:vertical {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
+}
+</string>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item row="0" column="2">
+             <widget class="QGroupBox" name="groupBox_20">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+              </property>
+              <property name="title">
+               <string>Global Thresholding Image </string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_23">
+               <item row="0" column="0">
+                <layout class="QGridLayout" name="gridLayout_25">
+                 <item row="0" column="0">
+                  <widget class="QGroupBox" name="groupBox_21">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:rgb(255, 255, 255);
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+                   </property>
+                   <property name="title">
+                    <string/>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_24">
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="global_image_label_page3">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                        <horstretch>50</horstretch>
+                        <verstretch>50</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string/>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_28">
+                   <property name="leftMargin">
+                    <number>5</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>5</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QSlider" name="global_thresholding_slider">
+                     <property name="styleSheet">
+                      <string notr="true">QSlider::groove {
+    border: 1px solid #bbbbbb;
+    background-color: #52595d;
+    border-radius: 4px;
+}
+QSlider::groove:horizontal {
+    height: 6px;
+}
+QSlider::groove:vertical {
+    width: 6px;
+}
+QSlider::handle:horizontal {
+    background: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(207,207,207);
+    width: 12px;
+    margin: -5px 0;
+    border-radius: 7px;
+}
+QSlider::handle:vertical {
+    background: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(207,207,207);
+    height: 12px;
+    margin: 0 -5px;
+    border-radius: 7px;
+}
+QSlider::add-page, QSlider::sub-page {
+    border: 1px transparent;
+    background-color: #52595d;
+    border-radius: 4px;
+}
+QSlider::add-page:horizontal {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #ddd5d5, stop:0.5 #dad3d3, stop:1 #ddd5d5);
+}
+QSlider::sub-page:horizontal {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
+}
+</string>
+                     </property>
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_6">
+       <attribute name="title">
+        <string>RGB Hist</string>
+       </attribute>
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
@@ -1917,8 +2205,8 @@ QGroupBox::indicator {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1172</width>
-     <height>22</height>
+     <width>1096</width>
+     <height>26</height>
     </rect>
    </property>
   </widget>

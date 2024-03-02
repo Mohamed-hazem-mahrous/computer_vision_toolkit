@@ -146,9 +146,10 @@ class ImageProcessor:
         :param sigma: Standard deviation of the Gaussian distribution.
         :return: Filtered image.
         """
-        kernel = np.fromfunction(lambda x, y: (1/(2*np.pi*sigma**2)) * np.exp(-((x-(kernel_size-1)//2)**2 + (y-(kernel_size-1)//2)**2) / (2*sigma**2)), (kernel_size, kernel_size))
+        kernel = np.fromfunction(lambda x, y: (1/(2*np.pi*sigma**2)) * np.exp(-((x-(kernel_size-1)//2)**2 + (y-(kernel_size-1)//2)**2) / 
+                (2*sigma**2)), (kernel_size, kernel_size))
         kernel /= np.sum(kernel)
-        
+        ## call ur function here ya mohammed 
         filtered_image = cv2.filter2D(image, -1, kernel)
         
         return filtered_image
@@ -183,6 +184,7 @@ class ImageProcessor:
         return convolved_image
 
 
+###########################canyy 
 
 
     def laplacian_edge(self, image, direction='both'):
@@ -310,40 +312,21 @@ class ImageProcessor:
 
         return grayscale_image.astype(np.uint8)
     
-    def get_RGB_histograms_and_cdf(self, image):
+    def get_RGB_histograms(self, image):
         if len(image.shape) == 2:
             hist = [0] * 256
-            cdf = [0] * 256
-            total_pixels = image.shape[0] * image.shape[1]
-
             for row in image:
                 for pixel in row:
                     hist[pixel] += 1
-
-            cdf[0] = hist[0] / total_pixels
-            for i in range(1, 256):
-                cdf[i] = cdf[i-1] + hist[i] / total_pixels
-
-            return [hist, hist, hist], [cdf, cdf, cdf]
-
+            return [hist, hist, hist]
         elif len(image.shape) == 3 and image.shape[2] == 3:
             hist = [[0]*256, [0]*256, [0]*256]
-            cdf = [[0]*256, [0]*256, [0]*256]
-            total_pixels = image.shape[0] * image.shape[1]
-
             for row in image:
                 for pixel in row:
                     for i in range(3):
                         hist[i][pixel[i]] += 1
-
-            for i in range(3):
-                cdf[i][0] = hist[i][0] / total_pixels
-                for j in range(1, 256):
-                    cdf[i][j] = cdf[i][j-1] + hist[i][j] / total_pixels
-
-            return hist, cdf
+            return hist
         else:
             raise ValueError("Unsupported image format")
-
         
     

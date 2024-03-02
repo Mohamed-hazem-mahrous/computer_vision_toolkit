@@ -1,24 +1,56 @@
 
 import numpy as np
 import pandas as pd
-from PyQt5.QtWidgets import QSlider,QHBoxLayout , QLabel,QFileDialog
+from PyQt5.QtWidgets import QSlider, QHBoxLayout, QLabel, QFileDialog, QVBoxLayout, QSizePolicy
 from PyQt5 import QtWidgets, QtCore, uic
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtCore import QUrl, QTimer
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
 import os
 import sys
 import bisect
 import pyqtgraph as pg
-import numpy as np
-import image_processing 
+import image_processing
 from PyQt5.QtGui import QPixmap,QImage
 import cv2
 import numpy as np
+
 
 class ImageProcessor:
     def __init__(self, filePath):
         self.filePath = filePath
         self.image = cv2.imread(self.filePath, cv2.IMREAD_GRAYSCALE)
+
+    def get_histogram(self, img, bins_num):
+        histogram = np.zeros(bins_num)
+        for pixel in img:
+            histogram[pixel] += 1
+
+        return histogram
+
+    def get_cdf(self, histogram, shape):
+        if len(shape) > 1:
+            no_pixels = shape[0] * shape[1]
+            prob = histogram / no_pixels
+        else:
+            no_pixels = shape[0]
+            prob = histogram / no_pixels
+
+        cdf = np.zeros(len(prob))
+        for i in range(1, len(prob)):
+            cdf[i] = cdf[i - 1] + prob[i]
+
+        return cdf
+
+    def histogram_equalization(self, img, max_value):
+        hist = self.get_histogram(img.flatten(), 256)
+        cdf = self.get_cdf(hist, img.shape)
+        normalize = np.rint(cdf * max_value).astype('int')
+
+        result = normalize[img.flatten()]
+        return result
+
       
     def image_normalization(self):
         # Ensure the image is in float format to handle division correctly
@@ -104,11 +136,22 @@ class MainWindow(QtWidgets.QMainWindow):
         local_thresholding_val=self.local_thresholding_slider.value()
         self.display_image_in_label(self.local_image_label_page3,image.local_thresholding( block_size, local_thresholding_val) ) #display local thresholding image
 
+    def display_hist_dist(self, image):
+        hist = image.get_histogram(image.image, 256)
+        # cdf = image.get_cdf(hist, image.image.shape)
+        self.display_histogram(hist)
+        # self.display_cdf(cdf)
+
+    def display_histogram(self, hist):
+        self.histograme_plot.clear()
+        self.histograme_plot.plot(hist, pen='r')
+
     def browseImage(self):
         # Open file dialog to select an image
         filePath, _ = QFileDialog.getOpenFileName(self, "Open Image", "", "Image Files (*.png *.jpg *.jpeg *.bmp *.gif)")
         self.image = ImageProcessor(filePath)
         self.display_images_page3(self.image)
+        self.display_hist_dist(self.image)
         
 def main():
     app = QtWidgets.QApplication(sys.argv)

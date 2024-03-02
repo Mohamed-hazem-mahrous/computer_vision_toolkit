@@ -11,83 +11,14 @@ import os
 import sys
 import bisect
 import pyqtgraph as pg
-import image_processing
+from image_processing import ImageProcessor
 from PyQt5.QtGui import QPixmap,QImage
 import cv2
 import numpy as np
+from PIL import Image as PILImage
 
 
-class ImageProcessor:
-    def __init__(self, filePath):
-        self.filePath = filePath
-        self.image = cv2.imread(self.filePath, cv2.IMREAD_GRAYSCALE)
 
-    def get_histogram(self, img, bins_num):
-        histogram = np.zeros(bins_num)
-        for pixel in img:
-            histogram[pixel] += 1
-
-        return histogram
-
-    def get_cdf(self, histogram, shape):
-        if len(shape) > 1:
-            no_pixels = shape[0] * shape[1]
-            prob = histogram / no_pixels
-        else:
-            no_pixels = shape[0]
-            prob = histogram / no_pixels
-
-        cdf = np.zeros(len(prob))
-        for i in range(1, len(prob)):
-            cdf[i] = cdf[i - 1] + prob[i]
-
-        return cdf
-
-    def histogram_equalization(self, img, max_value):
-        hist = self.get_histogram(img.flatten(), 256)
-        cdf = self.get_cdf(hist, img.shape)
-        normalize = np.rint(cdf * max_value).astype('int')
-
-        result = normalize[img.flatten()]
-        return result
-
-      
-    def image_normalization(self):
-        # Ensure the image is in float format to handle division correctly
-        image_float = self.image.astype(np.float32)
-        # Compute the minimum and maximum pixel values
-        min_val = np.min(image_float)
-        max_val = np.max(image_float)
-        # Normalize the image to [0, 255]
-        normalized_image = ((image_float - min_val) / (max_val - min_val)) * 255
-        return normalized_image.astype(np.uint8)  # Convert to uint8 for QImage
-    def global_thresholding(self, threshold):
-        # Create an empty image for the result
-        thresholded_image = np.zeros_like(self.image)
-
-        # Apply global thresholding
-        thresholded_image[self.image >= threshold] = 255
-
-        return thresholded_image
-    def local_thresholding(self, block_size, C):
-        height, width = self.image.shape
-        local_thresholded_image = np.zeros((height, width), dtype=np.uint8)
-
-        for y in range(0, height, block_size):
-            for x in range(0, width, block_size):
-                # Extract the current block
-                block = self.image[y:y + block_size, x:x + block_size]
-
-                # Calculate the mean intensity of the block
-                block_mean = np.mean(block)
-
-                # Apply local thresholding to the block where if condition is true (foreground) it takes white and otherwise is black
-                thresholded_block = np.where(block >= (block_mean - C), 255, 0)
-
-                # Assign the block to the result image
-                local_thresholded_image[y:y + block_size, x:x + block_size] = thresholded_block
-
-        return local_thresholded_image
 class MainWindow(QtWidgets.QMainWindow):    
     def __init__(self, *args, **kwargs):
         self.image=None 
@@ -145,6 +76,27 @@ class MainWindow(QtWidgets.QMainWindow):
     def display_histogram(self, hist):
         self.histograme_plot.clear()
         self.histograme_plot.plot(hist, pen='r')
+
+    def hybrid_images(self, image1, image2, alpha):
+        image1 = PILImage.fromarray(image1)
+        image2 = PILImage.fromarray(image2)
+
+        if image1.size[0] * image1.size[1] > image2.size[0] * image2.size[1]:
+            image1 = image1.resize((image2.size[0], image2.size[1]))
+        else:
+            image2 = image2.resize((image1.size[0], image1.size[1]))
+
+        image1 = np.array(image1)
+        image2 = np.array(image2)
+
+        hybrid_image = (alpha * image1 + (1 - alpha) * image2).astype(np.uint8)
+
+        return hybrid_image
+    
+    # def plot_histogram(self, hist):
+    #     for i in range(len(hist)):
+    #         self.histPlot.plot(hist[i], pen=(i, 3))
+    
 
     def browseImage(self):
         # Open file dialog to select an image

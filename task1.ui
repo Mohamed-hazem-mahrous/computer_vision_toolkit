@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1096</width>
+    <width>1196</width>
     <height>871</height>
    </rect>
   </property>
@@ -14,14 +14,14 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_36">
-    <item row="0" column="0">
+   <layout class="QGridLayout" name="gridLayout_53">
+    <item row="0" column="1">
      <widget class="QTabWidget" name="tabWidget">
       <property name="whatsThis">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;gg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -1274,12 +1274,309 @@ QGroupBox::indicator {
       </widget>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
-        <string>Histograms</string>
+        <string>Histograms &amp;&amp; Equalization</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_21">
+       <layout class="QGridLayout" name="gridLayout_49">
         <item row="0" column="0">
-         <layout class="QVBoxLayout" name="verticalLayout_7">
-          <item>
+         <layout class="QGridLayout" name="gridLayout_48">
+          <item row="0" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QFrame" name="frame_13">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>80</height>
+               </size>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_21">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_11">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>14</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <property name="text">
+                  <string>Original Image</string>
+                 </property>
+                 <property name="textFormat">
+                  <enum>Qt::AutoText</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QFrame" name="frame_14">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>80</height>
+               </size>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_47">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_12">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>14</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <property name="text">
+                  <string>Equalized Image</string>
+                 </property>
+                 <property name="textFormat">
+                  <enum>Qt::AutoText</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <layout class="QGridLayout" name="gridLayout_42">
+            <item row="0" column="0">
+             <widget class="QGroupBox" name="groupBox_26">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  padding: 0 10px;
+  font-size: 12px; /* Updated font size to 12px */
+}
+
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+              </property>
+              <property name="title">
+               <string/>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_43">
+               <item row="0" column="0">
+                <widget class="QGroupBox" name="groupBox_27">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:rgb(255, 255, 255);
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+                 </property>
+                 <property name="title">
+                  <string/>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_44">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="original_image">
+                    <property name="minimumSize">
+                     <size>
+                      <width>380</width>
+                      <height>200</height>
+                     </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::WinPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Sunken</enum>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QGroupBox" name="groupBox_28">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  padding: 0 10px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+              </property>
+              <property name="title">
+               <string/>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_45">
+               <item row="0" column="0">
+                <widget class="QGroupBox" name="groupBox_29">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QGroupBox {
+
+  background-color:rgb(255, 255, 255);
+  border-radius: 15px;
+ 
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+
+  padding: 0 3px;
+}
+
+
+
+
+</string>
+                 </property>
+                 <property name="title">
+                  <string/>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_46">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="equalized_image">
+                    <property name="minimumSize">
+                     <size>
+                      <width>380</width>
+                      <height>200</height>
+                     </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::WinPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Sunken</enum>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
              <widget class="QFrame" name="frame_9">
@@ -1379,7 +1676,7 @@ QGroupBox::indicator {
             </item>
            </layout>
           </item>
-          <item>
+          <item row="3" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
              <widget class="QGroupBox" name="groupBox_14">
@@ -1393,7 +1690,7 @@ QGroupBox::indicator {
                <string notr="true">QGroupBox {
   width: 65vw;
   height: 90vh;
-  background-color:rgb(186, 186, 186) ;
+  background-color:#dddddd;
   border-radius: 15px;
   padding: 5px; /* Adjust padding as needed */
   margin-right: 5px;
@@ -1432,7 +1729,7 @@ QGroupBox::indicator {
                     <string notr="true">QGroupBox {
   width: 65vw;
   height: 90vh;
-  background-color:#dddddd;
+  background-color:rgb(255, 255, 255);
   border-radius: 15px;
   padding: 5px; /* Adjust padding as needed */
   margin-right: 5px;
@@ -1456,8 +1753,8 @@ QGroupBox::indicator {
                    <property name="title">
                     <string/>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_24">
-                    <item>
+                   <layout class="QGridLayout" name="gridLayout_41">
+                    <item row="0" column="0">
                      <widget class="QWidget" name="histograme_plot" native="true"/>
                     </item>
                    </layout>
@@ -1482,7 +1779,7 @@ QGroupBox::indicator {
                  <string notr="true">QGroupBox {
   width: 65vw;
   height: 90vh;
-  background-color:rgb(186, 186, 186);
+  background-color:#dddddd;
   border-radius: 15px;
   padding: 5px; /* Adjust padding as needed */
   margin-right: 5px;
@@ -1521,7 +1818,7 @@ QGroupBox::indicator {
                       <string notr="true">QGroupBox {
   width: 65vw;
   height: 90vh;
-  background-color:#dddddd;
+  background-color:rgb(255, 255, 255);
   border-radius: 15px;
   padding: 5px; /* Adjust padding as needed */
   margin-right: 5px;
@@ -2283,11 +2580,1300 @@ QSlider::sub-page:horizontal {
        <attribute name="title">
         <string>RGB Hist</string>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout_55">
+        <item row="0" column="0">
+         <layout class="QGridLayout" name="gridLayout_54">
+          <item row="0" column="0">
+           <layout class="QGridLayout" name="gridLayout_36">
+            <item row="0" column="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <item>
+               <widget class="QComboBox" name="plotting_typr_combobox">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QComboBox, QFontComboBox {
+    border-width: 2px;
+    border-radius: 8px;
+    border-style: solid;
+    border-top-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd);
+    border-right-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd);
+    border-bottom-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #c1c9cf, stop:1 #d2d8dd);
+    border-left-color: qlineargradient(spread:pad, x1:1, y1:0, x2:0, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd);
+    background-color: #f4f4f4;
+    color: #272727;
+    padding-left: 5px;
+}
+QComboBox:editable, QComboBox:!editable, QComboBox::drop-down:editable, QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: rgb(255, 255, 255);
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+    color: #272727;
+    border-left-width: 1px;
+    border-left-color: darkgray;
+    border-left-style: solid;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+QComboBox::down-arrow {
+    image: url(/usr/share/icons/Adwaita/16x16/actions/go-down-symbolic.symbolic.png); /*Adawaita icon thene*/
+}
+
+QComboBox::down-arrow:on {
+    top: 1px;
+    left: 1px;
+}
+QComboBox QAbstractItemView {
+    border: 1px solid darkgray;
+    border-radius: 8px;
+    selection-background-color: #dadada;
+    selection-color: #272727;
+    color: #272727;
+    background: white;
+}</string>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Histogram</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>CDF</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item row="0" column="1">
+             <layout class="QVBoxLayout" name="verticalLayout_7">
+              <property name="topMargin">
+               <number>100</number>
+              </property>
+              <property name="rightMargin">
+               <number>500</number>
+              </property>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <layout class="QGridLayout" name="gridLayout_52">
+            <property name="topMargin">
+             <number>50</number>
+            </property>
+            <property name="bottomMargin">
+             <number>200</number>
+            </property>
+            <item row="0" column="0">
+             <widget class="QGroupBox" name="groupBox_7">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+              </property>
+              <property name="title">
+               <string/>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_26">
+               <item>
+                <widget class="QGraphicsView" name="R_curve"/>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QGroupBox" name="groupBox_37">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+              </property>
+              <property name="title">
+               <string/>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_32">
+               <item>
+                <widget class="QGraphicsView" name="G_curve"/>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QGroupBox" name="groupBox_38">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+              </property>
+              <property name="title">
+               <string/>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_31">
+               <item>
+                <widget class="QGraphicsView" name="B_curve"/>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
         <string>frequancy domain</string>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout_77">
+        <item row="0" column="0">
+         <layout class="QGridLayout" name="gridLayout_76">
+          <item row="0" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_19">
+            <property name="bottomMargin">
+             <number>20</number>
+            </property>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_11">
+              <property name="leftMargin">
+               <number>70</number>
+              </property>
+              <property name="rightMargin">
+               <number>70</number>
+              </property>
+              <item>
+               <widget class="QGroupBox" name="groupBox_4">
+                <property name="styleSheet">
+                 <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+                </property>
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_59">
+                 <item row="0" column="0">
+                  <layout class="QVBoxLayout" name="verticalLayout_28">
+                   <item>
+                    <widget class="QFrame" name="frame_21">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>60</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Raised</enum>
+                     </property>
+                     <layout class="QGridLayout" name="gridLayout_64">
+                      <item row="0" column="0">
+                       <widget class="QLabel" name="label_20">
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>30</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>Calibri</family>
+                          <pointsize>10</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Original Image One</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="1">
+                       <layout class="QHBoxLayout" name="horizontalLayout_31">
+                        <property name="leftMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QPushButton" name="upload_btn_1">
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>30</height>
+                           </size>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">QPushButton {
+    width: 50%;
+    background-color: rgb(182, 13, 13); /* Replace with the corresponding color value for --dark-grey in your application */
+    color: white;
+    border-radius: 10px;
+    text-align: center;
+
+}
+
+QPushButton:hover {
+    background-color: white;
+color:red /* Replace with the corresponding color value for --darkest-color in your application */
+}
+</string>
+                          </property>
+                          <property name="text">
+                           <string>Upload</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_9">
+                     <item>
+                      <widget class="QGroupBox" name="groupBox_30">
+                       <property name="styleSheet">
+                        <string notr="true">QGroupBox {
+    border: none; /* or border: 0; */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 5px; /* Optional padding for the title */
+}
+
+</string>
+                       </property>
+                       <property name="title">
+                        <string/>
+                       </property>
+                       <layout class="QGridLayout" name="gridLayout_65">
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="original_image_1">
+                          <property name="minimumSize">
+                           <size>
+                            <width>300</width>
+                            <height>0</height>
+                           </size>
+                          </property>
+                          <property name="maximumSize">
+                           <size>
+                            <width>450</width>
+                            <height>16777215</height>
+                           </size>
+                          </property>
+                          <property name="frameShape">
+                           <enum>QFrame::WinPanel</enum>
+                          </property>
+                          <property name="frameShadow">
+                           <enum>QFrame::Sunken</enum>
+                          </property>
+                          <property name="text">
+                           <string/>
+                          </property>
+                          <property name="scaledContents">
+                           <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_14">
+              <property name="leftMargin">
+               <number>70</number>
+              </property>
+              <property name="rightMargin">
+               <number>70</number>
+              </property>
+              <item>
+               <widget class="QGroupBox" name="groupBox_3">
+                <property name="styleSheet">
+                 <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+                </property>
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_56">
+                 <item row="0" column="0">
+                  <layout class="QVBoxLayout" name="verticalLayout_14">
+                   <item>
+                    <widget class="QFrame" name="frame_19">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>60</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Raised</enum>
+                     </property>
+                     <layout class="QGridLayout" name="gridLayout_57">
+                      <item row="0" column="0">
+                       <widget class="QLabel" name="label_18">
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>30</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>Calibri</family>
+                          <pointsize>10</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Original Image two</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="1">
+                       <layout class="QHBoxLayout" name="horizontalLayout_29">
+                        <property name="leftMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QPushButton" name="upload_btn_2">
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>30</height>
+                           </size>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">QPushButton {
+    width: 50%;
+    background-color: rgb(182, 13, 13); /* Replace with the corresponding color value for --dark-grey in your application */
+    color: white;
+    border-radius: 10px;
+    text-align: center;
+
+}
+
+QPushButton:hover {
+    background-color: white;
+color:red /* Replace with the corresponding color value for --darkest-color in your application */
+}
+</string>
+                          </property>
+                          <property name="text">
+                           <string>Upload</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_8">
+                     <item>
+                      <widget class="QGroupBox" name="groupBox_2">
+                       <property name="styleSheet">
+                        <string notr="true">QGroupBox {
+    border: none; /* or border: 0; */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 5px; /* Optional padding for the title */
+}
+
+</string>
+                       </property>
+                       <property name="title">
+                        <string/>
+                       </property>
+                       <layout class="QGridLayout" name="gridLayout_58">
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="original_image_2">
+                          <property name="minimumSize">
+                           <size>
+                            <width>300</width>
+                            <height>0</height>
+                           </size>
+                          </property>
+                          <property name="maximumSize">
+                           <size>
+                            <width>450</width>
+                            <height>16777215</height>
+                           </size>
+                          </property>
+                          <property name="frameShape">
+                           <enum>QFrame::WinPanel</enum>
+                          </property>
+                          <property name="frameShadow">
+                           <enum>QFrame::Sunken</enum>
+                          </property>
+                          <property name="text">
+                           <string/>
+                          </property>
+                          <property name="scaledContents">
+                           <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_37">
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_15">
+              <property name="rightMargin">
+               <number>10</number>
+              </property>
+              <property name="bottomMargin">
+               <number>30</number>
+              </property>
+              <item>
+               <widget class="QGroupBox" name="groupBox_31">
+                <property name="styleSheet">
+                 <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+                </property>
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_66">
+                 <item row="0" column="0">
+                  <layout class="QVBoxLayout" name="verticalLayout_29">
+                   <item>
+                    <widget class="QFrame" name="frame_22">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>60</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Raised</enum>
+                     </property>
+                     <layout class="QGridLayout" name="gridLayout_67">
+                      <item row="0" column="0">
+                       <widget class="QLabel" name="label_21">
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>30</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>Calibri</family>
+                          <pointsize>10</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Filtered Image One</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="1">
+                       <layout class="QHBoxLayout" name="horizontalLayout_32">
+                        <property name="leftMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QComboBox" name="filter_type_combobox_1">
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>40</height>
+                           </size>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">QComboBox, QFontComboBox {
+    border-width: 2px;
+    border-radius: 8px;
+    border-style: solid;
+    border-top-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd);
+    border-right-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd);
+    border-bottom-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #c1c9cf, stop:1 #d2d8dd);
+    border-left-color: qlineargradient(spread:pad, x1:1, y1:0, x2:0, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd);
+    background-color: #f4f4f4;
+    color: #272727;
+    padding-left: 5px;
+}
+QComboBox:editable, QComboBox:!editable, QComboBox::drop-down:editable, QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: #ffff;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+    color: #272727;
+    border-left-width: 1px;
+    border-left-color: darkgray;
+    border-left-style: solid;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+QComboBox::down-arrow {
+    image: url(/usr/share/icons/Adwaita/16x16/actions/go-down-symbolic.symbolic.png); /*Adawaita icon thene*/
+}
+
+QComboBox::down-arrow:on {
+    top: 1px;
+    left: 1px;
+}
+QComboBox QAbstractItemView {
+    border: 1px solid darkgray;
+    border-radius: 8px;
+    selection-background-color: #dadada;
+    selection-color: #272727;
+    color: #272727;
+    background: white;
+}</string>
+                          </property>
+                          <item>
+                           <property name="text">
+                            <string>Low-pass filter</string>
+                           </property>
+                          </item>
+                          <item>
+                           <property name="text">
+                            <string>High-pass filter</string>
+                           </property>
+                          </item>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_12">
+                     <item>
+                      <widget class="QGroupBox" name="groupBox_32">
+                       <property name="styleSheet">
+                        <string notr="true">QGroupBox {
+    border: none; /* or border: 0; */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 5px; /* Optional padding for the title */
+}
+
+</string>
+                       </property>
+                       <property name="title">
+                        <string/>
+                       </property>
+                       <layout class="QGridLayout" name="gridLayout_68">
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="filtered_image_1">
+                          <property name="minimumSize">
+                           <size>
+                            <width>300</width>
+                            <height>0</height>
+                           </size>
+                          </property>
+                          <property name="maximumSize">
+                           <size>
+                            <width>450</width>
+                            <height>16777215</height>
+                           </size>
+                          </property>
+                          <property name="frameShape">
+                           <enum>QFrame::WinPanel</enum>
+                          </property>
+                          <property name="frameShadow">
+                           <enum>QFrame::Sunken</enum>
+                          </property>
+                          <property name="text">
+                           <string/>
+                          </property>
+                          <property name="scaledContents">
+                           <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QGridLayout" name="gridLayout_63">
+              <item row="0" column="0">
+               <widget class="QFrame" name="frame_20">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>70</height>
+                 </size>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_62">
+                 <item row="0" column="0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_34">
+                   <property name="leftMargin">
+                    <number>60</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>60</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QPushButton" name="create_hybrid_btn">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+    width: 50%;
+    background-color: rgb(182, 13, 13); /* Replace with the corresponding color value for --dark-grey in your application */
+    color: white;
+    border-radius: 10px;
+    text-align: center;
+
+}
+
+QPushButton:hover {
+    background-color: white;
+color:red /* Replace with the corresponding color value for --darkest-color in your application */
+}
+</string>
+                     </property>
+                     <property name="text">
+                      <string>Create Hybrid Image</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <layout class="QHBoxLayout" name="horizontalLayout_36">
+                <property name="leftMargin">
+                 <number>10</number>
+                </property>
+                <property name="rightMargin">
+                 <number>10</number>
+                </property>
+                <item>
+                 <widget class="QGroupBox" name="groupBox_6">
+                  <property name="styleSheet">
+                   <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+                  </property>
+                  <property name="title">
+                   <string/>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_61">
+                   <item row="0" column="0">
+                    <layout class="QVBoxLayout" name="verticalLayout_35">
+                     <item>
+                      <widget class="QFrame" name="frame_24">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>40</height>
+                        </size>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Raised</enum>
+                       </property>
+                       <layout class="QGridLayout" name="gridLayout_72">
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="label_23">
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>20</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <family>Calibri</family>
+                            <pointsize>10</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Hybrid Image</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_18">
+                       <item>
+                        <widget class="QGroupBox" name="groupBox_36">
+                         <property name="styleSheet">
+                          <string notr="true">QGroupBox {
+    border: none; /* or border: 0; */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 5px; /* Optional padding for the title */
+}
+
+</string>
+                         </property>
+                         <property name="title">
+                          <string/>
+                         </property>
+                         <layout class="QGridLayout" name="gridLayout_74">
+                          <item row="0" column="0">
+                           <widget class="QLabel" name="hybrid_image">
+                            <property name="minimumSize">
+                             <size>
+                              <width>250</width>
+                              <height>230</height>
+                             </size>
+                            </property>
+                            <property name="maximumSize">
+                             <size>
+                              <width>450</width>
+                              <height>16777215</height>
+                             </size>
+                            </property>
+                            <property name="frameShape">
+                             <enum>QFrame::WinPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Sunken</enum>
+                            </property>
+                            <property name="text">
+                             <string/>
+                            </property>
+                            <property name="scaledContents">
+                             <bool>true</bool>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_16">
+              <property name="leftMargin">
+               <number>10</number>
+              </property>
+              <property name="bottomMargin">
+               <number>30</number>
+              </property>
+              <item>
+               <widget class="QGroupBox" name="groupBox_5">
+                <property name="styleSheet">
+                 <string notr="true">QGroupBox {
+  width: 65vw;
+  height: 90vh;
+  background-color:#dddddd;
+  border-radius: 15px;
+  padding: 5px; /* Adjust padding as needed */
+  margin-right: 5px;
+}
+
+/* You may need to adjust the sub-controls styles based on your specific requirements */
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top center;
+  padding: 0 3px;
+}
+
+QGroupBox::indicator {
+  width: 13px;
+  height: 13px;
+}
+
+
+</string>
+                </property>
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_60">
+                 <item row="0" column="0">
+                  <layout class="QVBoxLayout" name="verticalLayout_33">
+                   <item>
+                    <widget class="QFrame" name="frame_23">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>60</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Raised</enum>
+                     </property>
+                     <layout class="QGridLayout" name="gridLayout_69">
+                      <item row="0" column="0">
+                       <widget class="QLabel" name="label_22">
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>30</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>Calibri</family>
+                          <pointsize>10</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Filtered Image two</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="1">
+                       <layout class="QHBoxLayout" name="horizontalLayout_33">
+                        <property name="leftMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QComboBox" name="filter_type_combobox_2">
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>40</height>
+                           </size>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">QComboBox, QFontComboBox {
+    border-width: 2px;
+    border-radius: 8px;
+    border-style: solid;
+    border-top-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd);
+    border-right-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd);
+    border-bottom-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #c1c9cf, stop:1 #d2d8dd);
+    border-left-color: qlineargradient(spread:pad, x1:1, y1:0, x2:0, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd);
+    background-color: #f4f4f4;
+    color: #272727;
+    padding-left: 5px;
+}
+QComboBox:editable, QComboBox:!editable, QComboBox::drop-down:editable, QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: #ffff;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+    color: #272727;
+    border-left-width: 1px;
+    border-left-color: darkgray;
+    border-left-style: solid;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+QComboBox::down-arrow {
+    image: url(/usr/share/icons/Adwaita/16x16/actions/go-down-symbolic.symbolic.png); /*Adawaita icon thene*/
+}
+
+QComboBox::down-arrow:on {
+    top: 1px;
+    left: 1px;
+}
+QComboBox QAbstractItemView {
+    border: 1px solid darkgray;
+    border-radius: 8px;
+    selection-background-color: #dadada;
+    selection-color: #272727;
+    color: #272727;
+    background: white;
+}</string>
+                          </property>
+                          <item>
+                           <property name="text">
+                            <string>Low-pass filter</string>
+                           </property>
+                          </item>
+                          <item>
+                           <property name="text">
+                            <string>High-pass filter</string>
+                           </property>
+                          </item>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_10">
+                     <item>
+                      <widget class="QGroupBox" name="groupBox_33">
+                       <property name="styleSheet">
+                        <string notr="true">QGroupBox {
+    border: none; /* or border: 0; */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 5px; /* Optional padding for the title */
+}
+
+</string>
+                       </property>
+                       <property name="title">
+                        <string/>
+                       </property>
+                       <layout class="QGridLayout" name="gridLayout_70">
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="filtered_image_2">
+                          <property name="minimumSize">
+                           <size>
+                            <width>300</width>
+                            <height>0</height>
+                           </size>
+                          </property>
+                          <property name="maximumSize">
+                           <size>
+                            <width>450</width>
+                            <height>16777215</height>
+                           </size>
+                          </property>
+                          <property name="frameShape">
+                           <enum>QFrame::WinPanel</enum>
+                          </property>
+                          <property name="frameShadow">
+                           <enum>QFrame::Sunken</enum>
+                          </property>
+                          <property name="text">
+                           <string/>
+                          </property>
+                          <property name="scaledContents">
+                           <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -2298,7 +3884,7 @@ QSlider::sub-page:horizontal {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1096</width>
+     <width>1196</width>
      <height>26</height>
     </rect>
    </property>

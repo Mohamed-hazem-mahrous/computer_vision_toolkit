@@ -1569,11 +1569,11 @@ QGroupBox::indicator {
        <attribute name="title">
         <string>Normalization &amp;&amp; thresholding</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_35">
+       <layout class="QGridLayout" name="gridLayout_40">
         <item row="0" column="0">
-         <layout class="QGridLayout" name="gridLayout_34">
+         <layout class="QGridLayout" name="gridLayout_39">
           <item row="0" column="0">
-           <layout class="QGridLayout" name="gridLayout_33">
+           <layout class="QGridLayout" name="gridLayout_32">
             <item row="0" column="0">
              <widget class="QGroupBox" name="groupBox_17">
               <property name="maximumSize">
@@ -1650,17 +1650,17 @@ QGroupBox::indicator {
                  <layout class="QGridLayout" name="gridLayout_27">
                   <item row="0" column="0">
                    <widget class="QLabel" name="original_image_label_page3">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-                      <horstretch>50</horstretch>
-                      <verstretch>50</verstretch>
-                     </sizepolicy>
-                    </property>
                     <property name="minimumSize">
                      <size>
-                      <width>0</width>
-                      <height>0</height>
+                      <width>380</width>
+                      <height>200</height>
                      </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::WinPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Sunken</enum>
                     </property>
                     <property name="text">
                      <string/>
@@ -1720,25 +1720,20 @@ QGroupBox::indicator {
                  </property>
                  <property name="styleSheet">
                   <string notr="true">QGroupBox {
-  width: 65vw;
-  height: 90vh;
+
   background-color:rgb(255, 255, 255);
   border-radius: 15px;
-  padding: 5px; /* Adjust padding as needed */
-  margin-right: 5px;
+ 
 }
 
 /* You may need to adjust the sub-controls styles based on your specific requirements */
 QGroupBox::title {
   subcontrol-origin: margin;
-  subcontrol-position: top center;
+
   padding: 0 3px;
 }
 
-QGroupBox::indicator {
-  width: 13px;
-  height: 13px;
-}
+
 
 
 </string>
@@ -1749,17 +1744,17 @@ QGroupBox::indicator {
                  <layout class="QGridLayout" name="gridLayout_22">
                   <item row="0" column="0">
                    <widget class="QLabel" name="normalized_image_label_page3">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-                      <horstretch>50</horstretch>
-                      <verstretch>50</verstretch>
-                     </sizepolicy>
-                    </property>
                     <property name="minimumSize">
                      <size>
-                      <width>0</width>
-                      <height>0</height>
+                      <width>380</width>
+                      <height>200</height>
                      </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::WinPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Sunken</enum>
                     </property>
                     <property name="text">
                      <string/>
@@ -1775,7 +1770,7 @@ QGroupBox::indicator {
            </layout>
           </item>
           <item row="1" column="0">
-           <layout class="QGridLayout" name="gridLayout_32">
+           <layout class="QGridLayout" name="gridLayout_38">
             <item row="0" column="0">
              <widget class="QGroupBox" name="groupBox_24">
               <property name="maximumSize">
@@ -1812,9 +1807,9 @@ QGroupBox::indicator {
               <property name="title">
                <string>Local Thresholding Image </string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_28">
+              <layout class="QGridLayout" name="gridLayout_29">
                <item row="0" column="0">
-                <layout class="QGridLayout" name="gridLayout_29">
+                <layout class="QGridLayout" name="gridLayout_28">
                  <item row="0" column="0">
                   <widget class="QGroupBox" name="groupBox_25">
                    <property name="maximumSize">
@@ -1854,17 +1849,17 @@ QGroupBox::indicator {
                    <layout class="QGridLayout" name="gridLayout_30">
                     <item row="0" column="0">
                      <widget class="QLabel" name="local_image_label_page3">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-                        <horstretch>50</horstretch>
-                        <verstretch>50</verstretch>
-                       </sizepolicy>
-                      </property>
                       <property name="minimumSize">
                        <size>
-                        <width>0</width>
-                        <height>0</height>
+                        <width>390</width>
+                        <height>200</height>
                        </size>
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::WinPanel</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Sunken</enum>
                       </property>
                       <property name="text">
                        <string/>
@@ -1875,23 +1870,38 @@ QGroupBox::indicator {
                   </widget>
                  </item>
                  <item row="1" column="0">
-                  <layout class="QHBoxLayout" name="horizontalLayout_29">
-                   <property name="leftMargin">
-                    <number>5</number>
+                  <widget class="QFrame" name="frame_11">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>40</height>
+                    </size>
                    </property>
-                   <property name="topMargin">
-                    <number>0</number>
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
                    </property>
-                   <property name="rightMargin">
-                    <number>5</number>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
                    </property>
-                   <property name="bottomMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QSlider" name="local_thresholding_slider">
-                     <property name="styleSheet">
-                      <string notr="true">QSlider::groove {
+                   <layout class="QGridLayout" name="gridLayout_34">
+                    <item row="0" column="2">
+                     <layout class="QHBoxLayout" name="horizontalLayout_30">
+                      <property name="leftMargin">
+                       <number>5</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>5</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QSlider" name="local_thresholding_slider">
+                        <property name="styleSheet">
+                         <string notr="true">QSlider::groove {
     border: 1px solid #bbbbbb;
     background-color: #52595d;
     border-radius: 4px;
@@ -1932,13 +1942,23 @@ QSlider::sub-page:horizontal {
     background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
 }
 </string>
-                     </property>
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
+                        </property>
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QLabel" name="label_3">
+                      <property name="text">
+                       <string>threshold value </string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
                  </item>
                 </layout>
                </item>
@@ -1948,21 +1968,62 @@ QSlider::sub-page:horizontal {
             <item row="0" column="1">
              <layout class="QGridLayout" name="gridLayout_31">
               <item row="0" column="0">
-               <widget class="QSlider" name="local_block_size_slider">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
+               <widget class="QFrame" name="frame_12">
+                <property name="maximumSize">
                  <size>
-                  <width>0</width>
-                  <height>230</height>
+                  <width>16777215</width>
+                  <height>35</height>
                  </size>
                 </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_35">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Block Size</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QGroupBox" name="groupBox_13">
                 <property name="styleSheet">
-                 <string notr="true">QSlider::groove {
+                 <string notr="true">QGroupBox {
+
+  background-color:rgb(255, 255, 255);
+  border-radius: 15px;
+ }</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_37">
+                 <item row="0" column="0">
+                  <widget class="QSlider" name="local_block_size_slider">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>230</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QSlider::groove {
     border: 1px solid #bbbbbb;
     background-color: #52595d;
     border-radius: 4px;
@@ -2003,10 +2064,13 @@ QSlider::add-page:vertical {
     background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
 }
 </string>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
@@ -2047,9 +2111,9 @@ QGroupBox::indicator {
               <property name="title">
                <string>Global Thresholding Image </string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_23">
+              <layout class="QGridLayout" name="gridLayout_25">
                <item row="0" column="0">
-                <layout class="QGridLayout" name="gridLayout_25">
+                <layout class="QGridLayout" name="gridLayout_23">
                  <item row="0" column="0">
                   <widget class="QGroupBox" name="groupBox_21">
                    <property name="maximumSize">
@@ -2089,17 +2153,17 @@ QGroupBox::indicator {
                    <layout class="QGridLayout" name="gridLayout_24">
                     <item row="0" column="0">
                      <widget class="QLabel" name="global_image_label_page3">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-                        <horstretch>50</horstretch>
-                        <verstretch>50</verstretch>
-                       </sizepolicy>
-                      </property>
                       <property name="minimumSize">
                        <size>
-                        <width>0</width>
-                        <height>0</height>
+                        <width>390</width>
+                        <height>200</height>
                        </size>
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::Panel</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Sunken</enum>
                       </property>
                       <property name="text">
                        <string/>
@@ -2110,23 +2174,47 @@ QGroupBox::indicator {
                   </widget>
                  </item>
                  <item row="1" column="0">
-                  <layout class="QHBoxLayout" name="horizontalLayout_28">
-                   <property name="leftMargin">
-                    <number>5</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="rightMargin">
-                    <number>5</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>0</number>
-                   </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_3">
                    <item>
-                    <widget class="QSlider" name="global_thresholding_slider">
-                     <property name="styleSheet">
-                      <string notr="true">QSlider::groove {
+                    <widget class="QFrame" name="frame_10">
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Raised</enum>
+                     </property>
+                     <layout class="QGridLayout" name="gridLayout_33">
+                      <item row="0" column="0">
+                       <widget class="QLabel" name="label_2">
+                        <property name="text">
+                         <string>threshold value </string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="1">
+                       <layout class="QHBoxLayout" name="horizontalLayout_28">
+                        <property name="leftMargin">
+                         <number>5</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>5</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QSlider" name="global_thresholding_slider">
+                          <property name="styleSheet">
+                           <string notr="true">QSlider::groove {
     border: 1px solid #bbbbbb;
     background-color: #52595d;
     border-radius: 4px;
@@ -2167,10 +2255,15 @@ QSlider::sub-page:horizontal {
     background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
 }
 </string>
-                     </property>
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
+                          </property>
+                          <property name="orientation">
+                           <enum>Qt::Horizontal</enum>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                     </layout>
                     </widget>
                    </item>
                   </layout>

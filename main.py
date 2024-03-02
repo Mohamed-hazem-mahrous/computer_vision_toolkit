@@ -32,9 +32,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.local_thresholding_slider.setMaximum(255)
         self.local_block_size_slider.setMinimum(1)
         self.browse_btn.clicked.connect(self.browseImage)
-        self.global_thresholding_slider.valueChanged.connect(self.global_threshold_slider_value_changed)
-        self.local_thresholding_slider.valueChanged.connect(self.local_threshold_sliders_value_changed)
-        self.local_block_size_slider.valueChanged.connect(self.local_threshold_sliders_value_changed)
+        self.global_thresholding_slider.sliderReleased.connect(self.global_threshold_slider_value_changed)
+        self.local_thresholding_slider.sliderReleased.connect(self.local_threshold_sliders_value_changed)
+        self.local_block_size_slider.sliderReleased.connect(self.local_threshold_sliders_value_changed)
 
     def local_threshold_sliders_value_changed(self):
         block_size=self.local_block_size_slider.value()

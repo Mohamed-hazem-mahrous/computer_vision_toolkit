@@ -36,7 +36,7 @@ class ImageProcessor:
         result = normalize[image.flatten()]
         return result
 
-      
+    
     def image_normalization(self):
         # Ensure the image is in float format to handle division correctly
         image_float = self.image.astype(np.float32)

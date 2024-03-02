@@ -310,21 +310,40 @@ class ImageProcessor:
 
         return grayscale_image.astype(np.uint8)
     
-    def get_RGB_histograms(self, image):
+    def get_RGB_histograms_and_cdf(self, image):
         if len(image.shape) == 2:
             hist = [0] * 256
+            cdf = [0] * 256
+            total_pixels = image.shape[0] * image.shape[1]
+
             for row in image:
                 for pixel in row:
                     hist[pixel] += 1
-            return [hist, hist, hist]
+
+            cdf[0] = hist[0] / total_pixels
+            for i in range(1, 256):
+                cdf[i] = cdf[i-1] + hist[i] / total_pixels
+
+            return [hist, hist, hist], [cdf, cdf, cdf]
+
         elif len(image.shape) == 3 and image.shape[2] == 3:
             hist = [[0]*256, [0]*256, [0]*256]
+            cdf = [[0]*256, [0]*256, [0]*256]
+            total_pixels = image.shape[0] * image.shape[1]
+
             for row in image:
                 for pixel in row:
                     for i in range(3):
                         hist[i][pixel[i]] += 1
-            return hist
+
+            for i in range(3):
+                cdf[i][0] = hist[i][0] / total_pixels
+                for j in range(1, 256):
+                    cdf[i][j] = cdf[i][j-1] + hist[i][j] / total_pixels
+
+            return hist, cdf
         else:
             raise ValueError("Unsupported image format")
+
         
     

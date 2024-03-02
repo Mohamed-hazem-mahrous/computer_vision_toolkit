@@ -2882,25 +2882,6 @@ QGroupBox::indicator {
                       <enum>QFrame::Raised</enum>
                      </property>
                      <layout class="QGridLayout" name="gridLayout_64">
-                      <item row="0" column="0">
-                       <widget class="QLabel" name="label_20">
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>30</height>
-                         </size>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Calibri</family>
-                          <pointsize>10</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Original Image One</string>
-                        </property>
-                       </widget>
-                      </item>
                       <item row="0" column="1">
                        <layout class="QHBoxLayout" name="horizontalLayout_31">
                         <property name="leftMargin">
@@ -2946,6 +2927,25 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
                         </item>
                        </layout>
                       </item>
+                      <item row="0" column="0">
+                       <widget class="QLabel" name="label_20">
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>30</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>Calibri</family>
+                          <pointsize>10</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Original Image One</string>
+                        </property>
+                       </widget>
+                      </item>
                      </layout>
                     </widget>
                    </item>
@@ -2970,7 +2970,7 @@ QGroupBox::title {
                         <string/>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_65">
-                        <item row="0" column="0">
+                        <item row="1" column="0">
                          <widget class="QLabel" name="original_image_1">
                           <property name="minimumSize">
                            <size>
@@ -2995,6 +2995,56 @@ QGroupBox::title {
                           </property>
                           <property name="scaledContents">
                            <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="0" column="0">
+                         <widget class="QSlider" name="horizontalSlider_3">
+                          <property name="styleSheet">
+                           <string notr="true">QSlider::groove {
+    border: 1px solid #bbbbbb;
+    background-color: #52595d;
+    border-radius: 4px;
+}
+QSlider::groove:horizontal {
+    height: 6px;
+}
+QSlider::groove:vertical {
+    width: 6px;
+}
+QSlider::handle:horizontal {
+    background: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(207,207,207);
+    width: 12px;
+    margin: -5px 0;
+    border-radius: 7px;
+}
+QSlider::handle:vertical {
+    background: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(207,207,207);
+    height: 12px;
+    margin: 0 -5px;
+    border-radius: 7px;
+}
+QSlider::add-page, QSlider::sub-page {
+    border: 1px transparent;
+    background-color: #52595d;
+    border-radius: 4px;
+}
+QSlider::add-page:horizontal {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #ddd5d5, stop:0.5 #dad3d3, stop:1 #ddd5d5);
+}
+QSlider::sub-page:horizontal {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
+}
+</string>
+                          </property>
+                          <property name="orientation">
+                           <enum>Qt::Horizontal</enum>
                           </property>
                          </widget>
                         </item>
@@ -3160,7 +3210,7 @@ QGroupBox::title {
                         <string/>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_58">
-                        <item row="0" column="0">
+                        <item row="1" column="0">
                          <widget class="QLabel" name="original_image_2">
                           <property name="minimumSize">
                            <size>
@@ -3185,6 +3235,56 @@ QGroupBox::title {
                           </property>
                           <property name="scaledContents">
                            <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="0" column="0">
+                         <widget class="QSlider" name="horizontalSlider_4">
+                          <property name="styleSheet">
+                           <string notr="true">QSlider::groove {
+    border: 1px solid #bbbbbb;
+    background-color: #52595d;
+    border-radius: 4px;
+}
+QSlider::groove:horizontal {
+    height: 6px;
+}
+QSlider::groove:vertical {
+    width: 6px;
+}
+QSlider::handle:horizontal {
+    background: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(207,207,207);
+    width: 12px;
+    margin: -5px 0;
+    border-radius: 7px;
+}
+QSlider::handle:vertical {
+    background: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(207,207,207);
+    height: 12px;
+    margin: 0 -5px;
+    border-radius: 7px;
+}
+QSlider::add-page, QSlider::sub-page {
+    border: 1px transparent;
+    background-color: #52595d;
+    border-radius: 4px;
+}
+QSlider::add-page:horizontal {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #ddd5d5, stop:0.5 #dad3d3, stop:1 #ddd5d5);
+}
+QSlider::sub-page:horizontal {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
+}
+</string>
+                          </property>
+                          <property name="orientation">
+                           <enum>Qt::Horizontal</enum>
                           </property>
                          </widget>
                         </item>
@@ -3885,7 +3985,7 @@ QGroupBox::title {
      <x>0</x>
      <y>0</y>
      <width>1196</width>
-     <height>26</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>

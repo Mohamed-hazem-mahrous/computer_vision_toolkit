@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from multiprocessing import Pool
 
 
 class ImageProcessor:
@@ -98,7 +99,7 @@ class ImageProcessor:
         :param sigma: Standard deviation of the Gaussian distribution.
         :return: Noisy image.
         """
-        gaussian_noise = np.random.normal(0, sigma, image.shape).astype(np.uint8)
+        gaussian_noise = np.random.normal(0, sigma * 255 / 5, image.shape).astype(np.uint8)
         noisy_image = np.clip(image + gaussian_noise, 0, 255).astype(np.uint8)
         return noisy_image
 
@@ -113,13 +114,20 @@ class ImageProcessor:
         noisy_image = np.copy(image)
         num_salt = np.ceil(amount * image.size * 0.5)
         coords = [np.random.randint(0, i - 1, int(num_salt)) for i in image.shape]
-        noisy_image[coords[0], coords[1], :] = 255
+        noisy_image[coords[0], coords[1]] = 255
 
         num_pepper = np.ceil(amount * image.size * 0.5)
         coords = [np.random.randint(0, i - 1, int(num_pepper)) for i in image.shape]
-        noisy_image[coords[0], coords[1], :] = 0
+        noisy_image[coords[0], coords[1]] = 0
         return noisy_image
     
+
+
+
+
+
+
+
     def apply_average_filter(self, image, kernel_size=3):
         """
         Apply average filter to the image.
@@ -138,7 +146,7 @@ class ImageProcessor:
         
         return filtered_image.astype(np.uint8)
 
-    def apply_gaussian_filter(self, image, kernel_size=3, sigma=1):
+    def apply_gaussian_filter(self, image, kernel_size = 3, sigma = 10):
         """
         Apply Gaussian filter to the image.
         :param image: Input image (numpy array).
@@ -149,8 +157,8 @@ class ImageProcessor:
         kernel = np.fromfunction(lambda x, y: (1/(2*np.pi*sigma**2)) * np.exp(-((x-(kernel_size-1)//2)**2 + (y-(kernel_size-1)//2)**2) / 
                 (2*sigma**2)), (kernel_size, kernel_size))
         kernel /= np.sum(kernel)
-        ## call ur function here ya mohammed 
-        filtered_image = cv2.filter2D(image, -1, kernel)
+
+        filtered_image = self.convolve(image, kernel)      
         
         return filtered_image
 
@@ -171,6 +179,12 @@ class ImageProcessor:
                 filtered_image[i, j] = np.median(padded_image[i:i+kernel_size, j:j+kernel_size])
         
         return filtered_image.astype(np.uint8)
+    
+
+
+
+
+
     
     def convolve(self, image, kernel):
         x, y = image.shape
@@ -197,19 +211,7 @@ class ImageProcessor:
         laplacian_kernel = np.array([[0, 1, 0],
                                     [1, -4, 1],
                                     [0, 1, 0]])
-
-        if direction == 'x':
-            edge = abs(self.convolve(image, laplacian_kernel))
-        elif direction == 'y':
-            edge = abs(self.convolve(image, laplacian_kernel.T))
-        else:
-            edge_x = abs(self.convolve(image, laplacian_kernel))
-            edge_y = abs(self.convolve(image, laplacian_kernel.T))
-            edge = np.sqrt(edge_x ** 2 + edge_y ** 2)
-
-        return edge.astype(np.uint8)
-
-
+        return self.apply_edge(image, laplacian_kernel, direction)
 
 
     def prewitt_edge(self, image, direction='both'):
@@ -219,30 +221,11 @@ class ImageProcessor:
         :param direction: Direction of edge detection ('x', 'y', or 'both').
         :return: Edge-detected image.
         """
-        if direction == 'x':
-            prewitt_kernel_x = np.array([[-1, 0, 1],
+        prewitt_kernel = np.array([[-1, 0, 1],
                                     [-1, 0, 1],
                                     [-1, 0, 1]])
-            edge = abs(self.convolve(image, prewitt_kernel_x))
-        elif direction == 'y':
-            prewitt_kernel_y = np.array([[-1, -1, -1],
-                                    [0, 0, 0],
-                                    [1, 1, 1]])
-            edge = abs(self.convolve(image, prewitt_kernel_y))
-            
-        else:
-            prewitt_kernel_x = np.array([[-1, 0, 1],
-                                        [-1, 0, 1],
-                                        [-1, 0, 1]])
-            prewitt_kernel_y = np.array([[-1, -1, -1],
-                                        [0, 0, 0],
-                                        [1, 1, 1]])
-            edge_x = abs(self.convolve(image, prewitt_kernel_x))
-            edge_y = abs(self.convolve(image, prewitt_kernel_y))
-            edge = np.sqrt(edge_x ** 2 + edge_y ** 2)
+        return self.apply_edge(image, prewitt_kernel, direction)
 
-
-        return edge.astype(np.uint8)
 
     def sobel_edge(self, image, direction='both'):
         """
@@ -251,30 +234,10 @@ class ImageProcessor:
         :param direction: Direction of edge detection ('x', 'y', or 'both').
         :return: Edge-detected image.
         """
-        if direction == 'x':
-            sobel_kernel_x = np.array([[-1, 0, 1],
+        sobel_kernel = np.array([[-1, 0, 1],
                                     [-2, 0, 2],
                                     [-1, 0, 1]])
-            edge = abs(self.convolve(image, sobel_kernel_x))
-            
-        elif direction == 'y':
-            sobel_kernel_y = np.array([[-1, -2, -1],
-                                    [0, 0, 0],
-                                    [1, 2, 1]])
-            edge = abs(self.convolve(image, sobel_kernel_y))
-            
-        else:
-            sobel_kernel_x = np.array([[-1, 0, 1],
-                                    [-2, 0, 2],
-                                    [-1, 0, 1]])
-            sobel_kernel_y = np.array([[-1, -2, -1],
-                                    [0, 0, 0],
-                                    [1, 2, 1]])
-            edge_x = abs(self.convolve(image, sobel_kernel_x))
-            edge_y = abs(self.convolve(image, sobel_kernel_y))
-            edge = np.sqrt(edge_x ** 2 + edge_y ** 2)
-
-        return edge.astype(np.uint8)
+        return self.apply_edge(image, sobel_kernel, direction)
 
     def roberts_edge(self, image, direction='both'):
         """
@@ -283,26 +246,34 @@ class ImageProcessor:
         :param direction: Direction of edge detection ('x', 'y', or 'both').
         :return: Edge-detected image.
         """
-        if direction == 'x':
-            roberts_kernel_x = np.array([[1, 0],
-                                    [0, -1]])
-            edge = abs(self.convolve(image, roberts_kernel_x))
-            
-        elif direction == 'y':
-            roberts_kernel_y = np.array([[0, 1],
-                                    [-1, 0]])
-            edge = abs(self.convolve(image, roberts_kernel_y))
-            
+        roberts_kernel = np.array([[1, 0],
+                                    [0, -1]])            
+        return self.apply_edge(image, roberts_kernel, direction)
+    
+
+    def apply_edge(self, image, array, direction):
+        if direction == 'Horizontal':
+            edge = abs(self.convolve(image, array))
+        elif direction == 'Vertical':
+            edge = abs(self.convolve(image, array.T))
         else:
-            roberts_kernel_x = np.array([[1, 0],
-                                        [0, -1]])
-            roberts_kernel_y = np.array([[0, 1],
-                                        [-1, 0]])
-            edge_x = abs(self.convolve(image, roberts_kernel_x))
-            edge_y = abs(self.convolve(image, roberts_kernel_y))
+            edge_x = abs(self.convolve(image, array))
+            edge_y = abs(self.convolve(image, array.T))
             edge = np.sqrt(edge_x ** 2 + edge_y ** 2)
-            
         return edge.astype(np.uint8)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

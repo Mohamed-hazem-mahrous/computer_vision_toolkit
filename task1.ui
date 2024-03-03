@@ -202,7 +202,7 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
                       <number>0</number>
                      </property>
                      <item>
-                      <widget class="QComboBox" name="operation_combobox">
+                      <widget class="QComboBox" name="noise_type_cb">
                        <property name="minimumSize">
                         <size>
                          <width>0</width>
@@ -253,9 +253,12 @@ QComboBox QAbstractItemView {
     background: white;
 }</string>
                        </property>
+                       <property name="currentText">
+                        <string>Salt and Pepper</string>
+                       </property>
                        <item>
                         <property name="text">
-                         <string>Salt and Papper</string>
+                         <string>Salt and Pepper</string>
                         </property>
                        </item>
                        <item>
@@ -336,7 +339,7 @@ QComboBox QAbstractItemView {
                       <number>0</number>
                      </property>
                      <item>
-                      <widget class="QComboBox" name="type_combobox">
+                      <widget class="QComboBox" name="filter_type_cb">
                        <property name="minimumSize">
                         <size>
                          <width>0</width>
@@ -429,7 +432,7 @@ QComboBox QAbstractItemView {
                      </property>
                      <layout class="QGridLayout" name="gridLayout_9">
                       <item row="0" column="0">
-                       <widget class="QLabel" name="label_6">
+                       <widget class="QLabel" name="SNR_label">
                         <property name="maximumSize">
                          <size>
                           <width>16777215</width>
@@ -470,7 +473,7 @@ QComboBox QAbstractItemView {
                       <number>0</number>
                      </property>
                      <item>
-                      <widget class="QSlider" name="horizontalSlider">
+                      <widget class="QSlider" name="NSR_Slider">
                        <property name="styleSheet">
                         <string notr="true">QSlider::groove {
     border: 1px solid #bbbbbb;
@@ -514,6 +517,12 @@ QSlider::sub-page:horizontal {
 }
 </string>
                        </property>
+                       <property name="minimum">
+                        <number>1</number>
+                       </property>
+                       <property name="maximum">
+                        <number>100</number>
+                       </property>
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -544,7 +553,7 @@ QSlider::sub-page:horizontal {
                      </property>
                      <layout class="QGridLayout" name="gridLayout_12">
                       <item row="0" column="0">
-                       <widget class="QLabel" name="label_7">
+                       <widget class="QLabel" name="kernel_label">
                         <property name="maximumSize">
                          <size>
                           <width>16777215</width>
@@ -585,7 +594,7 @@ QSlider::sub-page:horizontal {
                       <number>0</number>
                      </property>
                      <item>
-                      <widget class="QSlider" name="horizontalSlider_2">
+                      <widget class="QSlider" name="Kernel_slider">
                        <property name="styleSheet">
                         <string notr="true">QSlider::groove {
     border: 1px solid #bbbbbb;
@@ -628,6 +637,12 @@ QSlider::sub-page:horizontal {
     background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
 }
 </string>
+                       </property>
+                       <property name="minimum">
+                        <number>3</number>
+                       </property>
+                       <property name="maximum">
+                        <number>20</number>
                        </property>
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
@@ -724,7 +739,7 @@ QGroupBox::indicator {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_17">
                     <item>
-                     <widget class="QWidget" name="origional_img_1" native="true"/>
+                     <widget class="PlotWidget" name="original_img_1" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -771,7 +786,7 @@ QGroupBox::indicator {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_18">
                     <item>
-                     <widget class="QWidget" name="manipulated_img_1" native="true"/>
+                     <widget class="PlotWidget" name="manipulated_img_1" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -1214,7 +1229,7 @@ QGroupBox::indicator {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_21">
                     <item>
-                     <widget class="QWidget" name="origional_img_2" native="true"/>
+                     <widget class="PlotWidget" name="original_img_2" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -1261,7 +1276,7 @@ QGroupBox::indicator {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_22">
                     <item>
-                     <widget class="QWidget" name="manipulated_img_2" native="true"/>
+                     <widget class="PlotWidget" name="manipulated_img_2" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -3890,12 +3905,20 @@ QGroupBox::title {
      <x>0</x>
      <y>0</y>
      <width>1196</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QWidget</extends>
+   <header>pyqtgraph</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

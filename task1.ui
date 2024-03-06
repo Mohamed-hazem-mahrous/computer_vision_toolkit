@@ -21,7 +21,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;gg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -2489,7 +2489,7 @@ QGroupBox::indicator {
                    </property>
                    <layout class="QGridLayout" name="gridLayout_41">
                     <item row="0" column="0">
-                     <widget class="QWidget" name="histograme_plot" native="true"/>
+                     <widget class="PlotWidget" name="histograme_plot" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -2578,7 +2578,7 @@ QGroupBox::indicator {
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_27">
                       <item>
-                       <widget class="QWidget" name="distribution_curve_plot" native="true"/>
+                       <widget class="PlotWidget" name="distribution_curve_plot" native="true"/>
                       </item>
                      </layout>
                     </widget>
@@ -2731,13 +2731,26 @@ QGroupBox::indicator {
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_26">
                <item>
-                <widget class="QGraphicsView" name="R_curve"/>
+                <widget class="PlotWidget" name="R_Curve" native="true">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>
             </item>
             <item row="0" column="1">
              <widget class="QGroupBox" name="groupBox_37">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>16777215</width>
@@ -2774,7 +2787,7 @@ QGroupBox::indicator {
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_32">
                <item>
-                <widget class="QGraphicsView" name="G_curve"/>
+                <widget class="PlotWidget" name="G_Curve" native="true"/>
                </item>
               </layout>
              </widget>
@@ -2817,7 +2830,14 @@ QGroupBox::indicator {
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_31">
                <item>
-                <widget class="QGraphicsView" name="B_curve"/>
+                <widget class="PlotWidget" name="B_Curve" native="true">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -3905,7 +3925,7 @@ QGroupBox::title {
      <x>0</x>
      <y>0</y>
      <width>1196</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

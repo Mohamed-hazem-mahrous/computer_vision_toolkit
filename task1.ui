@@ -1376,23 +1376,7 @@ QGroupBox::indicator {
                  </property>
                  <layout class="QGridLayout" name="gridLayout_27">
                   <item row="0" column="0">
-                   <widget class="QLabel" name="original_image_label_page3">
-                    <property name="minimumSize">
-                     <size>
-                      <width>380</width>
-                      <height>200</height>
-                     </size>
-                    </property>
-                    <property name="frameShape">
-                     <enum>QFrame::WinPanel</enum>
-                    </property>
-                    <property name="frameShadow">
-                     <enum>QFrame::Sunken</enum>
-                    </property>
-                    <property name="text">
-                     <string/>
-                    </property>
-                   </widget>
+                   <widget class="PlotWidget" name="original_image_3" native="true"/>
                   </item>
                  </layout>
                 </widget>
@@ -1470,23 +1454,7 @@ QGroupBox::title {
                  </property>
                  <layout class="QGridLayout" name="gridLayout_22">
                   <item row="0" column="0">
-                   <widget class="QLabel" name="normalized_image_label_page3">
-                    <property name="minimumSize">
-                     <size>
-                      <width>380</width>
-                      <height>200</height>
-                     </size>
-                    </property>
-                    <property name="frameShape">
-                     <enum>QFrame::WinPanel</enum>
-                    </property>
-                    <property name="frameShadow">
-                     <enum>QFrame::Sunken</enum>
-                    </property>
-                    <property name="text">
-                     <string/>
-                    </property>
-                   </widget>
+                   <widget class="PlotWidget" name="normalized_image" native="true"/>
                   </item>
                  </layout>
                 </widget>
@@ -1575,23 +1543,7 @@ QGroupBox::indicator {
                    </property>
                    <layout class="QGridLayout" name="gridLayout_30">
                     <item row="0" column="0">
-                     <widget class="QLabel" name="local_image_label_page3">
-                      <property name="minimumSize">
-                       <size>
-                        <width>390</width>
-                        <height>200</height>
-                       </size>
-                      </property>
-                      <property name="frameShape">
-                       <enum>QFrame::WinPanel</enum>
-                      </property>
-                      <property name="frameShadow">
-                       <enum>QFrame::Sunken</enum>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                     </widget>
+                     <widget class="PlotWidget" name="local_thresholding_image" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -1879,23 +1831,7 @@ QGroupBox::indicator {
                    </property>
                    <layout class="QGridLayout" name="gridLayout_24">
                     <item row="0" column="0">
-                     <widget class="QLabel" name="global_image_label_page3">
-                      <property name="minimumSize">
-                       <size>
-                        <width>390</width>
-                        <height>200</height>
-                       </size>
-                      </property>
-                      <property name="frameShape">
-                       <enum>QFrame::Panel</enum>
-                      </property>
-                      <property name="frameShadow">
-                       <enum>QFrame::Sunken</enum>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                     </widget>
+                     <widget class="PlotWidget" name="global_thresholding_image" native="true"/>
                     </item>
                    </layout>
                   </widget>

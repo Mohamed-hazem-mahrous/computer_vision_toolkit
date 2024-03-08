@@ -1,11 +1,10 @@
 
 import numpy as np
 from PyQt5.QtWidgets import QFileDialog
-from PyQt5 import QtWidgets, QtCore, uic
+from PyQt5 import QtWidgets, uic
 import sys
 import pyqtgraph as pg
 from image_processing import ImageProcessor
-from PyQt5.QtGui import QPixmap,QImage
 import numpy as np
 from PIL import Image as PILImage
 
@@ -21,28 +20,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.local_thresholding_slider.setMaximum(255)
         self.local_block_size_slider.setMinimum(1)
 
-        self.original_image_view_widget, self.filter_manipulated_image_view_widget = pg.ImageItem(), pg.ImageItem()
-        self.original_image_1.addItem(self.original_image_view_widget)
-        self.manipulated_image_1.addItem(self.filter_manipulated_image_view_widget)
-
-        self.original_image_view_widget_edge, self.edge_manipulated_image_view_widget = pg.ImageItem(), pg.ImageItem()
-        self.original_image_2.addItem(self.original_image_view_widget_edge)
-        self.manipulated_image_2.addItem(self.edge_manipulated_image_view_widget)
-        
-        self.hybrid_image_1, self.hybrid_image_2 = pg.ImageItem(), pg.ImageItem()
-        self.original_hybrid_image_1.addItem(self.hybrid_image_1)
-        self.original_hybrid_image_2.addItem(self.hybrid_image_2)
-
-        self.hybrid_image_1_filtered, self.hybrid_image_2_filtered = pg.ImageItem(), pg.ImageItem()
-        self.hybrid_result_image = pg.ImageItem()
-        self.filtered_hybrid_image_1.addItem(self.hybrid_image_1_filtered)
-        self.filtered_hybrid_image_2.addItem(self.hybrid_image_2_filtered)
-        self.filtered_hybrid_image_3.addItem(self.hybrid_result_image)
-
+        self.link_view_widgets()
         
         self.view_widgets = [self.manipulated_image_2, self.manipulated_image_1, self.original_image_2, self.original_image_1,
                              self.original_hybrid_image_1, self.original_hybrid_image_2, self.filtered_hybrid_image_1,
-                             self.filtered_hybrid_image_2, self.filtered_hybrid_image_3]
+                             self.filtered_hybrid_image_2, self.filtered_hybrid_image_3, self.original_image_3, self.normalized_image,
+                             self.local_thresholding_image, self.global_thresholding_image]
         self.plot_widgets = [self.histograme_plot, self.distribution_curve_plot, self.R_Curve, self.G_Curve, self.B_Curve]
     
         for container in self.view_widgets:
@@ -97,16 +80,6 @@ class MainWindow(QtWidgets.QMainWindow):
         
         self.label_texts = { "Uniform": "SNR", "Gaussian": "Sigma", "Salt and Pepper": "S & P amount" }
 
-
-        
-    
-    def set_view_widget_settings(self, container):
-        container.setBackground('#dddddd')
-        container.setAspectLocked(True)
-        # container.setMouseEnabled(x=False, y=False)
-        # container.setMenuEnabled(False)
-        container.hideAxis('left')
-        container.hideAxis('bottom')
 
 
     def browse_image(self):
@@ -185,39 +158,29 @@ class MainWindow(QtWidgets.QMainWindow):
     def local_threshold_sliders_value_changed(self):
         block_size=self.local_block_size_slider.value()
         local_thresholding_val=self.local_thresholding_slider.value()
-        self.display_image_in_label(self.local_image_label_page3,self.loaded_images[0].local_thresholding( block_size, local_thresholding_val) )
+        self.local_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].local_thresholding( block_size, local_thresholding_val), k=-1))
 
 
 
     def global_threshold_slider_value_changed(self):
         global_thresholding_val=self.global_thresholding_slider.value()
-        self.display_image_in_label(self.global_image_label_page3,self.loaded_images[0].global_thresholding(global_thresholding_val) )
-
-
-
-    def display_image_in_label(self, label, image):
-        channel = 1
-        height, width = image.shape
-        bytes_per_line = channel * width
-        
-        q_image = QImage(image.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
-        
-        pixmap = QPixmap.fromImage(q_image)
-        pixmap = pixmap.scaled(label.size(), QtCore.Qt.KeepAspectRatio)
-        
-        label.setPixmap(pixmap)
+        self.global_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].global_thresholding(global_thresholding_val), k=-1))
 
 
 
     def display_images_page3(self):
-        self.display_image_in_label(self.original_image_label_page3,self.loaded_images[0].image)
-        self.display_image_in_label(self.normalized_image_label_page3,self.loaded_images[0].image_normalization())
+        self.original_image_view_widget_thresh.setImage(np.rot90(self.loaded_images[0].image, k=-1))
+        self.normalized_image_view_widget.setImage(np.rot90(self.loaded_images[0].image_normalization(), k=-1))
+        
         global_thresholding_val=self.global_thresholding_slider.value()
-        self.display_image_in_label(self.global_image_label_page3,self.loaded_images[0].global_thresholding(global_thresholding_val))
+        
+        self.global_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].global_thresholding(global_thresholding_val), k=-1))
+        
         block_size=self.local_block_size_slider.value()
         local_thresholding_val=self.local_thresholding_slider.value()
-        self.display_image_in_label(self.local_image_label_page3,self.loaded_images[0].local_thresholding( block_size, local_thresholding_val))
-
+        
+        self.local_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].local_thresholding( block_size, local_thresholding_val), k=-1))
+        
 
 
     def display_hist_dist(self):
@@ -324,6 +287,42 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 
+    def set_view_widget_settings(self, container):
+        container.setBackground('#dddddd')
+        container.setAspectLocked(True)
+        # container.setMouseEnabled(x=False, y=False)
+        # container.setMenuEnabled(False)
+        container.hideAxis('left')
+        container.hideAxis('bottom')
+
+
+
+    def link_view_widgets(self):
+        self.original_image_view_widget, self.filter_manipulated_image_view_widget = pg.ImageItem(), pg.ImageItem()
+        self.original_image_1.addItem(self.original_image_view_widget)
+        self.manipulated_image_1.addItem(self.filter_manipulated_image_view_widget)
+
+        self.original_image_view_widget_edge, self.edge_manipulated_image_view_widget = pg.ImageItem(), pg.ImageItem()
+        self.original_image_2.addItem(self.original_image_view_widget_edge)
+        self.manipulated_image_2.addItem(self.edge_manipulated_image_view_widget)
+
+        self.original_image_view_widget_thresh, self.normalized_image_view_widget = pg.ImageItem(), pg.ImageItem()
+        self.original_image_3.addItem(self.original_image_view_widget_thresh)
+        self.normalized_image.addItem(self.normalized_image_view_widget)
+
+        self.local_threshold_image_view_widget, self.global_threshold_image_view_widget = pg.ImageItem(), pg.ImageItem()
+        self.local_thresholding_image.addItem(self.local_threshold_image_view_widget)
+        self.global_thresholding_image.addItem(self.global_threshold_image_view_widget)
+        
+        self.hybrid_image_1, self.hybrid_image_2 = pg.ImageItem(), pg.ImageItem()
+        self.original_hybrid_image_1.addItem(self.hybrid_image_1)
+        self.original_hybrid_image_2.addItem(self.hybrid_image_2)
+
+        self.hybrid_image_1_filtered, self.hybrid_image_2_filtered = pg.ImageItem(), pg.ImageItem()
+        self.hybrid_result_image = pg.ImageItem()
+        self.filtered_hybrid_image_1.addItem(self.hybrid_image_1_filtered)
+        self.filtered_hybrid_image_2.addItem(self.hybrid_image_2_filtered)
+        self.filtered_hybrid_image_3.addItem(self.hybrid_result_image)
 
         
 def main():

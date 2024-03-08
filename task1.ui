@@ -21,7 +21,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;gg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -518,7 +518,7 @@ QSlider::sub-page:horizontal {
 </string>
                        </property>
                        <property name="minimum">
-                        <number>1</number>
+                        <number>0</number>
                        </property>
                        <property name="maximum">
                         <number>100</number>
@@ -739,7 +739,7 @@ QGroupBox::indicator {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_17">
                     <item>
-                     <widget class="PlotWidget" name="original_img_1" native="true"/>
+                     <widget class="PlotWidget" name="original_image_1" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -786,7 +786,7 @@ QGroupBox::indicator {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_18">
                     <item>
-                     <widget class="PlotWidget" name="manipulated_img_1" native="true"/>
+                     <widget class="PlotWidget" name="manipulated_image_1" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -1229,7 +1229,7 @@ QGroupBox::indicator {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_21">
                     <item>
-                     <widget class="PlotWidget" name="original_img_2" native="true"/>
+                     <widget class="PlotWidget" name="original_image_2" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -1276,7 +1276,7 @@ QGroupBox::indicator {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_22">
                     <item>
-                     <widget class="PlotWidget" name="manipulated_img_2" native="true"/>
+                     <widget class="PlotWidget" name="manipulated_image_2" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -3011,32 +3011,7 @@ QGroupBox::title {
                        </property>
                        <layout class="QGridLayout" name="gridLayout_65">
                         <item row="0" column="0">
-                         <widget class="QLabel" name="original_image_1">
-                          <property name="minimumSize">
-                           <size>
-                            <width>300</width>
-                            <height>0</height>
-                           </size>
-                          </property>
-                          <property name="maximumSize">
-                           <size>
-                            <width>450</width>
-                            <height>16777215</height>
-                           </size>
-                          </property>
-                          <property name="frameShape">
-                           <enum>QFrame::WinPanel</enum>
-                          </property>
-                          <property name="frameShadow">
-                           <enum>QFrame::Sunken</enum>
-                          </property>
-                          <property name="text">
-                           <string/>
-                          </property>
-                          <property name="scaledContents">
-                           <bool>true</bool>
-                          </property>
-                         </widget>
+                         <widget class="PlotWidget" name="original_hybrid_image_1" native="true"/>
                         </item>
                        </layout>
                       </widget>
@@ -3201,32 +3176,7 @@ QGroupBox::title {
                        </property>
                        <layout class="QGridLayout" name="gridLayout_58">
                         <item row="0" column="0">
-                         <widget class="QLabel" name="original_image_2">
-                          <property name="minimumSize">
-                           <size>
-                            <width>300</width>
-                            <height>0</height>
-                           </size>
-                          </property>
-                          <property name="maximumSize">
-                           <size>
-                            <width>450</width>
-                            <height>16777215</height>
-                           </size>
-                          </property>
-                          <property name="frameShape">
-                           <enum>QFrame::WinPanel</enum>
-                          </property>
-                          <property name="frameShadow">
-                           <enum>QFrame::Sunken</enum>
-                          </property>
-                          <property name="text">
-                           <string/>
-                          </property>
-                          <property name="scaledContents">
-                           <bool>true</bool>
-                          </property>
-                         </widget>
+                         <widget class="PlotWidget" name="original_hybrid_image_2" native="true"/>
                         </item>
                        </layout>
                       </widget>
@@ -3309,25 +3259,6 @@ QGroupBox::indicator {
                       <enum>QFrame::Raised</enum>
                      </property>
                      <layout class="QGridLayout" name="gridLayout_67">
-                      <item row="0" column="0">
-                       <widget class="QLabel" name="label_21">
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>30</height>
-                         </size>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Calibri</family>
-                          <pointsize>10</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Filtered Image One</string>
-                        </property>
-                       </widget>
-                      </item>
                       <item row="0" column="1">
                        <layout class="QHBoxLayout" name="horizontalLayout_32">
                         <property name="leftMargin">
@@ -3408,6 +3339,25 @@ QComboBox QAbstractItemView {
                         </item>
                        </layout>
                       </item>
+                      <item row="0" column="0">
+                       <widget class="QLabel" name="label_21">
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>30</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>Calibri</family>
+                          <pointsize>10</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Filtered Image One</string>
+                        </property>
+                       </widget>
+                      </item>
                      </layout>
                     </widget>
                    </item>
@@ -3432,31 +3382,56 @@ QGroupBox::title {
                         <string/>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_68">
-                        <item row="0" column="0">
-                         <widget class="QLabel" name="filtered_image_1">
-                          <property name="minimumSize">
-                           <size>
-                            <width>300</width>
-                            <height>0</height>
-                           </size>
+                        <item row="1" column="1">
+                         <widget class="PlotWidget" name="filtered_hybrid_image_1" native="true"/>
+                        </item>
+                        <item row="0" column="1">
+                         <widget class="QSlider" name="hybrid_filter_slider_1">
+                          <property name="styleSheet">
+                           <string notr="true">QSlider::groove {
+    border: 1px solid #bbbbbb;
+    background-color: #52595d;
+    border-radius: 4px;
+}
+QSlider::groove:horizontal {
+    height: 6px;
+}
+QSlider::groove:vertical {
+    width: 6px;
+}
+QSlider::handle:horizontal {
+    background: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(207,207,207);
+    width: 12px;
+    margin: -5px 0;
+    border-radius: 7px;
+}
+QSlider::handle:vertical {
+    background: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(207,207,207);
+    height: 12px;
+    margin: 0 -5px;
+    border-radius: 7px;
+}
+QSlider::add-page, QSlider::sub-page {
+    border: 1px transparent;
+    background-color: #52595d;
+    border-radius: 4px;
+}
+QSlider::add-page:horizontal {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #ddd5d5, stop:0.5 #dad3d3, stop:1 #ddd5d5);
+}
+QSlider::sub-page:horizontal {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
+}
+</string>
                           </property>
-                          <property name="maximumSize">
-                           <size>
-                            <width>450</width>
-                            <height>16777215</height>
-                           </size>
-                          </property>
-                          <property name="frameShape">
-                           <enum>QFrame::WinPanel</enum>
-                          </property>
-                          <property name="frameShadow">
-                           <enum>QFrame::Sunken</enum>
-                          </property>
-                          <property name="text">
-                           <string/>
-                          </property>
-                          <property name="scaledContents">
-                           <bool>true</bool>
+                          <property name="orientation">
+                           <enum>Qt::Horizontal</enum>
                           </property>
                          </widget>
                         </item>
@@ -3642,33 +3617,8 @@ QGroupBox::title {
                           <string/>
                          </property>
                          <layout class="QGridLayout" name="gridLayout_74">
-                          <item row="0" column="0">
-                           <widget class="QLabel" name="hybrid_image">
-                            <property name="minimumSize">
-                             <size>
-                              <width>250</width>
-                              <height>230</height>
-                             </size>
-                            </property>
-                            <property name="maximumSize">
-                             <size>
-                              <width>450</width>
-                              <height>16777215</height>
-                             </size>
-                            </property>
-                            <property name="frameShape">
-                             <enum>QFrame::WinPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Sunken</enum>
-                            </property>
-                            <property name="text">
-                             <string/>
-                            </property>
-                            <property name="scaledContents">
-                             <bool>true</bool>
-                            </property>
-                           </widget>
+                          <item row="0" column="1">
+                           <widget class="PlotWidget" name="filtered_hybrid_image_3" native="true"/>
                           </item>
                          </layout>
                         </widget>
@@ -3869,31 +3819,56 @@ QGroupBox::title {
                         <string/>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_70">
+                        <item row="1" column="0">
+                         <widget class="PlotWidget" name="filtered_hybrid_image_2" native="true"/>
+                        </item>
                         <item row="0" column="0">
-                         <widget class="QLabel" name="filtered_image_2">
-                          <property name="minimumSize">
-                           <size>
-                            <width>300</width>
-                            <height>0</height>
-                           </size>
+                         <widget class="QSlider" name="hybrid_filter_slider_2">
+                          <property name="styleSheet">
+                           <string notr="true">QSlider::groove {
+    border: 1px solid #bbbbbb;
+    background-color: #52595d;
+    border-radius: 4px;
+}
+QSlider::groove:horizontal {
+    height: 6px;
+}
+QSlider::groove:vertical {
+    width: 6px;
+}
+QSlider::handle:horizontal {
+    background: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(207,207,207);
+    width: 12px;
+    margin: -5px 0;
+    border-radius: 7px;
+}
+QSlider::handle:vertical {
+    background: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(207,207,207);
+    height: 12px;
+    margin: 0 -5px;
+    border-radius: 7px;
+}
+QSlider::add-page, QSlider::sub-page {
+    border: 1px transparent;
+    background-color: #52595d;
+    border-radius: 4px;
+}
+QSlider::add-page:horizontal {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #ddd5d5, stop:0.5 #dad3d3, stop:1 #ddd5d5);
+}
+QSlider::sub-page:horizontal {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
+}
+</string>
                           </property>
-                          <property name="maximumSize">
-                           <size>
-                            <width>450</width>
-                            <height>16777215</height>
-                           </size>
-                          </property>
-                          <property name="frameShape">
-                           <enum>QFrame::WinPanel</enum>
-                          </property>
-                          <property name="frameShadow">
-                           <enum>QFrame::Sunken</enum>
-                          </property>
-                          <property name="text">
-                           <string/>
-                          </property>
-                          <property name="scaledContents">
-                           <bool>true</bool>
+                          <property name="orientation">
+                           <enum>Qt::Horizontal</enum>
                           </property>
                          </widget>
                         </item>
@@ -3935,7 +3910,7 @@ QGroupBox::title {
   <customwidget>
    <class>PlotWidget</class>
    <extends>QWidget</extends>
-   <header>pyqtgraph</header>
+   <header location="global">pyqtgraph</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

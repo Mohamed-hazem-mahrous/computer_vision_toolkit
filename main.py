@@ -1,246 +1,254 @@
 
 import numpy as np
-import pandas as pd
-from PyQt5.QtWidgets import QSlider, QHBoxLayout, QLabel, QFileDialog, QVBoxLayout, QSizePolicy
+from PyQt5.QtWidgets import QFileDialog
 from PyQt5 import QtWidgets, QtCore, uic
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
-from PyQt5.QtCore import QUrl, QTimer
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
-import os
 import sys
-import bisect
 import pyqtgraph as pg
 from image_processing import ImageProcessor
 from PyQt5.QtGui import QPixmap,QImage
-import cv2
 import numpy as np
 from PIL import Image as PILImage
 
 
-
 class MainWindow(QtWidgets.QMainWindow):    
     def __init__(self, *args, **kwargs):
-        self.image=None 
         super(MainWindow, self).__init__(*args, **kwargs)
-        # Load the UI Page
         uic.loadUi(r'task1.ui', self)
-        # type your code here 
+        
         self.global_thresholding_slider.setMinimum(0)
         self.global_thresholding_slider.setMaximum(255)
         self.local_thresholding_slider.setMinimum(0)
         self.local_thresholding_slider.setMaximum(255)
         self.local_block_size_slider.setMinimum(1)
-        self.browse_btn.clicked.connect(self.browseImage)
+
+        self.original_image_view_widget, self.filter_manipulated_image_view_widget = pg.ImageItem(), pg.ImageItem()
+        self.original_image_1.addItem(self.original_image_view_widget)
+        self.manipulated_image_1.addItem(self.filter_manipulated_image_view_widget)
+
+        self.original_image_view_widget_edge, self.edge_manipulated_image_view_widget = pg.ImageItem(), pg.ImageItem()
+        self.original_image_2.addItem(self.original_image_view_widget_edge)
+        self.manipulated_image_2.addItem(self.edge_manipulated_image_view_widget)
+        
+        self.hybrid_image_1, self.hybrid_image_2 = pg.ImageItem(), pg.ImageItem()
+        self.original_hybrid_image_1.addItem(self.hybrid_image_1)
+        self.original_hybrid_image_2.addItem(self.hybrid_image_2)
+
+        self.hybrid_image_1_filtered, self.hybrid_image_2_filtered = pg.ImageItem(), pg.ImageItem()
+        self.hybrid_result_image = pg.ImageItem()
+        self.filtered_hybrid_image_1.addItem(self.hybrid_image_1_filtered)
+        self.filtered_hybrid_image_2.addItem(self.hybrid_image_2_filtered)
+        self.filtered_hybrid_image_3.addItem(self.hybrid_result_image)
+
+        
+        self.view_widgets = [self.manipulated_image_2, self.manipulated_image_1, self.original_image_2, self.original_image_1,
+                             self.original_hybrid_image_1, self.original_hybrid_image_2, self.filtered_hybrid_image_1,
+                             self.filtered_hybrid_image_2, self.filtered_hybrid_image_3]
+        self.plot_widgets = [self.histograme_plot, self.distribution_curve_plot, self.R_Curve, self.G_Curve, self.B_Curve]
+    
+        for container in self.view_widgets:
+            self.set_view_widget_settings(container)
+    
+        for container in self.plot_widgets:
+            container.setBackground('w')
+            container.setLimits(yMin = 0)
+
+
+        for button in [self.browse_btn, self.upload_btn_1, self.upload_btn_2]:
+            button.clicked.connect(self.browse_image)
+        self.done_btn.clicked.connect(self.apply_edge_detection)
+        self.create_hybrid_btn.clicked.connect(self.hybrid_images)
+        
+
         self.global_thresholding_slider.sliderReleased.connect(self.global_threshold_slider_value_changed)
         self.local_thresholding_slider.sliderReleased.connect(self.local_threshold_sliders_value_changed)
         self.local_block_size_slider.sliderReleased.connect(self.local_threshold_sliders_value_changed)
-
-
-        self.image_original_view = self.original_img_1
-        self.image_original_view.setAspectLocked(True)
-        self.image_original_view.setMouseEnabled(x=False, y=False)
-        self.image_original_view.setMenuEnabled(False)
-        self.image_original_view.hideAxis('left')
-        self.image_original_view.hideAxis('bottom')
-    
-        self.image_original_view_edge = self.original_img_2
-        self.image_original_view_edge.setAspectLocked(True)
-        self.image_original_view_edge.setMouseEnabled(x=False, y=False)
-        self.image_original_view_edge.setMenuEnabled(False)
-        self.image_original_view_edge.hideAxis('left')
-        self.image_original_view_edge.hideAxis('bottom')
-                
-        self.image_manipulated_view = self.manipulated_img_1
-        self.image_manipulated_view.setAspectLocked(True)
-        self.image_manipulated_view.setMouseEnabled(x=False, y=False)
-        self.image_manipulated_view.setMenuEnabled(False)
-        self.image_manipulated_view.hideAxis('left')
-        self.image_manipulated_view.hideAxis('bottom')
-
-        self.image_manipulated_view_edge = self.manipulated_img_2
-        self.image_manipulated_view_edge.setAspectLocked(True)
-        self.image_manipulated_view_edge.setMouseEnabled(x=False, y=False)
-        self.image_manipulated_view_edge.setMenuEnabled(False)
-        self.image_manipulated_view_edge.hideAxis('left')
-        self.image_manipulated_view_edge.hideAxis('bottom')
-
-        self.img_item_original = pg.ImageItem()
-        self.img_item_manipulated = pg.ImageItem()
-        self.image_original_view.addItem(self.img_item_original)
-        self.image_manipulated_view.addItem(self.img_item_manipulated)
-
-        self.img_item_original_edge = pg.ImageItem()
-        self.img_item_manipulated_edge = pg.ImageItem()
-        self.image_original_view_edge.addItem(self.img_item_original_edge)
-        self.image_manipulated_view_edge.addItem(self.img_item_manipulated_edge)
-
-
-        self.IMAGE = None
-        self.img_path = None
-        self.SNR = 0.01
-        self.Kernel = 3
-        self.last_operation = "Noise"
+        self.NSR_Slider.sliderReleased.connect(self.SNR_slider_value_changed)
+        self.Kernel_slider.sliderReleased.connect(self.kernel_slider_value_changed)
+        self.hybrid_filter_slider_1.sliderReleased.connect(lambda: self.filter_radius_slider_value_changed(1))
+        self.hybrid_filter_slider_2.sliderReleased.connect(lambda: self.filter_radius_slider_value_changed(2))
 
 
         self.noise_type_cb.currentIndexChanged.connect(self.apply_noise)
-
-        self.NSR_Slider.sliderReleased.connect(self.change_SNR)
-
-        self.Kernel_slider.sliderReleased.connect(self.change_Kernel)
         self.filter_type_cb.currentIndexChanged.connect(self.apply_filter)
-    
-        self.done_btn.clicked.connect(self.apply_edge_detection)
+        self.edge_filter_combobox.currentIndexChanged.connect(self.apply_edge_detection)
+        self.State_combobox.currentIndexChanged.connect(self.apply_edge_detection)
+        self.plotting_typr_combobox.currentIndexChanged.connect(self.display_hist_dist)
+        self.filter_type_combobox_1.currentIndexChanged.connect(lambda: self.display_images_page6(1))
+        self.filter_type_combobox_2.currentIndexChanged.connect(lambda: self.display_images_page6(2))
 
         
+        self.loaded_images = []
+        
+        self.SNR = 0.01
+        self.Kernel = 3
+        self.radius_lp_1, self.radius_hp_1 = 5, 10
+        self.radius_lp_2, self.radius_hp_2 = 5, 10
 
-
-
-
-    def change_Kernel(self):
-        self.Kernel = self.Kernel_slider.value()
-        self.kernel_label.setText("Kernel Size: " + str(self.Kernel))
-        self.apply_filter()
-    
-    def change_SNR(self):
-        self.SNR = self.NSR_Slider.value() / 100
-        self.SNR_label.setText(" Noise Ratio: " + str(self.SNR))
-        self.apply_noise()
-
-    def apply_edge_detection(self):
-        edge_method_mapping = {
+        self.edge_method_mapping = {
             "Sobel": "sobel_edge",
             "Prewitt": "prewitt_edge",
             "Roberts": "roberts_edge"
         }
-
-        edge_filter = self.edge_filter_combobox.currentText()
-        method_name = edge_method_mapping.get(edge_filter, "laplacian_edge")
-        out = getattr(ImageProcessor(self.img_path), method_name)(
-            image=self.IMAGE,
-            direction=self.State_combobox.currentText()
-        )
-        self.img_item_manipulated_edge.setImage(out)
-    
-    def apply_filter(self):
-        self.last_operation = "Filter"
-        filter_method_mapping = {
+        self.filter_method_mapping = {
             "Average": "apply_average_filter",
             "Median": "apply_median_filter",
             "Gaussian": "apply_gaussian_filter"
         }
+        
+        self.label_texts = { "Uniform": "SNR", "Gaussian": "Sigma", "Salt and Pepper": "S & P amount" }
 
-        filter_type = self.filter_type_cb.currentText()
-        method_name = filter_method_mapping.get(filter_type)
+
+        
+    
+    def set_view_widget_settings(self, container):
+        container.setBackground('#dddddd')
+        container.setAspectLocked(True)
+        # container.setMouseEnabled(x=False, y=False)
+        # container.setMenuEnabled(False)
+        container.hideAxis('left')
+        container.hideAxis('bottom')
+
+
+    def browse_image(self):
+        path, _ = QFileDialog.getOpenFileName(self, "Open Image", "", "Image Files (*.png *.jpg *.jpeg *.bmp *.gif)")
+        self.loaded_images.append(ImageProcessor(path))
+        if len(self.loaded_images) == 1:
+            self.display_images_page1()
+            self.display_images_page3()
+            self.display_images_page6(1)
+            self.display_hist_dist()
+            self.apply_noise()
+            self.apply_edge_detection()
+        else:
+            del self.loaded_images[1:-1]
+            self.display_images_page6(2)
+
+
+
+    def kernel_slider_value_changed(self):
+        self.Kernel = self.Kernel_slider.value()
+        self.kernel_label.setText("Kernel Size: " + str(self.Kernel))
+        self.apply_filter() 
+
+
+
+    def SNR_slider_value_changed(self):
+        self.SNR = self.NSR_Slider.value() / 100
+        self.apply_noise()
+
+
+
+    def apply_edge_detection(self):
+        method_name = self.edge_method_mapping.get(self.edge_filter_combobox.currentText())
+        out = getattr(self.loaded_images[0], method_name)(
+            image=self.loaded_images[0].image,
+            direction=self.State_combobox.currentText()
+        )
+        self.edge_manipulated_image_view_widget.setImage(np.rot90(out, k=-1))
+    
+
+
+    def apply_filter(self):
+        method_name = self.filter_method_mapping.get(self.filter_type_cb.currentText())
         if method_name:
-            method = getattr(ImageProcessor(self.img_path), method_name)
-            out = method(image=self.IMAGE, kernel_size=self.Kernel)
-            self.img_item_manipulated.setImage(out)
+            method = getattr(self.loaded_images[0], method_name)
+            out = method(image=self.loaded_images[0].noisy_image, kernel_size=self.Kernel)
+            self.filter_manipulated_image_view_widget.setImage(np.rot90(out, k=-1))
+
 
 
     def apply_noise(self):
-        self.last_operation = "Noise"
-        noise_method_mapping = {
+        self.noise_method_mapping = {
             "Uniform": ("add_uniform_noise", {"SNR": self.SNR}),
             "Gaussian": ("add_gaussian_noise", {"sigma": self.SNR}),
             "Salt and Pepper": ("add_salt_and_pepper_noise", {"amount": self.SNR})
         }
+        snr_value_text = self.label_texts.get(self.noise_type_cb.currentText(), "")
+        self.SNR_label.setText(f"{snr_value_text}: {str(self.SNR)}" )
 
-        noise_type = self.noise_type_cb.currentText()
-        method_name, kwargs = noise_method_mapping.get(noise_type)
+        method_name, kwargs = self.noise_method_mapping.get(self.noise_type_cb.currentText())
         if method_name:
-            method = getattr(ImageProcessor(self.img_path), method_name)
-            out = method(image=self.IMAGE, **kwargs)
-            self.img_item_manipulated.setImage(out)
+            method = getattr(self.loaded_images[0], method_name)
+            out = method(image=self.loaded_images[0].image, **kwargs)
+            self.original_image_view_widget.setImage(np.rot90(out, k=-1))
 
-    
-    def display_images_page1(self, img_path):
-        self.IMAGE = cv2.rotate(self.convert_to_grayscale(cv2.imread(img_path)), cv2.ROTATE_90_CLOCKWISE)
-        self.img_item_original.setImage(self.IMAGE)
-        self.img_item_original_edge.setImage(self.IMAGE)
-
-        if self.last_operation == "Noise":
-            self.apply_noise()
-        else:
-            self.apply_filter()
-    
-
-    def convert_to_grayscale(self, image):
-        rgb_coefficients = [0.299, 0.587, 0.114]
-        grayscale_image = np.dot(image[..., :3], rgb_coefficients)
-
-        return grayscale_image.astype(np.uint8)
-
-    
+        self.apply_filter()
     
 
 
-
-
-
-    def browseImage(self):
-        # Open file dialog to select an image
-        self.img_path, _ = QFileDialog.getOpenFileName(self, "Open Image", "", "Image Files (*.png *.jpg *.jpeg *.bmp *.gif)")
-        self.image = ImageProcessor(self.img_path)
-        self.display_images_page3(self.image)
-        self.display_images_page1(self.img_path)
-        self.display_hist_dist(self.image)
-
-
-
-        
-
+    def display_images_page1(self):
+        for view_widget in [self.original_image_view_widget, self.original_image_view_widget_edge]:
+            view_widget.setImage(np.rot90(self.loaded_images[0].image, k = -1))
 
 
 
     def local_threshold_sliders_value_changed(self):
         block_size=self.local_block_size_slider.value()
         local_thresholding_val=self.local_thresholding_slider.value()
-        self.display_image_in_label(self.local_image_label_page3,self.image.local_thresholding( block_size, local_thresholding_val) ) #display local thresholding image
+        self.display_image_in_label(self.local_image_label_page3,self.loaded_images[0].local_thresholding( block_size, local_thresholding_val) )
+
+
 
     def global_threshold_slider_value_changed(self):
         global_thresholding_val=self.global_thresholding_slider.value()
-        self.display_image_in_label(self.global_image_label_page3,self.image.global_thresholding(global_thresholding_val) ) #display global thresholding image
+        self.display_image_in_label(self.global_image_label_page3,self.loaded_images[0].global_thresholding(global_thresholding_val) )
+
+
 
     def display_image_in_label(self, label, image):
-        height, width = image.shape 
-        channel = 1  # Set the channel to 1 for grayscale
+        channel = 1
+        height, width = image.shape
         bytes_per_line = channel * width
-        # Convert the image to QImage
-        q_image = QImage(image.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
-        # Create a QPixmap from the QImage
-        pixmap = QPixmap.fromImage(q_image)
-        # Resize the QPixmap to fit the QLabel while maintaining aspect ratio
-        pixmap = pixmap.scaled(label.size(), QtCore.Qt.KeepAspectRatio)
-        # Set the pixmap to the label
-        label.setPixmap(pixmap)
         
-    def display_images_page3(self,image):
-        self.display_image_in_label(self.original_image_label_page3,image.image ) #display original image
-        self.display_image_in_label(self.normalized_image_label_page3,image.image_normalization() ) #display normalized image
+        q_image = QImage(image.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
+        
+        pixmap = QPixmap.fromImage(q_image)
+        pixmap = pixmap.scaled(label.size(), QtCore.Qt.KeepAspectRatio)
+        
+        label.setPixmap(pixmap)
+
+
+
+    def display_images_page3(self):
+        self.display_image_in_label(self.original_image_label_page3,self.loaded_images[0].image)
+        self.display_image_in_label(self.normalized_image_label_page3,self.loaded_images[0].image_normalization())
         global_thresholding_val=self.global_thresholding_slider.value()
-        self.display_image_in_label(self.global_image_label_page3,image.global_thresholding(global_thresholding_val) ) #display global thresholding image
+        self.display_image_in_label(self.global_image_label_page3,self.loaded_images[0].global_thresholding(global_thresholding_val))
         block_size=self.local_block_size_slider.value()
         local_thresholding_val=self.local_thresholding_slider.value()
-        self.display_image_in_label(self.local_image_label_page3,image.local_thresholding( block_size, local_thresholding_val) ) #display local thresholding image
+        self.display_image_in_label(self.local_image_label_page3,self.loaded_images[0].local_thresholding( block_size, local_thresholding_val))
 
 
 
-    
-
-    def display_hist_dist(self, image):
-        hist = image.get_histogram(image.image, 256)
+    def display_hist_dist(self):
+        hist = self.loaded_images[0].get_histogram(self.loaded_images[0].image, 256)
         # cdf = image.get_cdf(hist, image.image.shape)
-        self.display_histogram(hist)
         # self.display_cdf(cdf)
+        self.display_histogram(hist)
+
+        # Page 5 Plots
+        if self.plotting_typr_combobox.currentText() == "Histogram":
+            histograms_cdf = [hist for hist in self.loaded_images[0].RGBhistograms]
+        else:
+            histograms_cdf = [hist for hist in self.loaded_images[0].RGBcdf]
+        
+        colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
+        for plot_widget, histogram, color in zip([self.R_Curve, self.G_Curve, self.B_Curve], histograms_cdf, colors):
+            plot_widget.clear()
+            plot_widget.plot(histogram, pen=color, fillLevel=-0.3, fillBrush=color + (50,))
+
+
 
     def display_histogram(self, hist):
         self.histograme_plot.clear()
         self.histograme_plot.plot(hist, pen='r')
 
-    def hybrid_images(self, image1, image2, alpha):
-        image1 = PILImage.fromarray(image1)
-        image2 = PILImage.fromarray(image2)
+
+
+    def hybrid_images(self):
+        alpha = 0.5
+        image1 = PILImage.fromarray(self.image_to_be_mixed_1)
+        image2 = PILImage.fromarray(self.image_to_be_mixed_2)
 
         if image1.size[0] * image1.size[1] > image2.size[0] * image2.size[1]:
             image1 = image1.resize((image2.size[0], image2.size[1]))
@@ -251,15 +259,72 @@ class MainWindow(QtWidgets.QMainWindow):
         image2 = np.array(image2)
 
         hybrid_image = (alpha * image1 + (1 - alpha) * image2).astype(np.uint8)
+        self.hybrid_result_image.setImage(np.rot90(hybrid_image, k=-1))
 
-        return hybrid_image
-    
-    # def plot_histogram(self, hist):
-    #     for i in range(len(hist)):
-    #         self.histPlot.plot(hist[i], pen=(i, 3))
-    
 
-    
+
+    def display_images_page6(self, target):
+        if self.loaded_images:
+            target_image = self.loaded_images[0] if target == 1 else self.loaded_images[-1]
+            filtered_lp, filtered_hp = self.get_frequency_domain_filters(target_image, getattr(self, f"radius_lp_{target}"), getattr(self, f"radius_hp_{target}"))
+ 
+            filters_map = {"Low-pass filter": filtered_lp, "High-pass filter": filtered_hp}
+
+            if target == 1:
+                self.image_to_be_mixed_1 = filters_map[self.filter_type_combobox_1.currentText()]
+                self.hybrid_image_1_filtered.setImage(np.rot90(self.image_to_be_mixed_1, k=-1))
+                self.hybrid_image_1.setImage(np.rot90(target_image.image, k=-1))
+            else:
+                self.image_to_be_mixed_2 = filters_map[self.filter_type_combobox_2.currentText()]
+                self.hybrid_image_2.setImage(np.rot90(target_image.image, k=-1))
+                self.hybrid_image_2_filtered.setImage(np.rot90(self.image_to_be_mixed_2, k=-1))
+
+
+
+    def filter_radius_slider_value_changed(self, target):
+        filter_combobox = self.filter_type_combobox_1 if target == 1 else self.filter_type_combobox_2
+        filter_type = filter_combobox.currentText()
+
+        radius_attributes = {
+            "Low-pass filter": f"radius_lp_{target}",
+            "High-pass filter": f"radius_hp_{target}"
+        }
+
+        radius_attribute = radius_attributes.get(filter_type)
+        setattr(self, radius_attribute, getattr(self, f"hybrid_filter_slider_{target}").value())
+
+        self.display_images_page6(target)
+
+
+
+    def get_frequency_domain_filters(self, target_image, radius_lp, radius_hp):
+        f_transform = np.fft.fft2(target_image.image)
+        f_shift = np.fft.fftshift(f_transform)
+
+        rows, cols = target_image.image.shape
+        crow, ccol = rows // 2, cols // 2
+        lp_mask = np.zeros((rows, cols), np.uint8)
+        lp_mask[crow - radius_lp:crow + radius_lp, ccol - radius_lp:ccol + radius_lp] = 1
+
+        hp_mask = np.ones((rows, cols), np.uint8)
+        hp_mask[crow - radius_hp:crow + radius_hp, ccol - radius_hp:ccol + radius_hp] = 0
+
+        f_shift_lp = f_shift * lp_mask
+        f_shift_hp = f_shift * hp_mask
+
+        f_ishift_lp = np.fft.ifftshift(f_shift_lp)
+        filtered_lp = np.fft.ifft2(f_ishift_lp)
+        filtered_lp = np.abs(filtered_lp)
+
+        f_ishift_hp = np.fft.ifftshift(f_shift_hp)
+        filtered_hp = np.fft.ifft2(f_ishift_hp)
+        filtered_hp = np.abs(filtered_hp)
+
+        return filtered_lp, filtered_hp
+
+
+
+
         
 def main():
     app = QtWidgets.QApplication(sys.argv)

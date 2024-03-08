@@ -6,7 +6,10 @@ from multiprocessing import Pool
 class ImageProcessor:
     def __init__(self, filePath):
         self.filePath = filePath
-        self.image = cv2.imread(self.filePath, cv2.IMREAD_GRAYSCALE)
+        self.image = cv2.imread(self.filePath, cv2.IMREAD_ANYCOLOR)
+        self.RGBhistograms, self.RGBcdf = self.get_RGB_histograms_and_cdf(self.image)
+        self.image = self.convert_to_grayscale(self.image)
+        self.noisy_image = None
 
     def get_histogram(self, image, bins_num):
         histogram = np.zeros(bins_num)
@@ -88,8 +91,8 @@ class ImageProcessor:
         :return: Noisy image.
         """
         noise = np.random.uniform(low=0, high=(SNR) * 255, size=image.shape).astype(np.uint8)
-        noisy_image = np.clip(image + noise, 0, 255).astype(np.uint8)    
-        return noisy_image
+        self.noisy_image = np.clip(image + noise, 0, 255).astype(np.uint8)    
+        return self.noisy_image
     
 
     def add_gaussian_noise(self, image, sigma):
@@ -100,8 +103,8 @@ class ImageProcessor:
         :return: Noisy image.
         """
         gaussian_noise = np.random.normal(0, sigma * 255 / 5, image.shape).astype(np.uint8)
-        noisy_image = np.clip(image + gaussian_noise, 0, 255).astype(np.uint8)
-        return noisy_image
+        self.noisy_image = np.clip(image + gaussian_noise, 0, 255).astype(np.uint8)
+        return self.noisy_image
 
     
     def add_salt_and_pepper_noise(self, image, amount):
@@ -111,15 +114,15 @@ class ImageProcessor:
         :param amount: Probability of salt and pepper noise.
         :return: Noisy image.
         """
-        noisy_image = np.copy(image)
+        self.noisy_image = np.copy(image)
         num_salt = np.ceil(amount * image.size * 0.5)
         coords = [np.random.randint(0, i - 1, int(num_salt)) for i in image.shape]
-        noisy_image[coords[0], coords[1]] = 255
+        self.noisy_image[coords[0], coords[1]] = 255
 
         num_pepper = np.ceil(amount * image.size * 0.5)
         coords = [np.random.randint(0, i - 1, int(num_pepper)) for i in image.shape]
-        noisy_image[coords[0], coords[1]] = 0
-        return noisy_image
+        self.noisy_image[coords[0], coords[1]] = 0
+        return self.noisy_image
     
 
 
@@ -263,41 +266,44 @@ class ImageProcessor:
         return edge.astype(np.uint8)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     def convert_to_grayscale(self, image):
         rgb_coefficients = [0.299, 0.587, 0.114]
         grayscale_image = np.dot(image[..., :3], rgb_coefficients)
 
         return grayscale_image.astype(np.uint8)
-    
-    def get_RGB_histograms(self, image):
+
+
+    def get_RGB_histograms_and_cdf(self, image):
         if len(image.shape) == 2:
             hist = [0] * 256
+            cdf = [0] * 256
+            total_pixels = image.shape[0] * image.shape[1]
+
             for row in image:
                 for pixel in row:
                     hist[pixel] += 1
-            return [hist, hist, hist]
+
+            cdf[0] = hist[0] / total_pixels
+            for i in range(1, 256):
+                cdf[i] = cdf[i-1] + hist[i] / total_pixels
+
+            return [hist, hist, hist], [cdf, cdf, cdf]
+
         elif len(image.shape) == 3 and image.shape[2] == 3:
             hist = [[0]*256, [0]*256, [0]*256]
+            cdf = [[0]*256, [0]*256, [0]*256]
+            total_pixels = image.shape[0] * image.shape[1]
+
             for row in image:
                 for pixel in row:
                     for i in range(3):
                         hist[i][pixel[i]] += 1
-            return hist
+
+            for i in range(3):
+                cdf[i][0] = hist[i][0] / total_pixels
+                for j in range(1, 256):
+                    cdf[i][j] = cdf[i][j-1] + hist[i][j] / total_pixels
+
+            return hist, cdf
         else:
             raise ValueError("Unsupported image format")
-        
-    

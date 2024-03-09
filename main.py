@@ -1,6 +1,7 @@
-
+import os
 import numpy as np
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QShortcut
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5 import QtWidgets, uic
 import sys
 import pyqtgraph as pg
@@ -45,8 +46,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.global_thresholding_slider.sliderReleased.connect(self.global_threshold_slider_value_changed)
         self.local_thresholding_slider.sliderReleased.connect(self.local_threshold_sliders_value_changed)
         self.local_block_size_slider.sliderReleased.connect(self.local_threshold_sliders_value_changed)
-        self.NSR_Slider.sliderReleased.connect(self.SNR_slider_value_changed)
-        self.Kernel_slider.sliderReleased.connect(self.kernel_slider_value_changed)
+        self.NSR_Slider.valueChanged.connect(self.SNR_slider_value_changed)
+        self.Kernel_slider.valueChanged.connect(self.kernel_slider_value_changed)
+        self.NSR_Slider.sliderReleased.connect(self.apply_noise)
+        self.Kernel_slider.sliderReleased.connect(self.apply_filter)
         self.hybrid_filter_slider_1.sliderReleased.connect(lambda: self.filter_radius_slider_value_changed(1))
         self.hybrid_filter_slider_2.sliderReleased.connect(lambda: self.filter_radius_slider_value_changed(2))
 
@@ -58,6 +61,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.plotting_typr_combobox.currentIndexChanged.connect(self.display_hist_dist)
         self.filter_type_combobox_1.currentIndexChanged.connect(lambda: self.display_images_page6(1))
         self.filter_type_combobox_2.currentIndexChanged.connect(lambda: self.display_images_page6(2))
+
+        open_image_shortcut = QShortcut(Qt.CTRL + Qt.Key_O, self)
+        open_image_shortcut.activated.connect(self.browse_image)
 
         
         self.loaded_images = []
@@ -83,7 +89,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def browse_image(self):
-        path, _ = QFileDialog.getOpenFileName(self, "Open Image", "", "Image Files (*.png *.jpg *.jpeg *.bmp *.gif)")
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        initial_folder = os.path.join(script_directory, "Images")
+        path, _ = QFileDialog.getOpenFileName(self, "Open Image", initial_folder, "Image Files (*.png *.jpg *.jpeg *.bmp *.gif)")
         self.loaded_images.append(ImageProcessor(path))
         if len(self.loaded_images) == 1:
             self.display_images_page1()
@@ -102,13 +110,13 @@ class MainWindow(QtWidgets.QMainWindow):
     def kernel_slider_value_changed(self):
         self.Kernel = self.Kernel_slider.value()
         self.kernel_label.setText("Kernel Size: " + str(self.Kernel))
-        self.apply_filter() 
 
 
 
     def SNR_slider_value_changed(self):
         self.SNR = self.NSR_Slider.value() / 100
-        self.apply_noise()
+        snr_value_text = self.label_texts.get(self.noise_type_cb.currentText(), "")
+        self.SNR_label.setText(f"{snr_value_text}: {str(self.SNR)}" )
 
 
 
@@ -137,8 +145,9 @@ class MainWindow(QtWidgets.QMainWindow):
             "Gaussian": ("add_gaussian_noise", {"sigma": self.SNR}),
             "Salt and Pepper": ("add_salt_and_pepper_noise", {"amount": self.SNR})
         }
+
         snr_value_text = self.label_texts.get(self.noise_type_cb.currentText(), "")
-        self.SNR_label.setText(f"{snr_value_text}: {str(self.SNR)}" )
+        self.SNR_label.setText(f"{snr_value_text}: {str(self.SNR)}" )       
 
         method_name, kwargs = self.noise_method_mapping.get(self.noise_type_cb.currentText())
         if method_name:

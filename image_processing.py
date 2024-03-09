@@ -32,13 +32,13 @@ class ImageProcessor:
 
         return cdf
 
-    def histogram_equalization(self, image, max_value):
+    def histogram_equalization(self, image, max_value=255):
         hist = self.get_histogram(image.flatten(), 256)
         cdf = self.get_cdf(hist, image.shape)
         normalize = np.rint(cdf * max_value).astype('int')
 
         result = normalize[image.flatten()]
-        return result
+        return result.reshape(image.shape)
 
     
     def image_normalization(self):

@@ -86,8 +86,6 @@ class MainWindow(QtWidgets.QMainWindow):
         
         self.label_texts = { "Uniform": "SNR", "Gaussian": "Sigma", "Salt and Pepper": "S & P amount" }
 
-
-
     def browse_image(self):
         script_directory = os.path.dirname(os.path.abspath(__file__))
         initial_folder = os.path.join(script_directory, "Images")
@@ -104,8 +102,6 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             del self.loaded_images[1:-1]
             self.display_images_page6(2)
-
-
 
     def kernel_slider_value_changed(self):
         self.Kernel = self.Kernel_slider.value()
@@ -193,7 +189,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def display_images_page4(self):
         self.original_image_view_widget_eq.setImage(np.rot90(self.loaded_images[0].image, k=-1))
-        self.equalized_image_view_widget.setImage(np.rot90(self.loaded_images[0].histogram_equalization(self.loaded_images[0].image, max(self.loaded_images[0].image.flatten())), k=-1))
+        self.equalized_image_view_widget.setImage(
+            np.rot90(self.loaded_images[0].histogram_equalization(self.loaded_images[0].image, np.amax(self.loaded_images[0].image.flatten())), k=-1))
 
     def display_hist_dist(self):
         hist = self.loaded_images[0].get_histogram(self.loaded_images[0].image, 256)

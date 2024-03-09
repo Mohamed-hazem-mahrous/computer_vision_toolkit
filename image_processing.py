@@ -285,6 +285,11 @@ class ImageProcessor:
 
 
     def convert_to_grayscale(self, image):
+        """
+        Convert the RGB image to grayscale using NTSC formula.
+        :param image: Input RGB image (numpy array).
+        :return: Grayscale image (numpy array).
+        """
         rgb_coefficients = [0.299, 0.587, 0.114]
         grayscale_image = np.dot(image[..., :3], rgb_coefficients)
 
@@ -292,6 +297,11 @@ class ImageProcessor:
 
 
     def get_RGB_histograms_and_cdf(self, image):
+        """
+        Compute the RGB histograms and cumulative distribution functions (CDFs) of the image.
+        :param image: Input image (numpy array)
+        :return: Tuple containing RGB histograms and CDFs.
+        """
         if len(image.shape) == 2:
             hist = [0] * 256
             cdf = [0] * 256

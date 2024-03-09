@@ -12,6 +12,12 @@ class ImageProcessor:
         self.noisy_image = None
 
     def get_histogram(self, image, bins_num):
+        """
+        Compute the histogram of the image.
+        :param image: Image (numpy array).
+        :param bins_num: number of bins in the histogram.
+        :return: histogram of the image.
+        """
         histogram = np.zeros(bins_num)
         for pixel in image:
             histogram[pixel] += 1
@@ -19,6 +25,12 @@ class ImageProcessor:
         return histogram
 
     def get_cdf(self, histogram, shape):
+        """
+        Compute the cumulative distribution function (CDF) of the image.
+        :param histogram: histogram of the image computed from get_histogram.
+        :param shape: shape of the image.
+        :return: CDF of the image.
+        """
         if len(shape) > 1:
             no_pixels = shape[0] * shape[1]
             prob = histogram / no_pixels
@@ -33,6 +45,12 @@ class ImageProcessor:
         return cdf
 
     def histogram_equalization(self, image, max_value=255):
+        """
+        Apply histogram equalization to the image.
+        :param image: Image (numpy array).
+        :param max_value: maximum pixel value in the image.
+        :return: Equalized image.
+        """
         hist = self.get_histogram(image.flatten(), 256)
         cdf = self.get_cdf(hist, image.shape)
         normalize = np.rint(cdf * max_value).astype('int')

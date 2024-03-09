@@ -21,7 +21,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;gg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -2754,7 +2754,7 @@ QGroupBox::indicator {
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
-        <string>frequancy domain</string>
+        <string>frequency domain</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_77">
         <item row="0" column="0">

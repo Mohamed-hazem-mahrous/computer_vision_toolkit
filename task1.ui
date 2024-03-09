@@ -21,7 +21,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;gg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -2127,23 +2127,7 @@ QGroupBox::indicator {
                  </property>
                  <layout class="QGridLayout" name="gridLayout_44">
                   <item row="0" column="0">
-                   <widget class="QLabel" name="original_image">
-                    <property name="minimumSize">
-                     <size>
-                      <width>380</width>
-                      <height>200</height>
-                     </size>
-                    </property>
-                    <property name="frameShape">
-                     <enum>QFrame::WinPanel</enum>
-                    </property>
-                    <property name="frameShadow">
-                     <enum>QFrame::Sunken</enum>
-                    </property>
-                    <property name="text">
-                     <string/>
-                    </property>
-                   </widget>
+                   <widget class="PlotWidget" name="original_image" native="true"/>
                   </item>
                  </layout>
                 </widget>
@@ -2220,23 +2204,7 @@ QGroupBox::title {
                  </property>
                  <layout class="QGridLayout" name="gridLayout_46">
                   <item row="0" column="0">
-                   <widget class="QLabel" name="equalized_image">
-                    <property name="minimumSize">
-                     <size>
-                      <width>380</width>
-                      <height>200</height>
-                     </size>
-                    </property>
-                    <property name="frameShape">
-                     <enum>QFrame::WinPanel</enum>
-                    </property>
-                    <property name="frameShadow">
-                     <enum>QFrame::Sunken</enum>
-                    </property>
-                    <property name="text">
-                     <string/>
-                    </property>
-                   </widget>
+                   <widget class="PlotWidget" name="equalized_image" native="true"/>
                   </item>
                  </layout>
                 </widget>
@@ -2286,7 +2254,7 @@ QGroupBox::title {
                   <string notr="true"/>
                  </property>
                  <property name="text">
-                  <string>Histograme</string>
+                  <string>Histogram</string>
                  </property>
                  <property name="textFormat">
                   <enum>Qt::AutoText</enum>
@@ -3836,7 +3804,7 @@ QSlider::sub-page:horizontal {
      <x>0</x>
      <y>0</y>
      <width>1196</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

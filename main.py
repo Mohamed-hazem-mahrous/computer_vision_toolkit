@@ -25,7 +25,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.view_widgets = [self.manipulated_image_2, self.manipulated_image_1, self.original_image_2, self.original_image_1,
                              self.original_hybrid_image_1, self.original_hybrid_image_2, self.filtered_hybrid_image_1,
                              self.filtered_hybrid_image_2, self.filtered_hybrid_image_3, self.original_image_3, self.normalized_image,
-                             self.local_thresholding_image, self.global_thresholding_image]
+                             self.local_thresholding_image, self.global_thresholding_image, self.original_image, self.equalized_image]
         self.plot_widgets = [self.histograme_plot, self.distribution_curve_plot, self.R_Curve, self.G_Curve, self.B_Curve]
     
         for container in self.view_widgets:
@@ -92,6 +92,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.display_hist_dist()
             self.apply_noise()
             self.apply_edge_detection()
+            self.display_images_page4()
         else:
             del self.loaded_images[1:-1]
             self.display_images_page6(2)
@@ -180,14 +181,17 @@ class MainWindow(QtWidgets.QMainWindow):
         local_thresholding_val=self.local_thresholding_slider.value()
         
         self.local_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].local_thresholding( block_size, local_thresholding_val), k=-1))
-        
 
+    def display_images_page4(self):
+        self.original_image_view_widget_eq.setImage(np.rot90(self.loaded_images[0].image, k=-1))
+        self.equalized_image_view_widget.setImage(np.rot90(self.loaded_images[0].histogram_equalization(self.loaded_images[0].image, max(self.loaded_images[0].image.flatten())), k=-1))
 
     def display_hist_dist(self):
         hist = self.loaded_images[0].get_histogram(self.loaded_images[0].image, 256)
         # cdf = image.get_cdf(hist, image.image.shape)
         # self.display_cdf(cdf)
         self.display_histogram(hist)
+        self.display_distribution_curve()
 
         # Page 5 Plots
         if self.plotting_typr_combobox.currentText() == "Histogram":
@@ -205,7 +209,16 @@ class MainWindow(QtWidgets.QMainWindow):
     def display_histogram(self, hist):
         self.histograme_plot.clear()
         self.histograme_plot.plot(hist, pen='r')
+        self.histograme_plot.setLabel('left', 'Frequency')
+        self.histograme_plot.setLabel('bottom', 'Pixel Intensity')
 
+
+    def display_distribution_curve(self):
+        cdf = self.loaded_images[0].get_cdf(self.loaded_images[0].get_histogram(self.loaded_images[0].image.flatten(), 256), self.loaded_images[0].image.shape)
+        self.distribution_curve_plot.clear()
+        self.distribution_curve_plot.plot(cdf, pen='r')
+        self.distribution_curve_plot.setLabel('left', 'Probability')
+        self.distribution_curve_plot.setLabel('bottom', 'Pixel Intensity')
 
 
     def hybrid_images(self):
@@ -323,6 +336,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.filtered_hybrid_image_1.addItem(self.hybrid_image_1_filtered)
         self.filtered_hybrid_image_2.addItem(self.hybrid_image_2_filtered)
         self.filtered_hybrid_image_3.addItem(self.hybrid_result_image)
+
+        self.original_image_view_widget_eq, self.equalized_image_view_widget = pg.ImageItem(), pg.ImageItem()
+        self.original_image.addItem(self.original_image_view_widget_eq)
+        self.equalized_image.addItem(self.equalized_image_view_widget)
 
         
 def main():

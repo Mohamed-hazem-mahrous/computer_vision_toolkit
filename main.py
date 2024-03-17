@@ -17,6 +17,7 @@ class MainWindow(QtWidgets.QMainWindow):
         
         self.global_thresholding_slider.setMinimum(0)
         self.global_thresholding_slider.setMaximum(255)
+        self.global_thresholding_slider.setValue(120)
         self.local_thresholding_slider.setMinimum(0)
         self.local_thresholding_slider.setMaximum(255)
 
@@ -200,7 +201,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def display_images_page3(self):
         self.local_block_size_slider.setMinimum(1)
-        self.local_block_size_slider.setMaximum(max(self.loaded_images[0].image.shape[0], self.loaded_images[0].image.shape[1]))
+        local_block_size_slider_max_value =max(self.loaded_images[0].image.shape[0], self.loaded_images[0].image.shape[1])
+        self.local_block_size_slider.setMaximum(local_block_size_slider_max_value)
+        self.local_block_size_slider.setValue(int(local_block_size_slider_max_value/2))
         
         self.original_image_view_widget_thresh.setImage(np.rot90(self.loaded_images[0].image, k=-1))
         self.normalized_image_view_widget.setImage(np.rot90(self.loaded_images[0].image_normalization(), k=-1))

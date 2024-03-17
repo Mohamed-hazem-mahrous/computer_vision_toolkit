@@ -80,6 +80,7 @@ class ImageProcessor:
         return thresholded_image
 
 
+
     def local_thresholding(self, block_size, C):
         height, width = self.image.shape
         local_thresholded_image = np.zeros((height, width), dtype=np.uint8)
@@ -271,6 +272,94 @@ class ImageProcessor:
                                     [0, -1]])            
         return self.apply_edge(image, roberts_kernel, direction)
     
+
+    def canny_edge(self, image, direction='both', low_threshold=50, high_threshold=150):
+        # Step 1: Apply Gaussian blur
+        blurred_image = self.apply_gaussian_filter(image)
+
+        # Step 2: Compute gradient intensity and direction
+        gradient_magnitude, gradient_direction = self.compute_gradient(blurred_image)
+
+        # Step 3: Non-maximum suppression
+        suppressed_image = self.non_maximum_suppression(gradient_magnitude, gradient_direction)
+
+        # Step 4: Double thresholding
+        thresholded_image = self.double_thresholding(suppressed_image, low_threshold, high_threshold)
+
+        # Step 5: Edge tracking by hysteresis
+        canny_edges = self.edge_tracking(thresholded_image, low_threshold, high_threshold)
+
+        return canny_edges
+
+
+    def compute_gradient(self, image):
+        sobel_x = self.convolve(image, np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]))
+        sobel_y = self.convolve(image, np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]]))
+
+        gradient_magnitude = np.sqrt(sobel_x**2 + sobel_y**2)
+        gradient_direction = np.arctan2(sobel_y, sobel_x)
+
+        return gradient_magnitude, gradient_direction
+
+
+    def non_maximum_suppression(self, gradient_magnitude, gradient_direction):
+        suppressed_image = np.zeros_like(gradient_magnitude)
+
+        for i in range(1, gradient_magnitude.shape[0] - 1):
+            for j in range(1, gradient_magnitude.shape[1] - 1):
+                angle = gradient_direction[i, j]
+                q, r = 255, 255
+
+                if (0 <= angle < np.pi / 8) or (7 * np.pi / 8 <= angle <= np.pi):
+                    q = gradient_magnitude[i, j + 1]
+                    r = gradient_magnitude[i, j - 1]
+                elif (np.pi / 8 <= angle < 3 * np.pi / 8) or (5 * np.pi / 8 <= angle < 7 * np.pi / 8):
+                    q = gradient_magnitude[i + 1, j - 1]
+                    r = gradient_magnitude[i - 1, j + 1]
+                elif (3 * np.pi / 8 <= angle < 5 * np.pi / 8) or (5 * np.pi / 8 <= angle < 7 * np.pi / 8):
+                    q = gradient_magnitude[i + 1, j]
+                    r = gradient_magnitude[i - 1, j]
+
+                if gradient_magnitude[i, j] >= q and gradient_magnitude[i, j] >= r:
+                    suppressed_image[i, j] = gradient_magnitude[i, j]
+
+        return suppressed_image
+
+
+    def double_thresholding(self, gradient_magnitude, low_threshold, high_threshold):
+        strong_edges = gradient_magnitude > high_threshold
+        weak_edges = (gradient_magnitude >= low_threshold) & (gradient_magnitude <= high_threshold)
+        thresholded_image = np.zeros_like(gradient_magnitude)
+        thresholded_image[strong_edges] = 255
+        thresholded_image[weak_edges] = 50  # Weak edge marker
+        return thresholded_image
+
+
+    def edge_tracking(self, thresholded_image, low_threshold, high_threshold):
+        strong_edges = (thresholded_image == 255)
+        weak_edges = (thresholded_image == 50)
+
+        # Perform depth-first search to track weak edges
+        def dfs(i, j):
+            if 0 <= i < thresholded_image.shape[0] and 0 <= j < thresholded_image.shape[1]:
+                if thresholded_image[i, j] == 50:
+                    thresholded_image[i, j] = 255
+                    for di in range(-1, 2):
+                        for dj in range(-1, 2):
+                            if (di != 0 or dj != 0):
+                                dfs(i + di, j + dj)
+
+        for i in range(thresholded_image.shape[0]):
+            for j in range(thresholded_image.shape[1]):
+                if strong_edges[i, j]:
+                    dfs(i, j)
+
+        # Set all remaining weak edges to zero
+        thresholded_image[weak_edges] = 0
+
+        return thresholded_image
+
+
 
     def apply_edge(self, image, array, direction):
         if direction == 'Horizontal':

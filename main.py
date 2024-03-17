@@ -19,7 +19,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.global_thresholding_slider.setMaximum(255)
         self.local_thresholding_slider.setMinimum(0)
         self.local_thresholding_slider.setMaximum(255)
-        self.local_block_size_slider.setMinimum(1)
 
         self.link_view_widgets()
         
@@ -64,6 +63,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         open_image_shortcut = QShortcut(Qt.CTRL + Qt.Key_O, self)
         open_image_shortcut.activated.connect(self.browse_image)
+        self.setAcceptDrops(True)
 
         
         self.loaded_images = []
@@ -76,7 +76,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.edge_method_mapping = {
             "Sobel": "sobel_edge",
             "Prewitt": "prewitt_edge",
-            "Roberts": "roberts_edge"
+            "Roberts": "roberts_edge",
+            "Canny": "canny_edge"
         }
         self.filter_method_mapping = {
             "Average": "apply_average_filter",
@@ -86,10 +87,30 @@ class MainWindow(QtWidgets.QMainWindow):
         
         self.label_texts = { "Uniform": "SNR", "Gaussian": "Sigma", "Salt and Pepper": "S & P amount" }
 
+
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.accept()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        for url in event.mimeData().urls():
+            path = url.toLocalFile()
+            if os.path.exists(path):
+                self.load_image(path)
+
+
     def browse_image(self):
         script_directory = os.path.dirname(os.path.abspath(__file__))
         initial_folder = os.path.join(script_directory, "Images")
         path, _ = QFileDialog.getOpenFileName(self, "Open Image", initial_folder, "Image Files (*.png *.jpg *.jpeg *.bmp *.gif)")
+        self.load_image(path)
+        
+
+
+    def load_image(self, path):
         self.loaded_images.append(ImageProcessor(path))
         if len(self.loaded_images) == 1:
             self.display_images_page1()
@@ -102,6 +123,7 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             del self.loaded_images[1:-1]
             self.display_images_page6(2)
+
 
     def kernel_slider_value_changed(self):
         self.Kernel = self.Kernel_slider.value()
@@ -164,6 +186,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def local_threshold_sliders_value_changed(self):
         block_size=self.local_block_size_slider.value()
         local_thresholding_val=self.local_thresholding_slider.value()
+        print(local_thresholding_val)
+        print(block_size)
         self.local_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].local_thresholding( block_size, local_thresholding_val), k=-1))
 
 
@@ -175,6 +199,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def display_images_page3(self):
+        self.local_block_size_slider.setMinimum(1)
+        self.local_block_size_slider.setMaximum(max(self.loaded_images[0].image.shape[0], self.loaded_images[0].image.shape[1]))
+        
         self.original_image_view_widget_thresh.setImage(np.rot90(self.loaded_images[0].image, k=-1))
         self.normalized_image_view_widget.setImage(np.rot90(self.loaded_images[0].image_normalization(), k=-1))
         
@@ -184,7 +211,7 @@ class MainWindow(QtWidgets.QMainWindow):
         
         block_size=self.local_block_size_slider.value()
         local_thresholding_val=self.local_thresholding_slider.value()
-        
+
         self.local_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].local_thresholding( block_size, local_thresholding_val), k=-1))
 
     def display_images_page4(self):

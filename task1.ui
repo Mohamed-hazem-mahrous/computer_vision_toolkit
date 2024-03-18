@@ -14,14 +14,14 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_53">
-    <item row="0" column="1">
+   <layout class="QGridLayout" name="gridLayout_17">
+    <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="whatsThis">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;gg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -735,7 +735,7 @@ QGroupBox::indicator {
 </string>
                    </property>
                    <property name="title">
-                    <string/>
+                    <string>Noisy IMage</string>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_17">
                     <item>
@@ -782,7 +782,7 @@ QGroupBox::indicator {
 </string>
                    </property>
                    <property name="title">
-                    <string/>
+                    <string>Filtered Image</string>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_18">
                     <item>
@@ -806,13 +806,13 @@ QGroupBox::indicator {
        <attribute name="title">
         <string>Edge detection</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_17">
+       <layout class="QGridLayout" name="gridLayout_13">
         <item row="0" column="0">
-         <layout class="QGridLayout" name="gridLayout_16">
+         <layout class="QGridLayout" name="gridLayout_2">
           <item row="0" column="0">
-           <layout class="QVBoxLayout" name="verticalLayout_6">
+           <layout class="QVBoxLayout" name="verticalLayout_36">
             <item>
-             <widget class="QGroupBox" name="groupBox_11">
+             <widget class="QGroupBox" name="groupBox_35">
               <property name="maximumSize">
                <size>
                 <width>250</width>
@@ -847,16 +847,35 @@ QGroupBox::indicator {
               <property name="title">
                <string/>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_19">
+              <layout class="QVBoxLayout" name="verticalLayout_37">
                <item>
-                <layout class="QGridLayout" name="gridLayout_2">
-                 <item row="0" column="0">
-                  <layout class="QGridLayout" name="gridLayout_14">
+                <spacer name="horizontalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <layout class="QVBoxLayout" name="verticalLayout_38">
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>100</number>
+                 </property>
+                 <item>
+                  <layout class="QGridLayout" name="gridLayout_82">
                    <property name="topMargin">
                     <number>0</number>
                    </property>
                    <item row="0" column="0">
-                    <widget class="QFrame" name="frame_7">
+                    <widget class="QFrame" name="frame_28">
                      <property name="maximumSize">
                       <size>
                        <width>16777215</width>
@@ -869,15 +888,9 @@ QGroupBox::indicator {
                      <property name="frameShadow">
                       <enum>QFrame::Raised</enum>
                      </property>
-                     <layout class="QGridLayout" name="gridLayout_15">
-                      <property name="topMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
+                     <layout class="QGridLayout" name="gridLayout_83">
                       <item row="0" column="0">
-                       <widget class="QLabel" name="label_8">
+                       <widget class="QLabel" name="label_15">
                         <property name="maximumSize">
                          <size>
                           <width>16777215</width>
@@ -904,7 +917,7 @@ QGroupBox::indicator {
                     </widget>
                    </item>
                    <item row="1" column="0">
-                    <layout class="QHBoxLayout" name="horizontalLayout_26">
+                    <layout class="QHBoxLayout" name="horizontalLayout_44">
                      <property name="leftMargin">
                       <number>5</number>
                      </property>
@@ -915,7 +928,7 @@ QGroupBox::indicator {
                       <number>5</number>
                      </property>
                      <property name="bottomMargin">
-                      <number>50</number>
+                      <number>60</number>
                      </property>
                      <item>
                       <widget class="QComboBox" name="edge_filter_combobox">
@@ -969,6 +982,9 @@ QComboBox QAbstractItemView {
     background: white;
 }</string>
                        </property>
+                       <property name="currentText">
+                        <string>Sobel</string>
+                       </property>
                        <item>
                         <property name="text">
                          <string>Sobel</string>
@@ -995,30 +1011,35 @@ QComboBox QAbstractItemView {
                    </item>
                   </layout>
                  </item>
-                 <item row="1" column="0">
-                  <layout class="QHBoxLayout" name="horizontalLayout_27">
-                   <property name="leftMargin">
-                    <number>5</number>
-                   </property>
+                 <item>
+                  <layout class="QGridLayout" name="gridLayout_84">
                    <property name="topMargin">
-                    <number>50</number>
+                    <number>20</number>
                    </property>
-                   <property name="rightMargin">
-                    <number>5</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>50</number>
-                   </property>
-                   <item>
-                    <widget class="QComboBox" name="State_combobox">
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>40</height>
-                      </size>
+                   <item row="0" column="0">
+                    <layout class="QHBoxLayout" name="horizontalLayout_45">
+                     <property name="leftMargin">
+                      <number>5</number>
                      </property>
-                     <property name="styleSheet">
-                      <string notr="true">QComboBox, QFontComboBox {
+                     <property name="topMargin">
+                      <number>60</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>60</number>
+                     </property>
+                     <item>
+                      <widget class="QComboBox" name="State_combobox">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>40</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QComboBox, QFontComboBox {
     border-width: 2px;
     border-radius: 8px;
     border-style: solid;
@@ -1060,88 +1081,27 @@ QComboBox QAbstractItemView {
     color: #272727;
     background: white;
 }</string>
-                     </property>
-                     <item>
-                      <property name="text">
-                       <string>Horizontal</string>
-                      </property>
+                       </property>
+                       <item>
+                        <property name="text">
+                         <string>Horizontal</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>Vertical</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>Both</string>
+                        </property>
+                       </item>
+                      </widget>
                      </item>
-                     <item>
-                      <property name="text">
-                       <string>Vertical</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Both</string>
-                      </property>
-                     </item>
-                    </widget>
+                    </layout>
                    </item>
                   </layout>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QFrame" name="frame_6">
-                   <property name="maximumSize">
-                    <size>
-                     <width>16777215</width>
-                     <height>100</height>
-                    </size>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QGridLayout" name="gridLayout_13">
-                    <item row="0" column="0">
-                     <layout class="QHBoxLayout" name="horizontalLayout_25">
-                      <property name="leftMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>20</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>50</number>
-                      </property>
-                      <item>
-                       <widget class="QPushButton" name="done_btn">
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>40</height>
-                         </size>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">QPushButton {
-    width: 50%;
-    background-color: rgb(182, 13, 13); /* Replace with the corresponding color value for --dark-grey in your application */
-    color: white;
-    border-radius: 10px;
-    text-align: center;
-
-}
-
-QPushButton:hover {
-    background-color: white;
-color:red /* Replace with the corresponding color value for --darkest-color in your application */
-}
-</string>
-                        </property>
-                        <property name="text">
-                         <string>Done</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                   </layout>
-                  </widget>
                  </item>
                 </layout>
                </item>
@@ -1225,7 +1185,7 @@ QGroupBox::indicator {
 </string>
                    </property>
                    <property name="title">
-                    <string/>
+                    <string>Origional Image</string>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_21">
                     <item>
@@ -1272,7 +1232,7 @@ QGroupBox::indicator {
 </string>
                    </property>
                    <property name="title">
-                    <string/>
+                    <string>Edges</string>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_22">
                     <item>
@@ -3290,9 +3250,38 @@ QGroupBox::title {
                          <widget class="PlotWidget" name="filtered_hybrid_image_1" native="true"/>
                         </item>
                         <item row="0" column="1">
-                         <widget class="QSlider" name="hybrid_filter_slider_1">
-                          <property name="styleSheet">
-                           <string notr="true">QSlider::groove {
+                         <widget class="QFrame" name="frame_15">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>40</height>
+                           </size>
+                          </property>
+                          <property name="frameShape">
+                           <enum>QFrame::StyledPanel</enum>
+                          </property>
+                          <property name="frameShadow">
+                           <enum>QFrame::Raised</enum>
+                          </property>
+                          <layout class="QGridLayout" name="gridLayout_50">
+                           <item row="0" column="2">
+                            <layout class="QHBoxLayout" name="horizontalLayout_35">
+                             <property name="leftMargin">
+                              <number>5</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>5</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QSlider" name="hybrid_filter_slider_1">
+                               <property name="styleSheet">
+                                <string notr="true">QSlider::groove {
     border: 1px solid #bbbbbb;
     background-color: #52595d;
     border-radius: 4px;
@@ -3333,10 +3322,22 @@ QSlider::sub-page:horizontal {
     background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
 }
 </string>
-                          </property>
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
+                               </property>
+                               <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </item>
+                           <item row="0" column="1">
+                            <widget class="QLabel" name="label_6">
+                             <property name="text">
+                              <string>Radius </string>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
                          </widget>
                         </item>
                        </layout>
@@ -3727,9 +3728,38 @@ QGroupBox::title {
                          <widget class="PlotWidget" name="filtered_hybrid_image_2" native="true"/>
                         </item>
                         <item row="0" column="0">
-                         <widget class="QSlider" name="hybrid_filter_slider_2">
-                          <property name="styleSheet">
-                           <string notr="true">QSlider::groove {
+                         <widget class="QFrame" name="frame_16">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>40</height>
+                           </size>
+                          </property>
+                          <property name="frameShape">
+                           <enum>QFrame::StyledPanel</enum>
+                          </property>
+                          <property name="frameShadow">
+                           <enum>QFrame::Raised</enum>
+                          </property>
+                          <layout class="QGridLayout" name="gridLayout_51">
+                           <item row="0" column="2">
+                            <layout class="QHBoxLayout" name="horizontalLayout_38">
+                             <property name="leftMargin">
+                              <number>5</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>5</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QSlider" name="hybrid_filter_slider_2">
+                               <property name="styleSheet">
+                                <string notr="true">QSlider::groove {
     border: 1px solid #bbbbbb;
     background-color: #52595d;
     border-radius: 4px;
@@ -3770,10 +3800,22 @@ QSlider::sub-page:horizontal {
     background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
 }
 </string>
-                          </property>
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
+                               </property>
+                               <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </item>
+                           <item row="0" column="1">
+                            <widget class="QLabel" name="label_7">
+                             <property name="text">
+                              <string>Radius </string>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
                          </widget>
                         </item>
                        </layout>
@@ -3804,7 +3846,7 @@ QSlider::sub-page:horizontal {
      <x>0</x>
      <y>0</y>
      <width>1196</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

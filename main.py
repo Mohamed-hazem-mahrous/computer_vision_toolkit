@@ -39,7 +39,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         for button in [self.browse_btn, self.upload_btn_1, self.upload_btn_2]:
             button.clicked.connect(self.browse_image)
-        self.done_btn.clicked.connect(self.apply_edge_detection)
         self.create_hybrid_btn.clicked.connect(self.hybrid_images)
         
 

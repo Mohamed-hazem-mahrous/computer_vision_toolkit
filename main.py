@@ -187,8 +187,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def local_threshold_sliders_value_changed(self):
         block_size=self.local_block_size_slider.value()
         local_thresholding_val=self.local_thresholding_slider.value()
-        print(local_thresholding_val)
-        print(block_size)
+        # print(local_thresholding_val)
+        # print(block_size)
         self.local_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].local_thresholding( block_size, local_thresholding_val), k=-1))
 
 

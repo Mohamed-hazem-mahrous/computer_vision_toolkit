@@ -21,7 +21,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;gg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -642,7 +642,7 @@ QSlider::sub-page:horizontal {
                         <number>3</number>
                        </property>
                        <property name="maximum">
-                        <number>20</number>
+                        <number>10</number>
                        </property>
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
@@ -2254,7 +2254,7 @@ QGroupBox::title {
                   <string notr="true"/>
                  </property>
                  <property name="text">
-                  <string>Histogram</string>
+                  <string>Histogram Before</string>
                  </property>
                  <property name="textFormat">
                   <enum>Qt::AutoText</enum>
@@ -2302,7 +2302,7 @@ QGroupBox::title {
                   <string notr="true"/>
                  </property>
                  <property name="text">
-                  <string>Distribution Curve</string>
+                  <string>Distribution Curve Before</string>
                  </property>
                  <property name="textFormat">
                   <enum>Qt::AutoText</enum>
@@ -3804,7 +3804,7 @@ QSlider::sub-page:horizontal {
      <x>0</x>
      <y>0</y>
      <width>1196</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

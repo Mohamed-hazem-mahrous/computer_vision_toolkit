@@ -1,7 +1,6 @@
 import os
 import numpy as np
-from PyQt5.QtWidgets import QFileDialog, QShortcut
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtWidgets import QFileDialog
 from PyQt5 import QtWidgets, uic
 import sys
 import pyqtgraph as pg
@@ -38,7 +37,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         for button in [self.browse_btn, self.upload_btn_1, self.upload_btn_2]:
-            button.clicked.connect(self.browse_image)
+            button.clicked.connect(lambda checked, btn=button: self.browse_image(btn))
         self.create_hybrid_btn.clicked.connect(self.hybrid_images)
         
 
@@ -61,9 +60,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.filter_type_combobox_1.currentIndexChanged.connect(lambda: self.display_images_page6(1))
         self.filter_type_combobox_2.currentIndexChanged.connect(lambda: self.display_images_page6(2))
 
-        open_image_shortcut = QShortcut(Qt.CTRL + Qt.Key_O, self)
-        open_image_shortcut.activated.connect(self.browse_image)
-        self.setAcceptDrops(True)
+        # open_image_shortcut = QShortcut(Qt.CTRL + Qt.Key_O, self)
+        # open_image_shortcut.activated.connect(self.browse_image)
+        # self.setAcceptDrops(True)
 
         
         self.loaded_images = []
@@ -89,30 +88,32 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 
-    def dragEnterEvent(self, event):
-        if event.mimeData().hasUrls():
-            event.accept()
-        else:
-            event.ignore()
+    # def dragEnterEvent(self, event):
+    #     if event.mimeData().hasUrls():
+    #         event.accept()
+    #     else:
+    #         event.ignore()
 
-    def dropEvent(self, event):
-        for url in event.mimeData().urls():
-            path = url.toLocalFile()
-            if os.path.exists(path):
-                self.load_image(path)
+    # def dropEvent(self, event):
+    #     for url in event.mimeData().urls():
+    #         path = url.toLocalFile()
+    #         if os.path.exists(path):
+    #             self.load_image(path)
 
 
-    def browse_image(self):
+    def browse_image(self, button):
         script_directory = os.path.dirname(os.path.abspath(__file__))
         initial_folder = os.path.join(script_directory, "Images")
         path, _ = QFileDialog.getOpenFileName(self, "Open Image", initial_folder, "Image Files (*.png *.jpg *.jpeg *.bmp *.gif)")
-        self.load_image(path)
+        self.load_image(path, button)
         
 
 
-    def load_image(self, path):
-        self.loaded_images.append(ImageProcessor(path))
-        if len(self.loaded_images) == 1:
+    def load_image(self, path, button):
+        if button in [self.browse_btn, self.upload_btn_1]:
+            if len(self.loaded_images) != 0:
+                del self.loaded_images[0:]
+            self.loaded_images.append(ImageProcessor(path))
             self.display_images_page1()
             self.display_images_page3()
             self.display_images_page6(1)
@@ -121,6 +122,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.apply_edge_detection()
             self.display_images_page4()
         else:
+            self.loaded_images.append(ImageProcessor(path))
             del self.loaded_images[1:-1]
             self.display_images_page6(2)
 
@@ -216,15 +218,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.local_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].local_thresholding( block_size, local_thresholding_val), k=-1))
 
+
     def display_images_page4(self):
         self.original_image_view_widget_eq.setImage(np.rot90(self.loaded_images[0].image, k=-1))
         self.equalized_image_view_widget.setImage(
             np.rot90(self.loaded_images[0].histogram_equalization(self.loaded_images[0].image, np.amax(self.loaded_images[0].image.flatten())), k=-1))
 
+
     def display_hist_dist(self):
         hist = self.loaded_images[0].get_histogram(self.loaded_images[0].image, 256)
-        # cdf = image.get_cdf(hist, image.image.shape)
-        # self.display_cdf(cdf)
         self.display_histogram(hist)
         self.display_distribution_curve()
 
@@ -234,10 +236,10 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             histograms_cdf = [hist for hist in self.loaded_images[0].RGBcdf]
         
-        colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
-        for plot_widget, histogram, color in zip([self.R_Curve, self.G_Curve, self.B_Curve], histograms_cdf, colors):
+        colors = [(0, 0, 255), (0, 255, 0), (255, 0, 0)]
+        for plot_widget, histogram, color in zip([self.G_Curve, self.B_Curve, self.R_Curve], histograms_cdf, colors):
             plot_widget.clear()
-            plot_widget.plot(histogram, pen=color, fillLevel=-0.3, fillBrush=color + (50,))
+            plot_widget.plot(histogram, pen=color, fillLevel=-0.3, fillBrush=color + (80,))
 
 
 
@@ -338,8 +340,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def set_view_widget_settings(self, container):
         container.setBackground('#dddddd')
         container.setAspectLocked(True)
-        # container.setMouseEnabled(x=False, y=False)
-        # container.setMenuEnabled(False)
         container.hideAxis('left')
         container.hideAxis('bottom')
 

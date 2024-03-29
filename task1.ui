@@ -24,7 +24,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;gg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -5085,7 +5085,7 @@ QGroupBox::indicator {
                   </widget>
                  </item>
                  <item row="1" column="0">
-                  <widget class="PlotWidget" name="hough_transformed_image" native="true">
+                  <widget class="PlotWidget" name="original_image_6" native="true">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                      <horstretch>0</horstretch>
@@ -5147,7 +5147,7 @@ QGroupBox::indicator {
                   </widget>
                  </item>
                  <item row="1" column="0">
-                  <widget class="PlotWidget" name="original_image_widget" native="true">
+                  <widget class="PlotWidget" name="hough_transformed_image" native="true">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                      <horstretch>0</horstretch>

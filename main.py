@@ -25,7 +25,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.view_widgets = [self.manipulated_image_2, self.manipulated_image_1, self.original_image_2, self.original_image_1,
                              self.original_hybrid_image_1, self.original_hybrid_image_2, self.filtered_hybrid_image_1,
                              self.filtered_hybrid_image_2, self.filtered_hybrid_image_3, self.original_image_3, self.normalized_image,
-                             self.local_thresholding_image, self.global_thresholding_image, self.original_image, self.equalized_image]
+                             self.local_thresholding_image, self.global_thresholding_image, self.original_image, self.equalized_image,
+                             self.hough_transformed_image, self.original_image_6, self.original_image_5, self.manipulated_image_4]
         self.plot_widgets = [self.histograme_plot, self.distribution_curve_plot, self.R_Curve, self.G_Curve, self.B_Curve]
     
         for container in self.view_widgets:

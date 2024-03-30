@@ -7,13 +7,18 @@ import pyqtgraph as pg
 from image_processing import ImageProcessor
 import numpy as np
 from PIL import Image as PILImage
+from Active_contour import Snake
+import cv2
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg 
+import matplotlib.pyplot as plt
 
 
 class MainWindow(QtWidgets.QMainWindow):    
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         uic.loadUi(r'task1.ui', self)
-        
+        self.image_contour =None
         self.global_thresholding_slider.setMinimum(0)
         self.global_thresholding_slider.setMaximum(255)
         self.global_thresholding_slider.setValue(120)
@@ -23,10 +28,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.link_view_widgets()
         
         self.view_widgets = [self.manipulated_image_2, self.manipulated_image_1, self.original_image_2, self.original_image_1,
-                             self.original_hybrid_image_1, self.original_hybrid_image_2, self.filtered_hybrid_image_1,
-                             self.filtered_hybrid_image_2, self.filtered_hybrid_image_3, self.original_image_3, self.normalized_image,
-                             self.local_thresholding_image, self.global_thresholding_image, self.original_image, self.equalized_image,
-                             self.hough_transformed_image, self.original_image_6, self.original_image_5, self.manipulated_image_4]
+                            self.original_hybrid_image_1, self.original_hybrid_image_2, self.filtered_hybrid_image_1,
+                            self.filtered_hybrid_image_2, self.filtered_hybrid_image_3, self.original_image_3, self.normalized_image,
+                            self.local_thresholding_image, self.global_thresholding_image, self.original_image, self.equalized_image,
+                            self.hough_transformed_image, self.original_image_5, self.manipulated_image_4]
         self.plot_widgets = [self.histograme_plot, self.distribution_curve_plot, self.R_Curve, self.G_Curve, self.B_Curve]
     
         for container in self.view_widgets:
@@ -51,7 +56,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Kernel_slider.sliderReleased.connect(self.apply_filter)
         self.hybrid_filter_slider_1.sliderReleased.connect(lambda: self.filter_radius_slider_value_changed(1))
         self.hybrid_filter_slider_2.sliderReleased.connect(lambda: self.filter_radius_slider_value_changed(2))
-
+#_________________________________________________________________________________________________________
+        self.Apply_btn.clicked.connect(  lambda : self.plot_contour())
+        self.select_img_contour_btn.clicked.connect(lambda : self.display_images_page_contour())
+#___________________________________________________________________________________________________________
 
         self.noise_type_cb.currentIndexChanged.connect(self.apply_noise)
         self.filter_type_cb.currentIndexChanged.connect(self.apply_filter)
@@ -108,8 +116,6 @@ class MainWindow(QtWidgets.QMainWindow):
         path, _ = QFileDialog.getOpenFileName(self, "Open Image", initial_folder, "Image Files (*.png *.jpg *.jpeg *.bmp *.gif)")
         self.load_image(path, button)
         
-
-
     def load_image(self, path, button):
         if button in [self.browse_btn, self.upload_btn_1]:
             if len(self.loaded_images) != 0:
@@ -127,6 +133,38 @@ class MainWindow(QtWidgets.QMainWindow):
             del self.loaded_images[1:-1]
             self.display_images_page6(2)
 
+
+
+
+    def select_image_for_contour(self):
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        initial_folder = os.path.join(script_directory, "Images")
+        path, _ = QFileDialog.getOpenFileName(self, "Open Image", initial_folder, "Image Files (*.png *.jpg *.jpeg *.bmp *.gif)")
+        #image = cv2.imread(path, cv2.IMREAD_ANYCOLOR)
+        image = ImageProcessor(path).image
+        self.image_contour =image
+        return image
+
+
+    def display_images_page_contour(self):
+        image = self.select_image_for_contour()
+        for view_widget in [self.original_image_contour, self.output_image_contour]:
+            view_widget.setImage(np.rot90(image, k = -1))
+    #_________________________________________________________________________
+    def get_lineEdit_val(self):
+        alpha = float(self.Alpha_lineEdit.text())
+        beta  = float(self.Beta_lineEdit.text())
+        gamma  = float(self.Gamma_lineEdit.text())
+        itirations  = int(self.Iteration_lineEdit.text())
+        return alpha,beta,gamma,itirations
+    
+    def plot_contour(self):
+        alpha, beta, gamma , itirations = self.get_lineEdit_val()
+        snake_instance=Snake(self.image_contour)
+        contour_x ,contour_y = snake_instance.create_contour()
+        contour_x = np.array(contour_x)
+        contour_y = np.array(contour_y)
+        self.manipulated_image_4.plot(contour_x, contour_y, symbol='o', symbolSize=5, pen=pg.mkPen(color='r'))  # 'r' for red color
 
     def kernel_slider_value_changed(self):
         self.Kernel = self.Kernel_slider.value()
@@ -281,7 +319,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.loaded_images:
             target_image = self.loaded_images[0] if target == 1 else self.loaded_images[-1]
             filtered_lp, filtered_hp = self.get_frequency_domain_filters(target_image, getattr(self, f"radius_lp_{target}"), getattr(self, f"radius_hp_{target}"))
- 
+
             filters_map = {"Low-pass filter": filtered_lp, "High-pass filter": filtered_hp}
 
             if target == 1:
@@ -337,15 +375,14 @@ class MainWindow(QtWidgets.QMainWindow):
         return filtered_lp, filtered_hp
 
 
-
+    # utility function just to remove the bachground color of the pyqtgraph widgets and hide the axies
     def set_view_widget_settings(self, container):
         container.setBackground('#dddddd')
         container.setAspectLocked(True)
         container.hideAxis('left')
         container.hideAxis('bottom')
 
-
-
+    # this is a function to create an image item and then links it with its viewer widget 
     def link_view_widgets(self):
         self.original_image_view_widget, self.filter_manipulated_image_view_widget = pg.ImageItem(), pg.ImageItem()
         self.original_image_1.addItem(self.original_image_view_widget)
@@ -377,6 +414,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.original_image.addItem(self.original_image_view_widget_eq)
         self.equalized_image.addItem(self.equalized_image_view_widget)
 
+        self.original_image_contour, self.output_image_contour = pg.ImageItem(), pg.ImageItem()
+        self.original_image_5.addItem(self.original_image_contour)
+        self.manipulated_image_4.addItem(self.output_image_contour)
         
 def main():
     app = QtWidgets.QApplication(sys.argv)

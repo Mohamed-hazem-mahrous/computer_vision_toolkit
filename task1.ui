@@ -24,7 +24,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;gg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -3909,7 +3909,7 @@ QGroupBox::indicator {
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="QPushButton" name="browse_btn_3">
+                   <widget class="QPushButton" name="select_img_contour_btn">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -4413,8 +4413,8 @@ QGroupBox::indicator {
                    <property name="title">
                     <string>Input Image</string>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_47">
-                    <item>
+                   <layout class="QGridLayout" name="gridLayout_119">
+                    <item row="0" column="0">
                      <widget class="PlotWidget" name="original_image_5" native="true"/>
                     </item>
                    </layout>
@@ -4460,8 +4460,8 @@ QGroupBox::indicator {
                    <property name="title">
                     <string>Processed Image</string>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_49">
-                    <item>
+                   <layout class="QGridLayout" name="gridLayout_120">
+                    <item row="0" column="0">
                      <widget class="PlotWidget" name="manipulated_image_4" native="true"/>
                     </item>
                    </layout>
@@ -5085,7 +5085,7 @@ QGroupBox::indicator {
                   </widget>
                  </item>
                  <item row="1" column="0">
-                  <widget class="PlotWidget" name="original_image_6" native="true">
+                  <widget class="PlotWidget" name="hough_transformed_image" native="true">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                      <horstretch>0</horstretch>
@@ -5147,7 +5147,7 @@ QGroupBox::indicator {
                   </widget>
                  </item>
                  <item row="1" column="0">
-                  <widget class="PlotWidget" name="hough_transformed_image" native="true">
+                  <widget class="PlotWidget" name="original_image_widget" native="true">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                      <horstretch>0</horstretch>

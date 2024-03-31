@@ -18,7 +18,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         uic.loadUi(r'task1.ui', self)
-        self.image_contour =None
+        self.image_contour =()
         self.global_thresholding_slider.setMinimum(0)
         self.global_thresholding_slider.setMaximum(255)
         self.global_thresholding_slider.setValue(120)
@@ -57,8 +57,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.hybrid_filter_slider_1.sliderReleased.connect(lambda: self.filter_radius_slider_value_changed(1))
         self.hybrid_filter_slider_2.sliderReleased.connect(lambda: self.filter_radius_slider_value_changed(2))
 #_________________________________________________________________________________________________________
-        self.Apply_btn.clicked.connect(  lambda : self.plot_contour())
+        self.Apply_btn.clicked.connect(  lambda : self.apply_contour())
         self.select_img_contour_btn.clicked.connect(lambda : self.display_images_page_contour())
+        self.Reset_btn.clicked.connect(lambda: self.reset_contour())
 #___________________________________________________________________________________________________________
 
         self.noise_type_cb.currentIndexChanged.connect(self.apply_noise)
@@ -96,20 +97,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.label_texts = { "Uniform": "SNR", "Gaussian": "Sigma", "Salt and Pepper": "S & P amount" }
 
 
-
-    # def dragEnterEvent(self, event):
-    #     if event.mimeData().hasUrls():
-    #         event.accept()
-    #     else:
-    #         event.ignore()
-
-    # def dropEvent(self, event):
-    #     for url in event.mimeData().urls():
-    #         path = url.toLocalFile()
-    #         if os.path.exists(path):
-    #             self.load_image(path)
-
-
     def browse_image(self, button):
         script_directory = os.path.dirname(os.path.abspath(__file__))
         initial_folder = os.path.join(script_directory, "Images")
@@ -134,22 +121,21 @@ class MainWindow(QtWidgets.QMainWindow):
             self.display_images_page6(2)
 
 
-
-
     def select_image_for_contour(self):
         script_directory = os.path.dirname(os.path.abspath(__file__))
         initial_folder = os.path.join(script_directory, "Images")
         path, _ = QFileDialog.getOpenFileName(self, "Open Image", initial_folder, "Image Files (*.png *.jpg *.jpeg *.bmp *.gif)")
-        #image = cv2.imread(path, cv2.IMREAD_ANYCOLOR)
         image = ImageProcessor(path).image
-        self.image_contour =image
+        self.image_contour =(image,path)
         return image
 
-
     def display_images_page_contour(self):
+        self.reset_contour()
+        self.output_image_contour.clear()
         image = self.select_image_for_contour()
         for view_widget in [self.original_image_contour, self.output_image_contour]:
             view_widget.setImage(np.rot90(image, k = -1))
+        
     #_________________________________________________________________________
     def get_lineEdit_val(self):
         alpha = float(self.Alpha_lineEdit.text())
@@ -158,18 +144,52 @@ class MainWindow(QtWidgets.QMainWindow):
         itirations  = int(self.Iteration_lineEdit.text())
         return alpha,beta,gamma,itirations
     
-    def plot_contour(self):
-        alpha, beta, gamma , itirations = self.get_lineEdit_val()
-        snake_instance=Snake(self.image_contour)
-        contour_x ,contour_y = snake_instance.create_contour()
-        contour_x = np.array(contour_x)
-        contour_y = np.array(contour_y)
-        self.manipulated_image_4.plot(contour_x, contour_y, symbol='o', symbolSize=5, pen=pg.mkPen(color='r'))  # 'r' for red color
+    def plot_contour(self, cont_x, cont_y):
+        # Extract contour coordinates
+        contour_x = np.array(cont_x)
+        contour_y = np.array(cont_y)
 
+        # Clear existing contour if it exists
+        if hasattr(self, 'contour_plot'):
+            self.manipulated_image_4.removeItem(self.contour_plot)
+
+        # Plot the new contour
+        self.contour_plot = self.manipulated_image_4.plot(np.r_[cont_x, cont_x[0]], np.r_[cont_y, cont_y[0]], symbol='o', symbolSize=5, pen=pg.mkPen(color='r'))  # 'r' for red color
+        #print("cont_x" , cont_x[1:5] )
+
+
+    def apply_contour(self):
+        alpha, beta, gamma, iterations = self.get_lineEdit_val()
+        # Create a Snake instance
+        snake_instance = Snake(self.image_contour[0], self.image_contour[1], alpha, beta, gamma, iterations)
+        source = snake_instance.image
+        contour_x = snake_instance.contour_x
+        contour_y= snake_instance.contour_y
+        external_energy = snake_instance.external_energy
+        window_coordinates =snake_instance.window
+        for i in range(iterations):
+        # Start Applying Active Contour Algorithm
+            cont_x, cont_y = snake_instance.update_contour(source, contour_x, contour_y,
+                                            external_energy, window_coordinates)
+            # snake_instance.contour_x=cont_x
+            # snake_instance.contour_y =cont_y
+            print(i)
+            #print("cont_x_from_elly_ta7t" , cont_x[1:5] )
+            self.plot_contour(cont_x,cont_y)
+
+    def reset_contour(self):
+        if hasattr(self, 'contour_plot'):
+            self.manipulated_image_4.removeItem(self.contour_plot)
+            # Clear the contents of line edits
+        self.Alpha_lineEdit.clear()
+        self.Beta_lineEdit.clear()
+        self.Gamma_lineEdit.clear()
+        self.Iteration_lineEdit.clear()
+        self.image_contour= ()
+       
     def kernel_slider_value_changed(self):
         self.Kernel = self.Kernel_slider.value()
         self.kernel_label.setText("Kernel Size: " + str(self.Kernel))
-
 
 
     def SNR_slider_value_changed(self):

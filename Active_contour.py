@@ -90,6 +90,7 @@ class Snake:
     def update_contour(self , source: np.ndarray, contour_x: np.ndarray, contour_y: np.ndarray,
                 external_energy: np.ndarray, window_coordinates: list) -> Tuple[np.ndarray, np.ndarray]:
         src = source
+
         contour_points = len(contour_x)  # returns scaler of 60
         for Point in range(contour_points):  # point takes the value from 0 to 59
             MinEnergy = np.inf
@@ -100,24 +101,32 @@ class Snake:
             # this for loops aims to update the position of the contour point
             for Window in window_coordinates: # (x,y) window[0]--> 43
                 # Create Temporary Contours With Point Shifted To A Coordinate
-                contour_x[Point] = contour_x[Point] + Window[0] if (contour_x[Point] < src.shape[1]) else src.shape[1] - 1  # shape[1]--> x axis
-                contour_y[Point] = contour_y[Point] + Window[1] if contour_y[Point] < src.shape[0] else src.shape[0] - 1
+                cont_x = contour_x[Point].copy()
+                cont_y =contour_y[Point].copy()
+                contour_x[Point] = contour_x[Point] + Window[0]   # shape[1]--> x axis
+                contour_y[Point] = contour_y[Point] + Window[1] 
                 print("Countour_x2", contour_x[Point])
                 # Calculate Energy At The New Point
                 TotalEnergy = external_energy[contour_y[Point],contour_x[Point]] +self.calculate_internal_energy(contour_x,contour_y)
                 print("TotalEnergy", TotalEnergy)
+                intenisty_of_point = src[contour_x[Point],contour_y[Point]]
+                intenisty_of_Next_point= src[contour_x[Point]+1,contour_y[Point]+1]
+                differance= np.abs(intenisty_of_point-intenisty_of_Next_point)
                 # Save The Point If It Has The Lowest Energy In The Window
-                if TotalEnergy < MinEnergy:
+                if (TotalEnergy < MinEnergy and differance < 20 ):
                     MinEnergy = TotalEnergy
-                    NewX = contour_x[Point] if contour_x[Point] < src.shape[1] else src.shape[1] - 1
-                    NewY = contour_y[Point] if contour_y[Point] < src.shape[0] else src.shape[0] - 1
+                    NewX = contour_x[Point] 
+                    NewY = contour_y[Point] 
                     print("MinEnergy", MinEnergy)
 
                     print("NewX", NewX)
                     print("NewY", NewY)
+                else :
+                    NewX= cont_x
+                    NewY=cont_y
             # Shift The Point In The Contour To It's New Location With The Lowest Energy
-            contour_x[Point] = NewX
-            contour_y[Point] = NewY
+                contour_x[Point] = NewX
+                contour_y[Point] = NewY
             print("Final countour_x ", contour_x[Point])
         chain_code, dir_words = self.generate_chain_code(contour_x, contour_y)
         print("Chain Code:", chain_code)
@@ -128,7 +137,6 @@ class Snake:
         print("Contour Area:", area)
         print("Contour Perimeter:", perimeter)
         return contour_x, contour_y
-
 
 
 

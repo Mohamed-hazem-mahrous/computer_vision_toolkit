@@ -1,4 +1,5 @@
 from cv2 import imread, IMREAD_ANYCOLOR, line, circle
+import cv2
 import numpy as np
 from math import ceil
 
@@ -536,5 +537,70 @@ class ImageProcessor:
 
         for row, col, radius in circles:
             circle(image, (col, row), radius, (166,16,30), 2)
+
+        return image
+
+    def ellipse_hough_transform(self, min_a, max_a, min_b, max_b, theta_resolution=1):
+        edges = self.canny_edge(self.image)
+        h, w = edges.shape
+
+        accumulator = np.zeros((h, w, max_a - min_a + 1, max_b - min_b + 1), dtype=np.uint8)
+
+        for y in range(h):
+            for x in range(w):
+                if not edges[y, x]:
+                    continue
+
+                # Loop through semi-major and semi-minor axis lengths
+                for a in range(min_a, max_a + 1):
+                    for b in range(min_b, max_b + 1):
+                        # Generate range of orientations
+                        thetas = np.arange(0, 360, theta_resolution, dtype=np.float32) * np.pi / 180
+
+                        # Loop through orientations and vote in accumulator
+                        for theta in thetas:
+                            p = int(x + a * np.cos(theta))
+                            q = int(y + b * np.sin(theta))
+
+                            if 0 <= p < w and 0 <= q < h:
+                                a_offset = a - min_a
+                                b_offset = b - min_b
+                                accumulator[q, p, a_offset, b_offset] += 1
+
+        return accumulator
+
+
+    def ellipse_hough_peaks_suppression(self, accumulator, num_peaks, min_a, min_b, threshold=None):
+        peaks = []
+        h, w, *_ = accumulator.shape
+
+        # Flatten accumulator for efficient peak finding
+        flat_accumulator = accumulator.reshape(-1)
+
+        # Select top `num_peaks` indices with voting counts above threshold (if provided)
+        if threshold is None:
+            indices = np.argpartition(flat_accumulator, -num_peaks)[-num_peaks:]
+        else:
+            indices = np.where(flat_accumulator >= threshold)[0]
+            indices = indices[np.argsort(flat_accumulator[indices])[-num_peaks:]]
+
+        # Unravel indices to get peak coordinates in the accumulator
+        peak_coords = np.unravel_index(indices, accumulator.shape)
+
+        # Extract ellipse parameters from peaks
+        for row, col, a_offset, b_offset in zip(*peak_coords):
+            center_y, center_x = row, col
+            semi_major_axis = min_a + a_offset
+            semi_minor_axis = min_b + b_offset
+            peaks.append((center_y, center_x, semi_major_axis, semi_minor_axis))
+
+        return peaks
+    
+    def draw_ellipses(self, ellipses, color=(0, 255, 0), thickness=2):
+        image = np.stack((self.image,) * 3, axis=-1)
+
+        for center_y, center_x, semi_major_axis, semi_minor_axis in ellipses:
+            cv2.ellipse(image, (int(center_x), int(center_y)), (int(semi_major_axis), int(semi_minor_axis)),
+                        0, 0, 360, color, thickness)
 
         return image

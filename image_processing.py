@@ -220,9 +220,6 @@ class ImageProcessor:
         return convolved_image
 
 
-###########################canyy 
-
-
     def laplacian_edge(self, image, direction='both'):
         """
         Apply Laplacian edge detection to the image.

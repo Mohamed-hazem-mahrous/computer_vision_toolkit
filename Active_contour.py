@@ -176,7 +176,29 @@ class Snake:
         print("Chain Code:", chain_code)
         print("Chain Code Words:", dir_words)
 
+        area = self.calculate_area(contour_x, contour_y)
+        perimeter = self.calculate_perimeter(contour_x, contour_y)
+        print("Contour Area:", area)
+        print("Contour Perimeter:", perimeter)
+
         return contour_x, contour_y
+
+    def calculate_area(self, contour_x, contour_y):
+        # Shoelace formula
+        area = 0.5 * np.abs(np.dot(contour_x, np.roll(contour_y, 1)) - np.dot(contour_y, np.roll(contour_x, 1)))
+        return area
+
+    def calculate_perimeter(self, contour_x, contour_y):
+        perimeter = 0
+        for i in range(len(contour_x) - 1):
+            dx = contour_x[i + 1] - contour_x[i]
+            dy = contour_y[i + 1] - contour_y[i]
+            perimeter += np.sqrt(dx**2 + dy**2)
+        # Add the distance between the last and first points to close the contour
+        dx = contour_x[0] - contour_x[-1]
+        dy = contour_y[0] - contour_y[-1]
+        perimeter += np.sqrt(dx**2 + dy**2)
+        return perimeter
 
     def generate_chain_code(self, contour_x, contour_y):
         chain_code_sequence = []

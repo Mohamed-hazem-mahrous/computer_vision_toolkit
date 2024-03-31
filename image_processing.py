@@ -175,9 +175,9 @@ class ImageProcessor:
         :param kernel_size: Size of the square kernel.
         :param sigma: Standard deviation of the Gaussian distribution.
         :return: Filtered image.
-        """
-        kernel = np.fromfunction(lambda x, y: (1/(2*np.pi*sigma**2)) * np.exp(-((x-(kernel_size-1)//2)**2 + (y-(kernel_size-1)//2)**2) / 
-                (2*sigma**2)), (kernel_size, kernel_size))
+        """        
+        kernel = np.fromfunction(lambda x, y: (1/(2*np.pi*sigma**2)) * np.exp(-((x)**2 + (y)**2) / (2*sigma**2)), (kernel_size, kernel_size))
+        
         kernel /= np.sum(kernel)
 
         filtered_image = self.convolve(image, kernel)      
@@ -398,7 +398,7 @@ class ImageProcessor:
         weak_edges = (gradient_magnitude >= low_threshold) & (gradient_magnitude <= high_threshold)
         thresholded_image = np.zeros_like(gradient_magnitude)
         thresholded_image[strong_edges] = 255
-        thresholded_image[weak_edges] = 50  # Weak edge marker
+        thresholded_image[weak_edges] = 50
         return thresholded_image
 
 

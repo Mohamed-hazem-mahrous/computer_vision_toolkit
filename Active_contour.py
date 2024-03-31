@@ -21,6 +21,18 @@ class Snake:
         self.contour_x ,self.contour_y , self.window =self.create_contour()
         self.external_energy = self.calculate_external_energy(self.image)
 
+        # Direction of the chain code
+        self.directions = {
+            0:  "North",
+            1:  "North east",
+            2:  "East",
+            3:  "South east",
+            4:  "South",
+            5:  "South west",
+            6:  "West",
+            7:  "North west",
+        }
+
 
     # initialize the contour
     def create_contour(self):
@@ -160,7 +172,50 @@ class Snake:
             contour_x[Point] = NewX
             contour_y[Point] = NewY
         # print("cont_x ", contour_x[7:10])
+        chain_code, dir_words = self.generate_chain_code(contour_x, contour_y)
+        print("Chain Code:", chain_code)
+        print("Chain Code Words:", dir_words)
+
         return contour_x, contour_y
+
+    def generate_chain_code(self, contour_x, contour_y):
+        chain_code_sequence = []
+        chain_code_sequence_word = []
+
+        prev_point = (contour_x[0], contour_y[0])
+        for point in zip(contour_x[1:], contour_y[1:]):
+            dx = point[0] - prev_point[0]
+            dy = point[1] - prev_point[1]
+
+            direction = self.get_direction(dx, dy)
+            if direction is not None:
+                chain_code_sequence.append(direction)
+                chain_code_sequence_word.append(self.directions[direction])
+
+            prev_point = point
+        return chain_code_sequence, chain_code_sequence_word
+
+    def get_direction(self, dx, dy):
+        if dy < 0:
+            if dx > 0:
+                return 1  # Northeast
+            elif dx < 0:
+                return 7  # Northwest
+            else:
+                return 0  # North
+        elif dy > 0:
+            if dx > 0:
+                return 3  # Southeast
+            elif dx < 0:
+                return 5  # Southwest
+            else:
+                return 4  # South
+        else:
+            if dx > 0:
+                return 2  # East
+            elif dx < 0:
+                return 6  # West
+        return None
     
 
 

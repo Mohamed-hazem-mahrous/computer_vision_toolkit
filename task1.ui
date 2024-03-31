@@ -24,7 +24,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;gg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>7</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -4328,6 +4328,20 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
                     </item>
                    </layout>
                   </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="area_lbl">
+                    <property name="text">
+                     <string>Area: </string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="perim_lbl">
+                    <property name="text">
+                     <string>Perimeter: </string>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
                 </widget>
                </item>
@@ -5218,7 +5232,7 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
      <x>0</x>
      <y>0</y>
      <width>1196</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

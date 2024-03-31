@@ -261,6 +261,12 @@ class MainWindow(QtWidgets.QMainWindow):
             print(i)
             #print("cont_x_from_elly_ta7t" , cont_x[1:5] )
             self.plot_contour(cont_x,cont_y)
+            area = snake_instance.calculate_area(cont_x,cont_y)
+            peremeter= snake_instance.calculate_perimeter(cont_x,cont_y)
+            text1 = "perimeter :" + str(peremeter)
+            self.perim_lbl.setText(text1)
+            text2 = "area :" + str(area)
+            self.area_lbl.setText(text2)
 
     def reset_contour(self):
         if hasattr(self, 'contour_plot'):
@@ -271,7 +277,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Gamma_lineEdit.clear()
         self.Iteration_lineEdit.clear()
         self.image_contour= ()
-       
+
     def kernel_slider_value_changed(self):
         self.Kernel = self.Kernel_slider.value()
         self.kernel_label.setText("Kernel Size: " + str(self.Kernel))

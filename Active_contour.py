@@ -6,7 +6,7 @@ from image_processing import ImageProcessor
 from typing import Tuple 
 
 class Snake:
-    def __init__(self, image , filepath , alpha , beta , gamma , iteration, N_points= 40):
+    def __init__(self, image, filepath, alpha, beta, gamma, iteration, N_points= 25):
         self.image = image
         self.filepath = filepath
         self.N_points = N_points
@@ -18,9 +18,8 @@ class Snake:
         self.beta = beta
         self.gamma = gamma
         self.iteration = iteration
-        self.contour_x ,self.contour_y , self.window =self.create_contour()
+        self.contour_x, self.contour_y, self.window = self.create_contour()
         self.external_energy = self.calculate_external_energy(self.image)
-
         # Direction of the chain code
         self.directions = {
             0:  "North",
@@ -32,8 +31,6 @@ class Snake:
             6:  "West",
             7:  "North west",
         }
-
-
     # initialize the contour
     def create_contour(self):
         angles = np.linspace(0, 2*np.pi, self.N_points)
@@ -41,7 +38,7 @@ class Snake:
         y_coordinates = self.y_center + self.radius * np.sin(angles)
         contour_x = x_coordinates.astype(int)
         contour_y = y_coordinates.astype(int)
-        window =self.GenerateWindowCoordinates(3)
+        window = self.GenerateWindowCoordinates(7)
         return contour_x,contour_y , window
     
     # this function creates the indecis of each window pixel 
@@ -53,7 +50,6 @@ class Snake:
         # Generates All Possible Coordinates Inside The Window
         Coordinates = list(itertools.product(*PointsList))
         return Coordinates
-    
 
     def calculate_internal_energy( self , contour_x , contour_y ):
         JoinedXY = np.array((contour_x, contour_y))
@@ -62,21 +58,18 @@ class Snake:
         # Continuous  Energy
         PrevPoints = np.roll(Points, 1, axis=0)
         NextPoints = np.roll(Points, -1, axis=0)
-        Displacements = Points - PrevPoints
-        # computes the Euclidean distance between each pair of adjacent points.
-        PointDistances = np.sqrt(Displacements[:, 0] ** 2 + Displacements[:, 1] ** 2)
-        MeanDistance = np.mean(PointDistances)
-        ContinuousEnergy = np.sum((PointDistances - MeanDistance) ** 2)
+        Displacements = NextPoints - Points
+        square_x = Displacements[:, 0] ** 2 
+        square_y =Displacements[:, 1] ** 2
+        ContinuousEnergy =np.sum(square_x+square_y)
         # Curvature Energy
         CurvatureSeparated = PrevPoints - 2 * Points + NextPoints
         Curvature = (CurvatureSeparated[:, 0] ** 2 + CurvatureSeparated[:, 1] ** 2)
         CurvatureEnergy = np.sum(Curvature)
         return self.alpha * ContinuousEnergy + self.beta * CurvatureEnergy
-    
 
-
-    def calculate_external_energy( self , source):
-        imgg_instance = ImageProcessor(self.filepath)
+    def calculate_external_energy(self, source):
+        # imgg_instance = ImageProcessor(self.filepath)
         src = np.copy(source)
         # convert to gray scale if not already
         if len(src.shape) > 2:
@@ -84,94 +77,48 @@ class Snake:
         else:
             gray = src
         # Apply Gaussian Filter to smooth the image
-        Gaussian_image = imgg_instance.apply_gaussian_filter( gray,  7,  7)
-        # Get Gradient Magnitude & Direction
-        # Compute the gradient using the Sobel operator
-        gradient_x = imgg_instance.sobel_edge(Gaussian_image, "Horizontal")
-        gradient_y = imgg_instance.sobel_edge(Gaussian_image, "Vertical")
+        Gaussian_image = cv2.GaussianBlur(gray, (5, 5), 0)
+        gradient_x = cv2.Sobel(Gaussian_image, cv2.CV_64F, 1, 0, ksize=5)
+        gradient_y = cv2.Sobel(Gaussian_image, cv2.CV_64F, 0, 1, ksize=5)
         # Compute the magnitude of the gradient
         gradient_magnitude = np.sqrt(gradient_x**2 + gradient_y**2)
         # Normalize the gradient magnitude to range [0, 1]
         gradient_magnitude = gradient_magnitude / np.max(gradient_magnitude)
-        # Calculate the external energy
-        shape=src.shape
-        pad_width = ((0, shape[0] - gradient_magnitude.shape[0]+1),  # Padding along rows
-            (0, shape[1] - gradient_magnitude.shape[1]+1))  # Padding along columns
-
-# Pad the array with zeros
-        padded_array_2d = np.pad(gradient_magnitude, pad_width, mode='constant')
-
-        external_energy =  -1 * self.gamma * padded_array_2d
+        external_energy =  - self.gamma * gradient_magnitude
         return external_energy
-        
-
-    # def update_contour(self , source: np.ndarray, contour_x: np.ndarray, contour_y: np.ndarray,
-    #                 external_energy: np.ndarray, window_coordinates: list) -> Tuple[np.ndarray, np.ndarray]:
-    #     src = np.copy(source)
-    #     cont_x = np.copy(contour_x)
-    #     cont_y = np.copy(contour_y)
-        
-    #     contour_points = len(cont_x) #reterns scalers of 60 
-    #     for Point in range(contour_points):# point takes the value from 0 to 59
-    #         MinEnergy = np.inf
-    #         TotalEnergy = 0
-    #         NewX = None
-    #         NewY = None
-    #         #this for loops aims to update the position of the contour point
-    #         for Window in window_coordinates: # (x,y) window[0]--> 43
-    #             # Create Temporary Contours With Point Shifted To A Coordinate
-    #             contour_x, contour_y = np.copy(cont_x), np.copy(cont_y)
-    #             contour_x[Point] = contour_x[Point] + Window[0] if (contour_x[Point] < src.shape[1]) else src.shape[1] - 1 # shape[1]--> x axis
-    #             contour_y[Point] = contour_y[Point] + Window[1] if contour_y[Point] < src.shape[0] else src.shape[0] - 1
-    #             # Calculate Energy At The New Point
-    #             try:
-    #                 TotalEnergy = external_energy[contour_y[Point],contour_x[Point]] +self.calculate_internal_energy(contour_x,contour_y)
-                    
-    #             except:
-    #                 pass
-    #             # Save The Point If It Has The Lowest Energy In The Window
-    #             if TotalEnergy < MinEnergy:
-    #                 MinEnergy = TotalEnergy
-    #                 NewX = contour_x[Point] if contour_x[Point] < src.shape[1] else src.shape[1] - 1
-    #                 NewY = contour_y[Point] if contour_y[Point] < src.shape[0] else src.shape[0] - 1
-    #                 # print("NewX ", NewX)
-    #                 # print("NewY" , NewY )
-    #         # Shift The Point In The Contour To It's New Location With The Lowest Energy
-    #         cont_x[Point] = NewX
-    #         cont_y[Point] = NewY
-    #     print("cont_x ", cont_x[7:10])
-    #     return cont_x, cont_y
-
 
     def update_contour(self , source: np.ndarray, contour_x: np.ndarray, contour_y: np.ndarray,
-                    external_energy: np.ndarray, window_coordinates: list) -> Tuple[np.ndarray, np.ndarray]:
-        src = source      
-        contour_points = len(contour_x) #reterns scalers of 60
-        print(contour_points)
-        for Point in range(contour_points):# point takes the value from 0 to 59
+                external_energy: np.ndarray, window_coordinates: list) -> Tuple[np.ndarray, np.ndarray]:
+        src = source
+        contour_points = len(contour_x)  # returns scaler of 60
+        for Point in range(contour_points):  # point takes the value from 0 to 59
             MinEnergy = np.inf
             TotalEnergy = 0
             NewX = None
             NewY = None
-            #this for loops aims to update the position of the contour point
+            print("Countour_x1", contour_x[Point])
+            # this for loops aims to update the position of the contour point
             for Window in window_coordinates: # (x,y) window[0]--> 43
                 # Create Temporary Contours With Point Shifted To A Coordinate
-                contour_x[Point] = contour_x[Point] + Window[0] if (contour_x[Point] < src.shape[1]) else src.shape[1] - 1 # shape[1]--> x axis
+                contour_x[Point] = contour_x[Point] + Window[0] if (contour_x[Point] < src.shape[1]) else src.shape[1] - 1  # shape[1]--> x axis
                 contour_y[Point] = contour_y[Point] + Window[1] if contour_y[Point] < src.shape[0] else src.shape[0] - 1
+                print("Countour_x2", contour_x[Point])
                 # Calculate Energy At The New Point
                 TotalEnergy = external_energy[contour_y[Point],contour_x[Point]] +self.calculate_internal_energy(contour_x,contour_y)
+                print("TotalEnergy", TotalEnergy)
                 # Save The Point If It Has The Lowest Energy In The Window
                 if TotalEnergy < MinEnergy:
                     MinEnergy = TotalEnergy
                     NewX = contour_x[Point] if contour_x[Point] < src.shape[1] else src.shape[1] - 1
                     NewY = contour_y[Point] if contour_y[Point] < src.shape[0] else src.shape[0] - 1
-                    # print("NewX ", NewX)
-                
                     print("MinEnergy", MinEnergy)
+
+                    print("NewX", NewX)
+                    print("NewY", NewY)
             # Shift The Point In The Contour To It's New Location With The Lowest Energy
             contour_x[Point] = NewX
             contour_y[Point] = NewY
-        # print("cont_x ", contour_x[7:10])
+            print("Final countour_x ", contour_x[Point])
         chain_code, dir_words = self.generate_chain_code(contour_x, contour_y)
         print("Chain Code:", chain_code)
         print("Chain Code Words:", dir_words)
@@ -180,8 +127,10 @@ class Snake:
         perimeter = self.calculate_perimeter(contour_x, contour_y)
         print("Contour Area:", area)
         print("Contour Perimeter:", perimeter)
-
         return contour_x, contour_y
+
+
+
 
     def calculate_area(self, contour_x, contour_y):
         # Shoelace formula

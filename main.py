@@ -31,7 +31,7 @@ class MainWindow(QtWidgets.QMainWindow):
                             self.original_hybrid_image_1, self.original_hybrid_image_2, self.filtered_hybrid_image_1,
                             self.filtered_hybrid_image_2, self.filtered_hybrid_image_3, self.original_image_3, self.normalized_image,
                             self.local_thresholding_image, self.global_thresholding_image, self.original_image, self.equalized_image,
-                            self.hough_transformed_image, self.original_image_5, self.manipulated_image_4]
+                            self.hough_transformed_image, self.original_image_5, self.manipulated_image_4, self.original_image_6]
         self.plot_widgets = [self.histograme_plot, self.distribution_curve_plot, self.R_Curve, self.G_Curve, self.B_Curve]
     
         for container in self.view_widgets:
@@ -95,6 +95,91 @@ class MainWindow(QtWidgets.QMainWindow):
         }
         
         self.label_texts = { "Uniform": "SNR", "Gaussian": "Sigma", "Salt and Pepper": "S & P amount" }
+
+        self.line_hough_parameters = {
+            'Hough Space': None,
+            'Rhos': None,
+            'Thetas': None
+            }
+        self.circle_hough_parameters = {
+            'Hough Space': None,
+            'min radius': 10,
+            'max radius': 30
+            }
+        
+        self.no_of_peaks_slider.valueChanged.connect(self.number_of_peaks_slider_value_changed)
+        
+        self.browse_btn_4.clicked.connect(self.browse_hough_image)
+        self.hough_apply_btn.clicked.connect(self.apply_hough)
+
+        self.line_hough_radio_btn.setChecked(True)
+
+        for radio_btn in [self.line_hough_radio_btn, self.circle_hough_radio_btn, self.ellipse_hough_radio_btn]:
+            radio_btn.clicked.connect(self.hough_radio_btn_clicked)
+
+    
+    def apply_line_hough_transform(self, hough_image, num_peaks=15, calculate_accumlator = True):
+        image = hough_image
+        if calculate_accumlator:
+            (self.line_hough_parameters['Hough Space'], 
+            self.line_hough_parameters['Rhos'], 
+            self.line_hough_parameters['Thetas']) = image.line_hough_transform()
+        
+        indicies, _ = image.line_hough_peaks_suppresion(self.line_hough_parameters['Hough Space'], num_peaks, nhood_size=20)
+        detected_image = image.draw_lines(image.image, indicies, self.line_hough_parameters['Rhos'], self.line_hough_parameters['Thetas'])
+        
+        self.hough_transform_view_widget.setImage(np.rot90(detected_image, k=-1))
+        self.original_image_view_widget_hough.setImage(np.rot90(image.image, k=-1))
+
+
+    def apply_circle_hough_transform(self, hough_image, num_peaks=15, calculate_accumlator = True):
+        image = hough_image
+        if calculate_accumlator:
+            self.circle_hough_parameters['Hough Space'] = image.circle_hough_transform(self.circle_hough_parameters['min radius'], self.circle_hough_parameters['max radius'])
+            
+        circles = image.circle_hough_peaks_suppression(self.circle_hough_parameters['Hough Space'], num_peaks, self.circle_hough_parameters['min radius'])
+        detected_image = image.draw_circles(circles)
+        
+        self.hough_transform_view_widget.setImage(np.rot90(detected_image, k=-1))
+        self.original_image_view_widget_hough.setImage(np.rot90(image.image, k=-1))
+
+
+    def number_of_peaks_slider_value_changed(self):
+        value = self.no_of_peaks_slider.value()
+        self.no_of_peaks_label.setText(f"No. of Peaks: {str(value)}")
+        
+        if self.line_hough_radio_btn.isChecked():
+            calculate_accumlator_flag = self.line_hough_parameters['Hough Space'] is None
+            self.apply_line_hough_transform(self.original_hough_image, num_peaks=value, calculate_accumlator=calculate_accumlator_flag)
+
+        elif self.circle_hough_radio_btn.isChecked():
+            calculate_accumlator_flag = self.circle_hough_parameters['Hough Space'] is None
+            self.apply_circle_hough_transform(self.original_hough_image, num_peaks=value, calculate_accumlator=calculate_accumlator_flag)
+
+    
+    def browse_hough_image(self):
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        initial_folder = os.path.join(script_directory, "Images")
+        path, _ = QFileDialog.getOpenFileName(self, "Open Image", initial_folder, "Image Files (*.png *.jpg *.jpeg *.bmp *.gif)")
+        self.original_hough_image = ImageProcessor(path)
+
+        if self.line_hough_radio_btn.isChecked():
+            self.apply_line_hough_transform(self.original_hough_image)
+
+        elif self.circle_hough_radio_btn.isChecked():
+            self.apply_circle_hough_transform(self.original_hough_image)
+
+    def hough_radio_btn_clicked(self):
+        self.number_of_peaks_slider_value_changed()
+
+    def apply_hough(self):
+        if self.line_hough_radio_btn.isChecked():
+            return
+        
+        elif self.circle_hough_radio_btn.isChecked():
+            self.circle_hough_parameters['min radius'] = int(self.min_radius_line_edit.text())
+            self.circle_hough_parameters['max radius'] = int(self.max_radius_line_edit.text())
+            self.apply_circle_hough_transform(self.original_hough_image, num_peaks=self.no_of_peaks_slider.value(), calculate_accumlator=True)
 
 
     def browse_image(self, button):
@@ -437,6 +522,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.original_image_contour, self.output_image_contour = pg.ImageItem(), pg.ImageItem()
         self.original_image_5.addItem(self.original_image_contour)
         self.manipulated_image_4.addItem(self.output_image_contour)
+
+        self.hough_transform_view_widget, self.original_image_view_widget_hough = pg.ImageItem(), pg.ImageItem()
+        self.hough_transformed_image.addItem(self.hough_transform_view_widget)
+        self.original_image_6.addItem(self.original_image_view_widget_hough)
         
 def main():
     app = QtWidgets.QApplication(sys.argv)

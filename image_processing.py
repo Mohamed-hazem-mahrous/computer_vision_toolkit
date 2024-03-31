@@ -1,11 +1,12 @@
-import cv2
+from cv2 import imread, IMREAD_ANYCOLOR, line, circle
 import numpy as np
+from math import ceil
 
 
 class ImageProcessor:
     def __init__(self, filePath):
         self.filePath = filePath
-        self.image = cv2.imread(self.filePath, cv2.IMREAD_ANYCOLOR)
+        self.image = imread(self.filePath, IMREAD_ANYCOLOR)
         self.RGBhistograms, self.RGBcdf = self.get_RGB_histograms_and_cdf(self.image)
         self.image = self.convert_to_grayscale(self.image)
         self.noisy_image = None
@@ -272,6 +273,73 @@ class ImageProcessor:
         return self.apply_edge(image, roberts_kernel, direction)
     
 
+    def apply_edge(self, image, array, direction):
+        if direction == 'Horizontal':
+            edge = abs(self.convolve(image, array))
+        elif direction == 'Vertical':
+            edge = abs(self.convolve(image, array.T))
+        else:
+            edge_x = abs(self.convolve(image, array))
+            edge_y = abs(self.convolve(image, array.T))
+            edge = np.sqrt(edge_x ** 2 + edge_y ** 2)
+        return edge.astype(np.uint8)
+
+
+    def convert_to_grayscale(self, image):
+        """
+        Convert the RGB image to grayscale using NTSC formula.
+        :param image: Input RGB image (numpy array).
+        :return: Grayscale image (numpy array).
+        """
+        rgb_coefficients = [0.299, 0.587, 0.114]
+        grayscale_image = np.dot(image[..., :3], rgb_coefficients)
+
+        return grayscale_image.astype(np.uint8)
+
+
+    def get_RGB_histograms_and_cdf(self, image):
+        """
+        Compute the RGB histograms and cumulative distribution functions (CDFs) of the image.
+        :param image: Input image (numpy array)
+        :return: Tuple containing RGB histograms and CDFs.
+        """
+        if len(image.shape) == 2:
+            hist = [0] * 256
+            cdf = [0] * 256
+            total_pixels = image.shape[0] * image.shape[1]
+
+            for row in image:
+                for pixel in row:
+                    hist[pixel] += 1
+
+            cdf[0] = hist[0] / total_pixels
+            for i in range(1, 256):
+                cdf[i] = cdf[i-1] + hist[i] / total_pixels
+
+            return [hist, hist, hist], [cdf, cdf, cdf]
+
+        elif len(image.shape) == 3 and image.shape[2] == 3:
+            hist = [[0]*256, [0]*256, [0]*256]
+            cdf = [[0]*256, [0]*256, [0]*256]
+            total_pixels = image.shape[0] * image.shape[1]
+
+            for row in image:
+                for pixel in row:
+                    for i in range(3):
+                        hist[i][pixel[i]] += 1
+
+            for i in range(3):
+                cdf[i][0] = hist[i][0] / total_pixels
+                for j in range(1, 256):
+                    cdf[i][j] = cdf[i][j-1] + hist[i][j] / total_pixels
+
+            return hist, cdf
+        else:
+            raise ValueError("Unsupported image format")
+    # ==========================================================================================================================================
+    # ================================================= Canny Edge Detector ====================================================================
+    # ==========================================================================================================================================
+        
     def canny_edge(self, image, direction='both', low_threshold=50, high_threshold=150):
         # Step 1: Apply Gaussian blur
         blurred_image = self.apply_gaussian_filter(image)
@@ -359,67 +427,117 @@ class ImageProcessor:
         return thresholded_image
 
 
+    # ==========================================================================================================================================
+    # ================================================== Hough Transforms ======================================================================
+    # ==========================================================================================================================================
 
-    def apply_edge(self, image, array, direction):
-        if direction == 'Horizontal':
-            edge = abs(self.convolve(image, array))
-        elif direction == 'Vertical':
-            edge = abs(self.convolve(image, array.T))
-        else:
-            edge_x = abs(self.convolve(image, array))
-            edge_y = abs(self.convolve(image, array.T))
-            edge = np.sqrt(edge_x ** 2 + edge_y ** 2)
-        return edge.astype(np.uint8)
+    def line_hough_transform(self):
+        image = self.canny_edge(self.image)
+        w, h = image.shape
+        xy_pairs = np.nonzero(image)
+
+        R_max = ceil(((w ** 2) + (h ** 2)) ** (0.5))
+
+        thetas = np.deg2rad(np.arange(-90.0, 90.0))
+        rhos = np.linspace(-R_max, R_max, R_max * 2)
+
+        cosines, sines = np.cos(thetas), np.sin(thetas)
+
+        accumulator = np.zeros((2 * R_max, len(thetas)), dtype=np.uint32)
+
+        for (y, x) in zip(*xy_pairs):
+            for theta in range(len(thetas)):
+                rho = int(round(x * cosines[theta] + y * sines[theta]) + R_max)
+                accumulator[rho, theta] += 1
+
+        return accumulator, rhos, thetas
+    
+
+    def line_hough_peaks_suppresion(self, accumlator, num_peaks, nhood_size=3):
+        indices = []
+        hough_space = np.copy(accumlator)
+
+        for _ in range(num_peaks):
+            idx = np.argmax(hough_space)
+            hough_space_idx = np.unravel_index(idx, hough_space.shape)
+            indices.append(hough_space_idx)
+
+            idx_y, idx_x = hough_space_idx
+            min_x = max(0, idx_x - (nhood_size // 2))
+            max_x = min(accumlator.shape[1], idx_x + (nhood_size // 2) + 1)
+            min_y = max(0, idx_y - (nhood_size // 2))
+            max_y = min(accumlator.shape[0], idx_y + (nhood_size // 2) + 1)
+
+            hough_space[min_y:max_y, min_x:max_x] = 0
+
+        return indices, hough_space
 
 
-    def convert_to_grayscale(self, image):
-        """
-        Convert the RGB image to grayscale using NTSC formula.
-        :param image: Input RGB image (numpy array).
-        :return: Grayscale image (numpy array).
-        """
-        rgb_coefficients = [0.299, 0.587, 0.114]
-        grayscale_image = np.dot(image[..., :3], rgb_coefficients)
+    def draw_lines(self, image, indices, rhos, thetas):
+        image = np.stack((image,) * 3, axis=-1)
+        
+        for (idx_rhos, idx_thetas) in indices:
+            rho = rhos[idx_rhos]
+            theta = thetas[idx_thetas]
+            a, b = np.cos(theta), np.sin(theta)
+            x0, y0 = a * rho, b * rho
 
-        return grayscale_image.astype(np.uint8)
+            offset = len(rhos) # Line Length
+            x1, y1 = int(x0 + offset * (-b)), int(y0 + offset * (a))
+            x2, y2 = int(x0 - offset * (-b)), int(y0 - offset * (a))
+
+            line(image, (x1, y1), (x2, y2), (166,16,30), 2)
+
+        return image
+    
+
+    def circle_hough_transform(self, min_radius, max_radius):
+        image = self.canny_edge(self.image)
+        w, h = image.shape
+        xy_pairs = np.nonzero(image)
+
+        thetas = np.deg2rad(np.arange(360))
+        sines, cosines = np.sin(thetas), np.cos(thetas)
+        accumulator = np.zeros((w, h, max_radius - min_radius + 1), dtype=np.uint8)
+
+        for (y, x) in zip(*xy_pairs):
+            for r in range(min_radius, max_radius + 1):
+                a = y - np.round(r * cosines).astype(int)
+                b = x - np.round(r * sines).astype(int)
+                valid = (a >= 0) & (a < w) & (b >= 0) & (b < h)
+                accumulator[a[valid], b[valid], r - min_radius] += 1
+
+        return accumulator
 
 
-    def get_RGB_histograms_and_cdf(self, image):
-        """
-        Compute the RGB histograms and cumulative distribution functions (CDFs) of the image.
-        :param image: Input image (numpy array)
-        :return: Tuple containing RGB histograms and CDFs.
-        """
-        if len(image.shape) == 2:
-            hist = [0] * 256
-            cdf = [0] * 256
-            total_pixels = image.shape[0] * image.shape[1]
+    def circle_hough_peaks_suppression(self, accumulator, num_peaks, min_radius, nhood_size=3):
+        peaks = []
+        w, h, _ = accumulator.shape
 
-            for row in image:
-                for pixel in row:
-                    hist[pixel] += 1
+        flat_accumulator = accumulator.reshape(-1)
+        indices = np.argpartition(flat_accumulator, -num_peaks)[-num_peaks:]
+        peak_coords = np.unravel_index(indices, accumulator.shape)
 
-            cdf[0] = hist[0] / total_pixels
-            for i in range(1, 256):
-                cdf[i] = cdf[i-1] + hist[i] / total_pixels
+        for row, col, radius_offset in zip(*peak_coords):
+            center_y, center_x = row, col
+            radius = min_radius + radius_offset
 
-            return [hist, hist, hist], [cdf, cdf, cdf]
+            min_x = max(0, center_x - (nhood_size // 2))
+            max_x = min(h, center_x + (nhood_size // 2) + 1)
+            min_y = max(0, center_y - (nhood_size // 2))
+            max_y = min(w, center_y + (nhood_size // 2) + 1)
+            neighborhood = accumulator[min_y:max_y, min_x:max_x, :]
 
-        elif len(image.shape) == 3 and image.shape[2] == 3:
-            hist = [[0]*256, [0]*256, [0]*256]
-            cdf = [[0]*256, [0]*256, [0]*256]
-            total_pixels = image.shape[0] * image.shape[1]
+            if np.all(neighborhood <= accumulator[row, col, radius_offset]):
+                peaks.append((row, col, radius))
 
-            for row in image:
-                for pixel in row:
-                    for i in range(3):
-                        hist[i][pixel[i]] += 1
+        return peaks
+    
 
-            for i in range(3):
-                cdf[i][0] = hist[i][0] / total_pixels
-                for j in range(1, 256):
-                    cdf[i][j] = cdf[i][j-1] + hist[i][j] / total_pixels
+    def draw_circles(self, circles):
+        image = np.stack((self.image,) * 3, axis=-1)
 
-            return hist, cdf
-        else:
-            raise ValueError("Unsupported image format")
+        for row, col, radius in circles:
+            circle(image, (col, row), radius, (166,16,30), 2)
+
+        return image

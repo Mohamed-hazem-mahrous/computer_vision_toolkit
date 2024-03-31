@@ -114,7 +114,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.line_hough_radio_btn.setChecked(True)
 
-        for radio_btn in [self.line_hough_radio_btn, self.circle_hough_radio_btn, self.ellipse_hough_radio_btn]:
+        for radio_btn in [self.line_hough_radio_btn, self.circle_hough_radio_btn]:
             radio_btn.clicked.connect(self.hough_radio_btn_clicked)
 
     

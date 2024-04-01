@@ -140,7 +140,6 @@ class Snake:
 
 
 
-
     def calculate_area(self, contour_x, contour_y):
         # Shoelace formula
         area = 0.5 * np.abs(np.dot(contour_x, np.roll(contour_y, 1)) - np.dot(contour_y, np.roll(contour_x, 1)))

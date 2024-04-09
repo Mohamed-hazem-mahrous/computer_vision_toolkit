@@ -3,15 +3,15 @@ import cv2
 import numpy as np
 
 class ImageMatching:
-    def __init__(self, original_image, template_image, method):
-        self.original_image = original_image
-        self.template_image = template_image
-        self.method = method
-        self.original_image_gray = cv2.cvtColor(self.original_image, cv2.COLOR_BGR2GRAY)
-        self.template_image_gray = cv2.cvtColor(self.template_image, cv2.COLOR_BGR2GRAY)
+    def __init__(self, original_image, template_image):
+        self.original_image_gray = original_image
+        self.template_image_gray = template_image
+        # self.method = method
+        # self.original_image_gray = cv2.cvtColor(self.original_image, cv2.COLOR_BGR2GRAY)
+        # self.template_image_gray = cv2.cvtColor(self.template_image, cv2.COLOR_BGR2GRAY)
         self.height1, self.width1 = self.original_image_gray.shape
         self.height2, self.width2 = self.template_image_gray.shape
-        self.result = self.match_images()
+        # self.result = self.match_images()
 
     def compute_ssd(self, descriptor1, descriptor2):
         ssd = -(np.sqrt(np.sum((descriptor1 - descriptor2)**2)))  # try without -sqrt

@@ -1,7 +1,9 @@
 import os
 import numpy as np
 from PyQt5.QtWidgets import QFileDialog
-from PyQt5 import QtWidgets, uic
+from PyQt5.QtWidgets import QApplication, QMessageBox
+
+from PyQt5 import QtWidgets, uic 
 import sys
 import pyqtgraph as pg
 from image_processing import ImageProcessor
@@ -12,26 +14,28 @@ import cv2
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg 
 import matplotlib.pyplot as plt
-
+from ImageMatching import ImageMatching
+from PyQt5.QtGui import QPixmap ,QImage
 
 class MainWindow(QtWidgets.QMainWindow):    
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         uic.loadUi(r'task1.ui', self)
         self.image_contour =()
+        self.img_match_instance = None 
         self.global_thresholding_slider.setMinimum(0)
         self.global_thresholding_slider.setMaximum(255)
         self.global_thresholding_slider.setValue(120)
         self.local_thresholding_slider.setMinimum(0)
         self.local_thresholding_slider.setMaximum(255)
-
         self.link_view_widgets()
-        
+        self.uploaded_image_matching_list=[]
         self.view_widgets = [self.manipulated_image_2, self.manipulated_image_1, self.original_image_2, self.original_image_1,
                             self.original_hybrid_image_1, self.original_hybrid_image_2, self.filtered_hybrid_image_1,
                             self.filtered_hybrid_image_2, self.filtered_hybrid_image_3, self.original_image_3, self.normalized_image,
                             self.local_thresholding_image, self.global_thresholding_image, self.original_image, self.equalized_image,
-                            self.hough_transformed_image, self.original_image_5, self.manipulated_image_4, self.original_image_6]
+                            self.hough_transformed_image, self.original_image_5, self.manipulated_image_4, self.original_image_6 ,
+                            self.original_image_match , self.template_image_match , self.ssd_match_image, self.ncc_match_image]
         self.plot_widgets = [self.histograme_plot, self.distribution_curve_plot, self.R_Curve, self.G_Curve, self.B_Curve]
     
         for container in self.view_widgets:
@@ -42,7 +46,7 @@ class MainWindow(QtWidgets.QMainWindow):
             container.setLimits(yMin = 0)
 
 
-        for button in [self.browse_btn, self.upload_btn_1, self.upload_btn_2]:
+        for button in [self.browse_btn, self.upload_btn_1, self.upload_btn_2,self.upload_original_btn_match,self.upload_template_btn_match]:
             button.clicked.connect(lambda checked, btn=button: self.browse_image(btn))
         self.create_hybrid_btn.clicked.connect(self.hybrid_images)
         
@@ -69,11 +73,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.plotting_typr_combobox.currentIndexChanged.connect(self.display_hist_dist)
         self.filter_type_combobox_1.currentIndexChanged.connect(lambda: self.display_images_page6(1))
         self.filter_type_combobox_2.currentIndexChanged.connect(lambda: self.display_images_page6(2))
-
-        # open_image_shortcut = QShortcut(Qt.CTRL + Qt.Key_O, self)
-        # open_image_shortcut.activated.connect(self.browse_image)
-        # self.setAcceptDrops(True)
-
+        self.match_apply_btn.clicked.connect(self.apply_image_matching)
+       
         
         self.loaded_images = []
         
@@ -200,12 +201,42 @@ class MainWindow(QtWidgets.QMainWindow):
             self.apply_noise()
             self.apply_edge_detection()
             self.display_images_page4()
+            # self.display_images_page9(1)
+        elif button== self.upload_original_btn_match:
+            self.uploaded_image_matching_list.append(ImageProcessor(path))
+            # if len(self.loaded_images) != 0:
+            #     del self.loaded_images[0:]            
+            self.display_images_page9(1)
+        elif button== self.upload_template_btn_match:
+            self.uploaded_image_matching_list.append(ImageProcessor(path))
+            # del self.loaded_images[1:-1]
+            self.display_images_page9(2)
+
         else:
             self.loaded_images.append(ImageProcessor(path))
             del self.loaded_images[1:-1]
             self.display_images_page6(2)
 
-
+    def display_images_page9(self,target=1):
+        if self.uploaded_image_matching_list:
+            
+            if target == 1:
+                target_image =  self.uploaded_image_matching_list[0]
+                self.original_match_img.setImage(np.rot90(target_image.image, k=-1))
+              
+            else:
+                target_image =  self.uploaded_image_matching_list[1]
+                self.template_match_img.setImage(np.rot90(target_image.image, k=-1))
+                if self.img_match_instance == None:
+                    if len(self.uploaded_image_matching_list)>=2:
+                        # print ("bbbb",self.loaded_images[-2].image)
+                        self.img_match_instance= ImageMatching(self.uploaded_image_matching_list[0].image,target_image.image)
+                    else :
+                        msg_box = QMessageBox()
+                        msg_box.setIcon(QMessageBox.Critical)
+                        msg_box.setWindowTitle("Error")
+                        msg_box.setText("please upload original img first")
+                        msg_box.exec_()
     def select_image_for_contour(self):
         script_directory = os.path.dirname(os.path.abspath(__file__))
         initial_folder = os.path.join(script_directory, "Images")
@@ -221,7 +252,6 @@ class MainWindow(QtWidgets.QMainWindow):
         for view_widget in [self.original_image_contour, self.output_image_contour]:
             view_widget.setImage(np.rot90(image, k = -1))
         
-    #_________________________________________________________________________
     def get_lineEdit_val(self):
         alpha = float(self.Alpha_lineEdit.text())
         beta  = float(self.Beta_lineEdit.text())
@@ -485,7 +515,45 @@ class MainWindow(QtWidgets.QMainWindow):
 
         return filtered_lp, filtered_hp
 
+    def apply_image_matching(self):
+        sift_original = cv2.SIFT_create()
+        sift_template = cv2.SIFT_create()
+        
+        keypoints_original, descriptors_original = sift_original.detectAndCompute(self.img_match_instance.original_image_gray, None)
+        keypoints_template, descriptors_template = sift_template.detectAndCompute(self.img_match_instance.template_image_gray, None)
 
+        #ssd matching 
+        # start_time_ssd = time.time()
+        ssd_matches_list=self.img_match_instance.match_images(descriptors_original,descriptors_template,'ssd')
+        # end_time_ssd = time.time()
+        # match_time_ssd = end_time_ssd - start_time_ssd
+        # print("SSD computation time: ",match_time)
+        matched_features_ssd = sorted(ssd_matches_list, key=lambda x: x.distance, reverse=True)
+        matched_image_ssd = cv2.drawMatches( img1=self.img_match_instance.original_image_gray,
+                                        keypoints1=keypoints_original,img2= self.img_match_instance.template_image_gray, 
+                                        keypoints2=keypoints_template,matches1to2= matched_features_ssd[:30], outImg= self.img_match_instance.template_image_gray, flags=2)
+        
+        ssd_pixmap = QPixmap.fromImage(QImage(matched_image_ssd.data, matched_image_ssd.shape[1], matched_image_ssd.shape[0], 
+                                           matched_image_ssd.shape[1] * 3, QImage.Format_RGB888))
+
+        # Set QPixmap to PyQtGraph widget
+        self.ssd_match_img.setImage(np.array(ssd_pixmap))
+
+        # st.image(matched_image, caption='SSD Image' ,width=350,clamp=False, output_format="auto") 
+    
+        # start_time_ncc = time.time()
+        ncc_matches_list=self.img_match_instance.match_images(descriptors_original,descriptors_template,'ncc')
+        # end_time_ncc = time.time()
+        # match_time_mcc = end_time_ncc - start_time_ncc
+        # print("NCC computation time: ",match_time)
+        matched_features_ncc = sorted(ncc_matches_list, key=lambda x: x.distance, reverse=True)
+        matched_image_ncc = cv2.drawMatches( img1=self.img_match_instance.original_image_gray,
+                                        keypoints1=keypoints_original,img2= self.img_match_instance.template_image_gray, 
+                                        keypoints2=keypoints_template,matches1to2= matched_features_ncc[:30], outImg= self.img_match_instance.template_image_gray, flags=2)
+        # st.image(matched_image, caption='NCC Image' ,width=350,clamp=False, output_format="auto")
+
+            
+            
     # utility function just to remove the bachground color of the pyqtgraph widgets and hide the axies
     def set_view_widget_settings(self, container):
         container.setBackground('#dddddd')
@@ -514,6 +582,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.hybrid_image_1, self.hybrid_image_2 = pg.ImageItem(), pg.ImageItem()
         self.original_hybrid_image_1.addItem(self.hybrid_image_1)
         self.original_hybrid_image_2.addItem(self.hybrid_image_2)
+        
+        self.original_match_img, self.template_match_img = pg.ImageItem(), pg.ImageItem()
+        self.original_image_match.addItem(self.original_match_img)
+        self.template_image_match.addItem(self.template_match_img)
+
+
+        self.ssd_match_img, self.ncc_match_img = pg.ImageItem(), pg.ImageItem()
+        self.ssd_match_image.addItem(self.ssd_match_img)
+        self.ncc_match_image.addItem(self.ncc_match_img)
 
         self.hybrid_image_1_filtered, self.hybrid_image_2_filtered = pg.ImageItem(), pg.ImageItem()
         self.hybrid_result_image = pg.ImageItem()

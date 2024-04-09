@@ -5692,7 +5692,49 @@ QGroupBox::title {
              </layout>
             </item>
             <item>
-             <layout class="QGridLayout" name="gridLayout_103"/>
+             <layout class="QGridLayout" name="gridLayout_103">
+              <item row="0" column="0">
+               <widget class="QWidget" name="widget" native="true">
+                <layout class="QHBoxLayout" name="horizontalLayout_5">
+                 <item>
+                  <widget class="QPushButton" name="match_apply_btn">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>300</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QPushButton {
+    width: 50%;
+    background-color: rgb(91, 91, 90); /* Replace with the corresponding color value for --dark-grey in your application */
+    color: white;
+    border-radius: 10px;
+    text-align: center;
+
+}
+
+QPushButton:hover {
+    background-color: white;
+color:red /* Replace with the corresponding color value for --darkest-color in your application */
+}
+</string>
+                   </property>
+                   <property name="text">
+                    <string>Apply</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_55">
@@ -5830,7 +5872,7 @@ QGroupBox::title {
      <x>0</x>
      <y>0</y>
      <width>1196</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

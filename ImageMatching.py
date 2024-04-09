@@ -1,4 +1,3 @@
-from cv2 import imread, IMREAD_ANYCOLOR, line, circle
 import cv2
 import numpy as np
 

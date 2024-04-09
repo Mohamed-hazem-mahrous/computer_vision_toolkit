@@ -2,7 +2,7 @@ import os
 import numpy as np
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtWidgets import QApplication, QMessageBox
-
+import time
 from PyQt5 import QtWidgets, uic 
 import sys
 import pyqtgraph as pg
@@ -201,15 +201,13 @@ class MainWindow(QtWidgets.QMainWindow):
             self.apply_noise()
             self.apply_edge_detection()
             self.display_images_page4()
-            # self.display_images_page9(1)
         elif button== self.upload_original_btn_match:
             self.uploaded_image_matching_list.append(ImageProcessor(path))
-            # if len(self.loaded_images) != 0:
-            #     del self.loaded_images[0:]            
+              
             self.display_images_page9(1)
         elif button== self.upload_template_btn_match:
             self.uploaded_image_matching_list.append(ImageProcessor(path))
-            # del self.loaded_images[1:-1]
+
             self.display_images_page9(2)
 
         else:
@@ -219,24 +217,21 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def display_images_page9(self,target=1):
         if self.uploaded_image_matching_list:
-            
             if target == 1:
-                target_image =  self.uploaded_image_matching_list[0]
-                self.original_match_img.setImage(np.rot90(target_image.image, k=-1))
-              
+                self.original_match_img.setImage(np.rot90(self.uploaded_image_matching_list[0].image, k=-1))
+
             else:
-                target_image =  self.uploaded_image_matching_list[1]
-                self.template_match_img.setImage(np.rot90(target_image.image, k=-1))
-                if self.img_match_instance == None:
-                    if len(self.uploaded_image_matching_list)>=2:
-                        # print ("bbbb",self.loaded_images[-2].image)
-                        self.img_match_instance= ImageMatching(self.uploaded_image_matching_list[0].image,target_image.image)
-                    else :
-                        msg_box = QMessageBox()
-                        msg_box.setIcon(QMessageBox.Critical)
-                        msg_box.setWindowTitle("Error")
-                        msg_box.setText("please upload original img first")
-                        msg_box.exec_()
+                print(len(self.uploaded_image_matching_list))
+                if len(self.uploaded_image_matching_list)>=2:
+                        self.img_match_instance= ImageMatching(self.uploaded_image_matching_list[0].image,self.uploaded_image_matching_list[1].image)
+                        self.template_match_img.setImage(np.rot90(self.uploaded_image_matching_list[1].image, k=-1))
+                else :
+                    self.uploaded_image_matching_list=[]
+                    msg_box = QMessageBox()
+                    msg_box.setIcon(QMessageBox.Critical)
+                    msg_box.setWindowTitle("Error")
+                    msg_box.setText("please upload original img first")
+                    msg_box.exec_()
     def select_image_for_contour(self):
         script_directory = os.path.dirname(os.path.abspath(__file__))
         initial_folder = os.path.join(script_directory, "Images")
@@ -521,39 +516,47 @@ class MainWindow(QtWidgets.QMainWindow):
         
         keypoints_original, descriptors_original = sift_original.detectAndCompute(self.img_match_instance.original_image_gray, None)
         keypoints_template, descriptors_template = sift_template.detectAndCompute(self.img_match_instance.template_image_gray, None)
-
-        #ssd matching 
-        # start_time_ssd = time.time()
-        ssd_matches_list=self.img_match_instance.match_images(descriptors_original,descriptors_template,'ssd')
-        # end_time_ssd = time.time()
-        # match_time_ssd = end_time_ssd - start_time_ssd
-        # print("SSD computation time: ",match_time)
-        matched_features_ssd = sorted(ssd_matches_list, key=lambda x: x.distance, reverse=True)
-        matched_image_ssd = cv2.drawMatches( img1=self.img_match_instance.original_image_gray,
-                                        keypoints1=keypoints_original,img2= self.img_match_instance.template_image_gray, 
-                                        keypoints2=keypoints_template,matches1to2= matched_features_ssd[:30], outImg= self.img_match_instance.template_image_gray, flags=2)
         
-        ssd_pixmap = QPixmap.fromImage(QImage(matched_image_ssd.data, matched_image_ssd.shape[1], matched_image_ssd.shape[0], 
-                                           matched_image_ssd.shape[1] * 3, QImage.Format_RGB888))
+        
+        #ssd matching 
+        start_time_ssd = time.time()
+        ssd_matches_list=self.img_match_instance.match_images(descriptors_original,descriptors_template,'ssd')
+        end_time_ssd = time.time()
+        match_time_ssd = end_time_ssd - start_time_ssd
+        print("SSD computation time: ",match_time_ssd)
+        matched_features_ssd = sorted(ssd_matches_list, key=lambda x: x.distance, reverse=True) #contain top 30 matched features between 2 images 
+        #converting these matches to an image contaning both original and target with lines of matching 
+        matched_image_ssd = cv2.drawMatches( img1=self.img_match_instance.original_image_gray,
+                                        keypoints1=keypoints_original,
+                                        img2= self.img_match_instance.template_image_gray, 
+                                        keypoints2=keypoints_template,
+                                        matches1to2= matched_features_ssd[:30], 
+                                        outImg= self.img_match_instance.template_image_gray, flags=2)
 
-        # Set QPixmap to PyQtGraph widget
-        self.ssd_match_img.setImage(np.array(ssd_pixmap))
-
-        # st.image(matched_image, caption='SSD Image' ,width=350,clamp=False, output_format="auto") 
-    
-        # start_time_ncc = time.time()
+        # # Display ssd results 
+        self.ssd_match_img.setImage(matched_image_ssd)
+            
+        
+        #ncc matching 
+        start_time_ncc = time.time()
         ncc_matches_list=self.img_match_instance.match_images(descriptors_original,descriptors_template,'ncc')
-        # end_time_ncc = time.time()
-        # match_time_mcc = end_time_ncc - start_time_ncc
-        # print("NCC computation time: ",match_time)
+        end_time_ncc = time.time()
+        match_time_mcc = end_time_ncc - start_time_ncc
+        print("NCC computation time: ",match_time_mcc)
         matched_features_ncc = sorted(ncc_matches_list, key=lambda x: x.distance, reverse=True)
         matched_image_ncc = cv2.drawMatches( img1=self.img_match_instance.original_image_gray,
                                         keypoints1=keypoints_original,img2= self.img_match_instance.template_image_gray, 
                                         keypoints2=keypoints_template,matches1to2= matched_features_ncc[:30], outImg= self.img_match_instance.template_image_gray, flags=2)
-        # st.image(matched_image, caption='NCC Image' ,width=350,clamp=False, output_format="auto")
+        self.ncc_match_img.setImage(matched_image_ncc)
 
             
-            
+    def convert_cv_to_qimage(self,cv_img):
+        height, width, channel = cv_img.shape
+        bytes_per_line = 3 * width
+        q_img = QImage(cv_img.data, width, height, bytes_per_line, QImage.Format_RGB888)
+        q_img = q_img.rgbSwapped()
+        return q_img
+      
     # utility function just to remove the bachground color of the pyqtgraph widgets and hide the axies
     def set_view_widget_settings(self, container):
         container.setBackground('#dddddd')

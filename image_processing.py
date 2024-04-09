@@ -122,7 +122,7 @@ class ImageProcessor:
         :param sigma: Standard deviation of the Gaussian distribution.
         :return: Noisy image.
         """
-        gaussian_noise = np.random.normal(0, sigma * 255 / 5, image.shape).astype(np.uint8)
+        gaussian_noise = np.random.normal(0, sigma * 255 , image.shape).astype(np.uint8)
         self.noisy_image = np.clip(image + gaussian_noise, 0, 255).astype(np.uint8)
         return self.noisy_image
 

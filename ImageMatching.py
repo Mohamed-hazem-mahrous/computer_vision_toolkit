@@ -21,7 +21,11 @@ class ImageMatching:
         normalized_template = (descriptor2 - np.mean(descriptor2)) / np.std(descriptor2)
         ncc = float(np.mean(normalized_original * normalized_template))
         return ncc
-
+    
+    def downsample_images(self, scale_factor=0.5):
+        self.original_image_gray = cv2.resize(self.original_image_gray, None, fx=scale_factor, fy=scale_factor)
+        self.template_image_gray = cv2.resize(self.template_image_gray, None, fx=scale_factor, fy=scale_factor)
+        
     def match_images(self, descriptor1, descriptor2, method='ssd'):
         num_keypoints1 = descriptor1.shape[0]
         num_keypoints2 = descriptor2.shape[0]

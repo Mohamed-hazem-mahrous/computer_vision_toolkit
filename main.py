@@ -202,12 +202,11 @@ class MainWindow(QtWidgets.QMainWindow):
             self.apply_edge_detection()
             self.display_images_page4()
         elif button== self.upload_original_btn_match:
+            self.uploaded_image_matching_list=[]
             self.uploaded_image_matching_list.append(ImageProcessor(path))
-              
             self.display_images_page9(1)
         elif button== self.upload_template_btn_match:
             self.uploaded_image_matching_list.append(ImageProcessor(path))
-
             self.display_images_page9(2)
 
         else:
@@ -218,13 +217,16 @@ class MainWindow(QtWidgets.QMainWindow):
     def display_images_page9(self,target=1):
         if self.uploaded_image_matching_list:
             if target == 1:
+                self.original_match_img.clear()
                 self.original_match_img.setImage(np.rot90(self.uploaded_image_matching_list[0].image, k=-1))
 
             else:
-                print(len(self.uploaded_image_matching_list))
                 if len(self.uploaded_image_matching_list)>=2:
                         self.img_match_instance= ImageMatching(self.uploaded_image_matching_list[0].image,self.uploaded_image_matching_list[1].image)
+                        self.template_match_img.clear()
                         self.template_match_img.setImage(np.rot90(self.uploaded_image_matching_list[1].image, k=-1))
+                        self.ssd_match_img.clear()
+                        self.ncc_match_img.clear()
                 else :
                     self.uploaded_image_matching_list=[]
                     msg_box = QMessageBox()
@@ -265,7 +267,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Plot the new contour
         self.contour_plot = self.manipulated_image_4.plot(np.r_[cont_x, cont_x[0]], np.r_[cont_y, cont_y[0]], symbol='o', symbolSize=5, pen=pg.mkPen(color='r'))  # 'r' for red color
-        #print("cont_x" , cont_x[1:5] )
 
 
     def apply_contour(self):
@@ -281,10 +282,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # Start Applying Active Contour Algorithm
             cont_x, cont_y = snake_instance.update_contour(source, contour_x, contour_y,
                                             external_energy, window_coordinates)
-            # snake_instance.contour_x=cont_x
-            # snake_instance.contour_y =cont_y
-            print(i)
-            #print("cont_x_from_elly_ta7t" , cont_x[1:5] )
+
             self.plot_contour(cont_x,cont_y)
             area = snake_instance.calculate_area(cont_x,cont_y)
             peremeter= snake_instance.calculate_perimeter(cont_x,cont_y)
@@ -363,8 +361,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def local_threshold_sliders_value_changed(self):
         block_size=self.local_block_size_slider.value()
         local_thresholding_val=self.local_thresholding_slider.value()
-        # print(local_thresholding_val)
-        # print(block_size)
+
         self.local_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].local_thresholding( block_size, local_thresholding_val), k=-1))
 
 
@@ -511,6 +508,8 @@ class MainWindow(QtWidgets.QMainWindow):
         return filtered_lp, filtered_hp
 
     def apply_image_matching(self):
+        self.img_match_instance.downsample_images(scale_factor=0.5)
+
         sift_original = cv2.SIFT_create()
         sift_template = cv2.SIFT_create()
         
@@ -530,11 +529,11 @@ class MainWindow(QtWidgets.QMainWindow):
                                         keypoints1=keypoints_original,
                                         img2= self.img_match_instance.template_image_gray, 
                                         keypoints2=keypoints_template,
-                                        matches1to2= matched_features_ssd[:30], 
+                                        matches1to2= matched_features_ssd[:5], 
                                         outImg= self.img_match_instance.template_image_gray, flags=2)
 
         # # Display ssd results 
-        self.ssd_match_img.setImage(matched_image_ssd)
+        self.ssd_match_img.setImage(np.rot90(matched_image_ssd, k=-1))
             
         
         #ncc matching 
@@ -546,8 +545,8 @@ class MainWindow(QtWidgets.QMainWindow):
         matched_features_ncc = sorted(ncc_matches_list, key=lambda x: x.distance, reverse=True)
         matched_image_ncc = cv2.drawMatches( img1=self.img_match_instance.original_image_gray,
                                         keypoints1=keypoints_original,img2= self.img_match_instance.template_image_gray, 
-                                        keypoints2=keypoints_template,matches1to2= matched_features_ncc[:30], outImg= self.img_match_instance.template_image_gray, flags=2)
-        self.ncc_match_img.setImage(matched_image_ncc)
+                                        keypoints2=keypoints_template,matches1to2= matched_features_ncc[:5], outImg= self.img_match_instance.template_image_gray, flags=2)
+        self.ncc_match_img.setImage(np.rot90(matched_image_ncc, k=-1))
 
             
     def convert_cv_to_qimage(self,cv_img):

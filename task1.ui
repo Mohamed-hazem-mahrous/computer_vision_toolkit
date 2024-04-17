@@ -5934,7 +5934,7 @@ QGroupBox::indicator {
                      </property>
                      <layout class="QGridLayout" name="gridLayout_154">
                       <item row="0" column="0">
-                       <widget class="QLabel" name="SNR_label_20">
+                       <widget class="QLabel" name="lambda_comp_time">
                         <property name="maximumSize">
                          <size>
                           <width>16777215</width>
@@ -6046,6 +6046,12 @@ QSlider::sub-page:horizontal {
 }
 </string>
                           </property>
+                          <property name="minimum">
+                           <number>1</number>
+                          </property>
+                          <property name="maximum">
+                           <number>100</number>
+                          </property>
                           <property name="orientation">
                            <enum>Qt::Horizontal</enum>
                           </property>
@@ -6054,9 +6060,9 @@ QSlider::sub-page:horizontal {
                        </layout>
                       </item>
                       <item row="0" column="1">
-                       <widget class="QLabel" name="label_34">
+                       <widget class="QLabel" name="lambda_thr">
                         <property name="text">
-                         <string>Threshold</string>
+                         <string>Threshold: 0.01</string>
                         </property>
                        </widget>
                       </item>
@@ -6168,7 +6174,7 @@ QGroupBox::indicator {
                        <number>0</number>
                       </property>
                       <item>
-                       <widget class="QPushButton" name="upload_btn">
+                       <widget class="QPushButton" name="corner_upload_btn">
                         <property name="minimumSize">
                          <size>
                           <width>0</width>
@@ -6223,7 +6229,7 @@ QGroupBox::title {
                      </property>
                      <layout class="QGridLayout" name="gridLayout_108">
                       <item row="0" column="0">
-                       <widget class="PlotWidget" name="Original_image" native="true"/>
+                       <widget class="PlotWidget" name="corner_original_image" native="true"/>
                       </item>
                      </layout>
                     </widget>
@@ -6320,7 +6326,7 @@ QGroupBox::indicator {
                        </widget>
                       </item>
                       <item row="0" column="0">
-                       <widget class="QLabel" name="SNR_label_19">
+                       <widget class="QLabel" name="harris_comp_time">
                         <property name="maximumSize">
                          <size>
                           <width>16777215</width>
@@ -6420,6 +6426,12 @@ QSlider::sub-page:horizontal {
 }
 </string>
                           </property>
+                          <property name="minimum">
+                           <number>1</number>
+                          </property>
+                          <property name="maximum">
+                           <number>100</number>
+                          </property>
                           <property name="orientation">
                            <enum>Qt::Horizontal</enum>
                           </property>
@@ -6428,9 +6440,9 @@ QSlider::sub-page:horizontal {
                        </layout>
                       </item>
                       <item row="0" column="1">
-                       <widget class="QLabel" name="label_33">
+                       <widget class="QLabel" name="harris_thr">
                         <property name="text">
-                         <string>Threshold</string>
+                         <string>Threshold: 0.01</string>
                         </property>
                        </widget>
                       </item>
@@ -6712,7 +6724,7 @@ QGroupBox::title {
      <x>0</x>
      <y>0</y>
      <width>1196</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

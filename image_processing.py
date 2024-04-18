@@ -209,33 +209,15 @@ class ImageProcessor:
 
 
     
-    def convolve(image, kernel, padding_mode='reflect'):
-        """
-        Apply convolution between the input image and kernel.
-        
-        Args:
-        image: Input image (numpy array).
-        kernel: Convolution kernel (numpy array).
-        padding_mode: The padding mode for the convolution.
-        
-        Returns:
-        convolved_image: The resulting image after convolution.
-        """
-        # Define the padding mode
-        pad_size = kernel.shape[0] // 2
-        padded_image = np.pad(image, pad_width=pad_size, mode=padding_mode)
-        
-        # Initialize the convolved image with the same shape as the input image
-        convolved_image = np.zeros_like(image)
-        
-        # Perform convolution
-        for i in range(convolved_image.shape[0]):
-            for j in range(convolved_image.shape[1]):
-                # Extract the region of interest (ROI)
-                roi = padded_image[i:i + kernel.shape[0], j:j + kernel.shape[1]]
-                # Compute the convolution
-                convolved_image[i, j] = np.sum(roi * kernel)
-        
+    def convolve(self, image, kernel):
+        x, y = image.shape
+        k = kernel.shape[0]
+        convolved_image = np.zeros(shape=(x-2*k, y-2*k))
+        for i in range(x-2*k):
+            for j in range(y-2*k):
+                mat = image[i:i+k, j:j+k]
+                convolved_image[i, j] = np.sum(np.multiply(mat, kernel))
+
         return convolved_image
 
 

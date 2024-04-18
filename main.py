@@ -131,8 +131,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.harris_slider.valueChanged.connect(self.change_corner_threshold)
         self.Lambda_slider.valueChanged.connect(self.change_corner_threshold)
 
-        self.harris_slider.sliderReleased.connect(lambda: self.apply_corner(self.corner_gray_img))
-        self.Lambda_slider.sliderReleased.connect(lambda: self.apply_corner(self.corner_gray_img))
+        self.harris_slider.sliderReleased.connect(lambda: self.apply_harris_corner(self.corner_gray_img))
+        self.Lambda_slider.sliderReleased.connect(lambda: self.apply_lambda_corner(self.corner_gray_img))
     
 
     def browse_corner_image(self):
@@ -145,19 +145,20 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.original_corner_image_widget.setImage(np.rot90(self.corner_image, k=-1))
 
-        self.apply_corner(self.corner_gray_img)
+        self.apply_harris_corner(self.corner_gray_img)
+        self.apply_lambda_corner(self.corner_gray_img)
     
     def change_corner_threshold(self):
         self.harris_threshold = self.harris_slider.value() / 100
         self.harris_thr.setText(f"Threshold: {self.harris_threshold:.2f}")
         self.lambda_threshold = self.Lambda_slider.value() / 100
         self.lambda_thr.setText(f"Threshold: {self.lambda_threshold:.2f}")
-        
     
-    def apply_corner(self, gray_img):
+
+    def apply_harris_corner(self, gray_img):
         harris_start_time = time.time()
 
-        detected_corners = harris_corner_detection(gray_img, threshold=self.harris_threshold)
+        detected_corners = harris_corner_detection(gray_img, threshold = self.harris_threshold)
 
         harris_end_time = time.time()
         harris_computation_time = harris_end_time - harris_start_time
@@ -167,12 +168,12 @@ class MainWindow(QtWidgets.QMainWindow):
         img_with_harris_corners[detected_corners != 0] = [255, 0, 0]  # Mark corners in red
         
         self.harris_corner_widget.setImage(np.rot90(img_with_harris_corners, k=-1))
+    
 
-
-
+    def apply_lambda_corner(self, gray_img):
         lambda_start_time = time.time()
 
-        detected_corners = lambda_minus_corner_detection(gray_img, threshold=self.lambda_threshold)
+        detected_corners = lambda_minus_corner_detection(gray_img, threshold = self.lambda_threshold)
 
         lambda_end_time = time.time()
         lambda_computation_time = lambda_end_time - lambda_start_time
@@ -180,7 +181,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         img_with_lambda_corners = self.corner_image.copy()
         img_with_lambda_corners[detected_corners != 0] = [255, 0, 0]  # Mark corners in red
-
+        
         self.lambda_corner_widget.setImage(np.rot90(img_with_lambda_corners, k=-1))
 
 

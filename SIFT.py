@@ -20,8 +20,16 @@ class SIFT:
         self.scale_factor = 1.5
 
     def sift(self):
+        gaussian_pyramid, DoG_pyramid = self.create_scale_space()
+
+        keypoints = self.extract_keypoints(gaussian_pyramid, DoG_pyramid)
         
-        # Creating the Scale Space
+        print(f"SIFT Computation time: {time.time() - self.start_time}")
+
+        return keypoints
+    
+
+    def create_scale_space(self):
         image = cv2.resize(self.original_image, (0, 0), fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
         sigma_diff = np.sqrt(max((self.sigma ** 2) - ((2 * self.assumed_blur) ** 2), 0.01))
         image = cv2.GaussianBlur(image, (0, 0), sigmaX=sigma_diff, sigmaY=sigma_diff)
@@ -29,12 +37,7 @@ class SIFT:
         gaussian_pyramid = self.create_gaussian_pyramid(image, num_octaves)
         DoG_pyramid = self.create_DoG_pyramid(gaussian_pyramid)
 
-        # Extracting Keypoints and Descriptors
-        keypoints = self.extract_keypoints(gaussian_pyramid, DoG_pyramid)
-
-        print(f"SIFT Computation time: {time.time() - self.start_time}")
-
-        return keypoints
+        return gaussian_pyramid, DoG_pyramid
 
 
     def calculate_sigma_values(self):
@@ -177,6 +180,7 @@ class SIFT:
             
         return None
 
+
     def calculate_gradient_hessian(self, pixels_stack):
         
         gradient = self.calculate_gradient_matrix(pixels_stack)
@@ -185,16 +189,19 @@ class SIFT:
         extremum_update = -np.linalg.lstsq(hessian, gradient, rcond=None)[0]
         return extremum_update, gradient, hessian
 
+
     def update_indices(self, i, j, image_index, extremum_update):
         j += int(np.round(extremum_update[0]))
         i += int(np.round(extremum_update[1]))
         image_index += int(np.round(extremum_update[2]))
         return i, j, image_index
 
+
     def is_outside_image(self, i, j, image_index, image_shape):
         return (i < self.image_border_width or i >= image_shape[0] - self.image_border_width or 
                 j < self.image_border_width or j >= image_shape[1] - self.image_border_width or 
                 image_index < 1 or image_index > self.no_of_levels)
+
 
     def is_keypoint_valid(self, contrast_threshold, function_value, hessian):
         eigenvalue_ratio = 12.1
@@ -211,6 +218,7 @@ class SIFT:
         
         return ((hessian_trace) ** 2 / hessian_det) < eigenvalue_ratio
 
+
     def initialize_keypoint(self, i, j, octave_index, image_index, extremum_update, function_value):
         keypoint = cv2.KeyPoint()
         keypoint.pt = ((j + extremum_update[0]) * (2 ** octave_index), (i + extremum_update[1]) * (2 ** octave_index))
@@ -219,11 +227,13 @@ class SIFT:
         keypoint.response = abs(function_value)
         return keypoint
 
+
     def calculate_gradient_matrix(self, pixel_array):
         dx = 0.5 * (pixel_array[1, 1, 2] - pixel_array[1, 1, 0])
         dy = 0.5 * (pixel_array[1, 2, 1] - pixel_array[1, 0, 1])
         ds = 0.5 * (pixel_array[2, 1, 1] - pixel_array[0, 1, 1])
         return np.array([dx, dy, ds])
+
 
     def calculate_hessian_matrix(self, pixel_array):
         center_pixel_value = pixel_array[1, 1, 1]
@@ -296,14 +306,4 @@ class SIFT:
             return keypoint2.response - keypoint1.response
         if keypoint1.octave != keypoint2.octave:
             return keypoint2.octave - keypoint1.octave
-        return keypoint2.class_id - keypoint1.class_id
-
-
-    def broadcast_keypoints_to_image_size(self, keypoints):
-        converted_keypoints = []
-        for keypoint in keypoints:
-            keypoint.pt = tuple(0.5 * np.array(keypoint.pt))
-            keypoint.size *= 0.5
-            keypoint.octave = (keypoint.octave & ~255) | ((keypoint.octave - 1) & 255)
-            converted_keypoints.append(keypoint)
-        return converted_keypoints
+        return keypoint2.class_id - keypoint1.class_id    

@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtWidgets import QApplication, QMessageBox
+from PyQt5.QtWidgets import QMessageBox
 import time
 from PyQt5 import QtWidgets, uic 
 import sys
@@ -11,12 +11,10 @@ import numpy as np
 from PIL import Image as PILImage
 from Active_contour import Snake
 import cv2
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg 
-import matplotlib.pyplot as plt
 from ImageMatching import ImageMatching
-from PyQt5.QtGui import QPixmap ,QImage
+from PyQt5.QtGui import QImage
 from Corner_detection import harris_corner_detection, lambda_minus_corner_detection, convert_to_grayscale
+from SIFT import SIFT
 
 
 
@@ -578,12 +576,14 @@ class MainWindow(QtWidgets.QMainWindow):
     def apply_image_matching(self):
         self.img_match_instance.downsample_images(scale_factor=0.5)
 
-        sift_original = cv2.SIFT_create()
-        sift_template = cv2.SIFT_create()
+        # sift_original = cv2.SIFT_create()
+        # sift_template = cv2.SIFT_create()
         
-        keypoints_original, descriptors_original = sift_original.detectAndCompute(self.img_match_instance.original_image_gray, None)
-        keypoints_template, descriptors_template = sift_template.detectAndCompute(self.img_match_instance.template_image_gray, None)
+        # keypoints_original, descriptors_original = sift_original.detectAndCompute(self.img_match_instance.original_image_gray, None)
+        # keypoints_template, descriptors_template = sift_template.detectAndCompute(self.img_match_instance.template_image_gray, None)
         
+        keypoints_original, descriptors_original = SIFT(self.img_match_instance.original_image_gray).sift()
+        keypoints_template, descriptors_template = SIFT(self.img_match_instance.template_image_gray).sift()
         
         #ssd matching 
         start_time_ssd = time.time()

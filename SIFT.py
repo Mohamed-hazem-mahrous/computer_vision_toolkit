@@ -250,8 +250,8 @@ class SIFT:
         dxz = 0.25 * (pixels_stack[2, 1, 2] - pixels_stack[2, 1, 0] - pixels_stack[0, 1, 2] + pixels_stack[0, 1, 0])
         dyz = 0.25 * (pixels_stack[2, 2, 1] - pixels_stack[2, 0, 1] - pixels_stack[0, 2, 1] + pixels_stack[0, 0, 1])
         return np.array([[dxx, dxy, dxz], 
-                    [dxy, dyy, dyz],
-                    [dxz, dyz, dzz]])
+                         [dxy, dyy, dyz],
+                         [dxz, dyz, dzz]])
 
 
 
@@ -404,4 +404,5 @@ class SIFT:
             descriptor_vector[descriptor_vector < 0] = 0
             descriptor_vector[descriptor_vector > 255] = 255
             descriptors.append(descriptor_vector)
+            
         return np.array(descriptors, dtype='float32')

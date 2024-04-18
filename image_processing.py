@@ -574,14 +574,12 @@ class ImageProcessor:
         peaks = []
         flat_accumulator = accumulator.reshape(-1)
 
-        # Select top `num_peaks` indices with voting counts above threshold (if provided)
         if threshold is None:
             indices = np.argpartition(flat_accumulator, -num_peaks)[-num_peaks:]
         else:
             indices = np.where(flat_accumulator >= threshold)[0]
             indices = indices[np.argsort(flat_accumulator[indices])[-num_peaks:]]
 
-        # Unravel indices to get peak coordinates in the accumulator
         peak_coords = np.unravel_index(indices, accumulator.shape)
 
         # Extract ellipse parameters from peaks

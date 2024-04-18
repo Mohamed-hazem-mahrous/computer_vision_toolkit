@@ -30,11 +30,11 @@ class SIFT:
         DoG_pyramid = self.create_DoG_pyramid(gaussian_pyramid)
 
         # Extracting Keypoints and Descriptors
-        keypoints = self.localize_keypoints(gaussian_pyramid, DoG_pyramid)
-        keypoints = self.remove_duplicate_keypoints(keypoints)
-        keypoints = self.broadcast_keypoints_to_image_size(keypoints)
+        keypoints = self.extract_keypoints(gaussian_pyramid, DoG_pyramid)
 
         print(f"SIFT Computation time: {time.time() - self.start_time}")
+
+        return keypoints
 
 
     def calculate_sigma_values(self):
@@ -88,6 +88,25 @@ class SIFT:
             DoG_pyramid.append(DoG_octave)
 
         return np.array(DoG_pyramid, dtype=object)
+
+
+    def extract_keypoints(self, gaussian_pyramid, dog_pyramid):
+
+        keypoints = self.localize_keypoints(gaussian_pyramid, dog_pyramid)
+
+        keypoints.sort(key=cmp_to_key(self.compare_keypoints))
+
+        converted_keypoints = []
+        for keypoint in set(keypoints):
+            keypoint.pt = tuple(0.5 * np.array(keypoint.pt))
+            keypoint.size *= 0.5
+
+            keypoint.octave = (keypoint.octave & ~255) | ((keypoint.octave - 1) & 255)
+
+            converted_keypoints.append(keypoint)
+
+        return converted_keypoints
+
 
 
     def localize_keypoints(self, gaussian_pyramid, DoG_pyramid, contrast_threshold=0.04):
@@ -239,10 +258,9 @@ class SIFT:
                     dx = gaussian_image[region_y, region_x + 1] - gaussian_image[region_y, region_x - 1]
                     dy = gaussian_image[region_y - 1, region_x] - gaussian_image[region_y + 1, region_x]
                     gradient_magnitude, gradient_orientation = np.sqrt(dx * dx + dy * dy), np.rad2deg(np.arctan2(dy, dx))
-                    weight = np.exp(weight_factor * (i ** 2 + j ** 2))
                     
                     histogram_index = int(np.round(gradient_orientation * 36 / 360.))
-                    raw_histogram[histogram_index % 36] += weight * gradient_magnitude
+                    raw_histogram[histogram_index % 36] += np.exp(weight_factor * (i ** 2 + j ** 2)) * gradient_magnitude
 
         for n in range(36):
             smooth_histogram[n] = (6 * raw_histogram[n] + 4 * (raw_histogram[n - 1] + raw_histogram[(n + 1) % 36]) + raw_histogram[n - 2] + raw_histogram[(n + 2) % 36]) / 16.
@@ -259,8 +277,8 @@ class SIFT:
                 orientation = 360. - interpolated_peak_index * 360. / 36
                 if abs(orientation - 360.) < 1e-7:
                     orientation = 0
-                new_keypoint = cv2.KeyPoint(*keypoint.pt, keypoint.size, orientation, keypoint.response, keypoint.octave)
-                keypoints_with_orientations.append(new_keypoint)
+
+                keypoints_with_orientations.append(cv2.KeyPoint(*keypoint.pt, keypoint.size, orientation, keypoint.response, keypoint.octave))
 
         return keypoints_with_orientations
 
@@ -279,23 +297,6 @@ class SIFT:
         if keypoint1.octave != keypoint2.octave:
             return keypoint2.octave - keypoint1.octave
         return keypoint2.class_id - keypoint1.class_id
-
-    def remove_duplicate_keypoints(self, keypoints):
-        if len(keypoints) < 2:
-            return keypoints
-
-        keypoints.sort(key=cmp_to_key(self.compare_keypoints))
-        unique_keypoints = [keypoints[0]]
-
-        for next_keypoint in keypoints[1:]:
-            last_unique_keypoint = unique_keypoints[-1]
-            if last_unique_keypoint.pt[0] != next_keypoint.pt[0] or \
-            last_unique_keypoint.pt[1] != next_keypoint.pt[1] or \
-            last_unique_keypoint.size != next_keypoint.size or \
-            last_unique_keypoint.angle != next_keypoint.angle:
-                unique_keypoints.append(next_keypoint)
-        return unique_keypoints
-
 
 
     def broadcast_keypoints_to_image_size(self, keypoints):

@@ -19,6 +19,11 @@ class SIFT:
         self.peak_ratio = 0.8
         self.scale_factor = 1.5
 
+        # Descriptors Generations Parameters
+        self.window_width = 4
+        self.scale_multiplier = 3
+        self.descriptor_max_value = 0.2
+
     def sift(self):
         gaussian_pyramid, DoG_pyramid = self.create_scale_space()
 
@@ -229,24 +234,24 @@ class SIFT:
         return keypoint
 
 
-    def calculate_gradient_matrix(self, pixel_array):
-        dx = 0.5 * (pixel_array[1, 1, 2] - pixel_array[1, 1, 0])
-        dy = 0.5 * (pixel_array[1, 2, 1] - pixel_array[1, 0, 1])
-        ds = 0.5 * (pixel_array[2, 1, 1] - pixel_array[0, 1, 1])
-        return np.array([dx, dy, ds])
+    def calculate_gradient_matrix(self, pixels_stack):
+        dx = 0.5 * (pixels_stack[1, 1, 2] - pixels_stack[1, 1, 0])
+        dy = 0.5 * (pixels_stack[1, 2, 1] - pixels_stack[1, 0, 1])
+        dz = 0.5 * (pixels_stack[2, 1, 1] - pixels_stack[0, 1, 1])
+        return np.array([dx, dy, dz])
 
 
-    def calculate_hessian_matrix(self, pixel_array):
-        center_pixel_value = pixel_array[1, 1, 1]
-        dxx = pixel_array[1, 1, 2] - 2 * center_pixel_value + pixel_array[1, 1, 0]
-        dyy = pixel_array[1, 2, 1] - 2 * center_pixel_value + pixel_array[1, 0, 1]
-        dss = pixel_array[2, 1, 1] - 2 * center_pixel_value + pixel_array[0, 1, 1]
-        dxy = 0.25 * (pixel_array[1, 2, 2] - pixel_array[1, 2, 0] - pixel_array[1, 0, 2] + pixel_array[1, 0, 0])
-        dxs = 0.25 * (pixel_array[2, 1, 2] - pixel_array[2, 1, 0] - pixel_array[0, 1, 2] + pixel_array[0, 1, 0])
-        dys = 0.25 * (pixel_array[2, 2, 1] - pixel_array[2, 0, 1] - pixel_array[0, 2, 1] + pixel_array[0, 0, 1])
-        return np.array([[dxx, dxy, dxs], 
-                    [dxy, dyy, dys],
-                    [dxs, dys, dss]])
+    def calculate_hessian_matrix(self, pixels_stack):
+        center_pixel_value = pixels_stack[1, 1, 1]
+        dxx = pixels_stack[1, 1, 2] - 2 * center_pixel_value + pixels_stack[1, 1, 0]
+        dyy = pixels_stack[1, 2, 1] - 2 * center_pixel_value + pixels_stack[1, 0, 1]
+        dzz = pixels_stack[2, 1, 1] - 2 * center_pixel_value + pixels_stack[0, 1, 1]
+        dxy = 0.25 * (pixels_stack[1, 2, 2] - pixels_stack[1, 2, 0] - pixels_stack[1, 0, 2] + pixels_stack[1, 0, 0])
+        dxz = 0.25 * (pixels_stack[2, 1, 2] - pixels_stack[2, 1, 0] - pixels_stack[0, 1, 2] + pixels_stack[0, 1, 0])
+        dyz = 0.25 * (pixels_stack[2, 2, 1] - pixels_stack[2, 0, 1] - pixels_stack[0, 2, 1] + pixels_stack[0, 0, 1])
+        return np.array([[dxx, dxy, dxz], 
+                    [dxy, dyy, dyz],
+                    [dxz, dyz, dzz]])
 
 
 
@@ -319,7 +324,7 @@ class SIFT:
         return octave, layer, scale
 
 
-    def generate_descriptors(self, keypoints, gaussian_pyramid, window_width=4, num_bins=8, scale_multiplier=3, descriptor_max_value=0.2):
+    def generate_descriptors(self, keypoints, gaussian_pyramid):
         descriptors = []
 
         for keypoint in keypoints:
@@ -327,28 +332,25 @@ class SIFT:
             gaussian_image = gaussian_pyramid[octave + 1, layer]
             num_rows, num_cols = gaussian_image.shape
             point = np.round(scale * np.array(keypoint.pt)).astype('int')
-            bins_per_degree = num_bins / 360.
+            bins_per_degree = 8 / 360.
             angle = 360. - keypoint.angle
-            np.cos_angle = np.cos(np.deg2rad(angle))
-            np.sin_angle = np.sin(np.deg2rad(angle))
-            weight_multiplier = -0.5 / ((0.5 * window_width) ** 2)
-            row_bin_list = []
-            col_bin_list = []
-            magnitude_list = []
-            orientation_bin_list = []
-            histogram_tensor = np.zeros((window_width + 2, window_width + 2, num_bins))
+            np.cos_angle, np.sin_angle = np.cos(np.deg2rad(angle)), np.sin(np.deg2rad(angle))
+            weight_multiplier = -0.5 / ((0.5 * self.window_width) ** 2)
+            row_bin_list, col_bin_list = [], []
+            magnitude_list, orientation_bin_list = [], []
+            histogram_tensor = np.zeros((self.window_width + 2, self.window_width + 2, 8))
 
-            hist_width = scale_multiplier * 0.5 * scale * keypoint.size
-            half_width = int(np.round(hist_width * np.sqrt(2) * (window_width + 1) * 0.5))
+            hist_width = self.scale_multiplier * 0.5 * scale * keypoint.size
+            half_width = int(np.round(hist_width * np.sqrt(2) * (self.window_width + 1) * 0.5))
             half_width = int(min(half_width, np.sqrt(num_rows ** 2 + num_cols ** 2)))
 
             for row in range(-half_width, half_width + 1):
                 for col in range(-half_width, half_width + 1):
                     row_rot = col * np.sin_angle + row * np.cos_angle
                     col_rot = col * np.cos_angle - row * np.sin_angle
-                    row_bin = (row_rot / hist_width) + 0.5 * window_width - 0.5
-                    col_bin = (col_rot / hist_width) + 0.5 * window_width - 0.5
-                    if row_bin > -1 and row_bin < window_width and col_bin > -1 and col_bin < window_width:
+                    row_bin = (row_rot / hist_width) + 0.5 * self.window_width - 0.5
+                    col_bin = (col_rot / hist_width) + 0.5 * self.window_width - 0.5
+                    if row_bin > -1 and row_bin < self.window_width and col_bin > -1 and col_bin < self.window_width:
                         window_row = int(np.round(point[1] + row))
                         window_col = int(np.round(point[0] + col))
                         if window_row > 0 and window_row < num_rows - 1 and window_col > 0 and window_col < num_cols - 1:
@@ -366,9 +368,9 @@ class SIFT:
                 row_bin_floor, col_bin_floor, orientation_bin_floor = np.floor([row_bin, col_bin, orientation_bin]).astype(int)
                 row_fraction, col_fraction, orientation_fraction = row_bin - row_bin_floor, col_bin - col_bin_floor, orientation_bin - orientation_bin_floor
                 if orientation_bin_floor < 0:
-                    orientation_bin_floor += num_bins
-                if orientation_bin_floor >= num_bins:
-                    orientation_bin_floor -= num_bins
+                    orientation_bin_floor += 8
+                if orientation_bin_floor >= 8:
+                    orientation_bin_floor -= 8
 
                 c1 = magnitude * row_fraction
                 c0 = magnitude * (1 - row_fraction)
@@ -386,16 +388,16 @@ class SIFT:
                 c000 = c00 * (1 - orientation_fraction)
 
                 histogram_tensor[row_bin_floor + 1, col_bin_floor + 1, orientation_bin_floor] += c000
-                histogram_tensor[row_bin_floor + 1, col_bin_floor + 1, (orientation_bin_floor + 1) % num_bins] += c001
+                histogram_tensor[row_bin_floor + 1, col_bin_floor + 1, (orientation_bin_floor + 1) % 8] += c001
                 histogram_tensor[row_bin_floor + 1, col_bin_floor + 2, orientation_bin_floor] += c010
-                histogram_tensor[row_bin_floor + 1, col_bin_floor + 2, (orientation_bin_floor + 1) % num_bins] += c011
+                histogram_tensor[row_bin_floor + 1, col_bin_floor + 2, (orientation_bin_floor + 1) % 8] += c011
                 histogram_tensor[row_bin_floor + 2, col_bin_floor + 1, orientation_bin_floor] += c100
-                histogram_tensor[row_bin_floor + 2, col_bin_floor + 1, (orientation_bin_floor + 1) % num_bins] += c101
+                histogram_tensor[row_bin_floor + 2, col_bin_floor + 1, (orientation_bin_floor + 1) % 8] += c101
                 histogram_tensor[row_bin_floor + 2, col_bin_floor + 2, orientation_bin_floor] += c110
-                histogram_tensor[row_bin_floor + 2, col_bin_floor + 2, (orientation_bin_floor + 1) % num_bins] += c111
+                histogram_tensor[row_bin_floor + 2, col_bin_floor + 2, (orientation_bin_floor + 1) % 8] += c111
 
             descriptor_vector = histogram_tensor[1:-1, 1:-1, :].flatten()
-            threshold = np.linalg.norm(descriptor_vector) * descriptor_max_value
+            threshold = np.linalg.norm(descriptor_vector) * self.descriptor_max_value
             descriptor_vector[descriptor_vector > threshold] = threshold
             descriptor_vector /= max(np.linalg.norm(descriptor_vector), 1e-7)
             descriptor_vector = np.round(512 * descriptor_vector)

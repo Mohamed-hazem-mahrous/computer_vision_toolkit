@@ -514,16 +514,16 @@ class ImageProcessor:
 
         thetas = np.deg2rad(np.arange(360))
         sines, cosines = np.sin(thetas), np.cos(thetas)
-        accumulator = np.zeros((w, h, max_radius - min_radius + 1), dtype=np.uint8)
+        hough_space = np.zeros((w, h, max_radius - min_radius + 1), dtype=np.uint8)
 
         for (y, x) in zip(*xy_pairs):
             for r in range(min_radius, max_radius + 1):
                 a = y - np.round(r * cosines).astype(int)
                 b = x - np.round(r * sines).astype(int)
                 valid = (a >= 0) & (a < w) & (b >= 0) & (b < h)
-                accumulator[a[valid], b[valid], r - min_radius] += 1
+                hough_space[a[valid], b[valid], r - min_radius] += 1
 
-        return accumulator
+        return hough_space
 
 
     def circle_hough_peaks_suppression(self, accumulator, num_peaks, min_radius, nhood_size=3):
@@ -590,9 +590,6 @@ class ImageProcessor:
 
     def ellipse_hough_peaks_suppression(self, accumulator, num_peaks, min_a, min_b, threshold=None):
         peaks = []
-        h, w, *_ = accumulator.shape
-
-        # Flatten accumulator for efficient peak finding
         flat_accumulator = accumulator.reshape(-1)
 
         # Select top `num_peaks` indices with voting counts above threshold (if provided)

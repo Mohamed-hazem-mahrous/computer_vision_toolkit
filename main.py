@@ -16,6 +16,9 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 import matplotlib.pyplot as plt
 from ImageMatching import ImageMatching
 from PyQt5.QtGui import QPixmap ,QImage
+from Corner_detection import harris_corner_detection, lambda_minus_corner_detection, convert_to_grayscale
+
+
 
 class MainWindow(QtWidgets.QMainWindow):    
     def __init__(self, *args, **kwargs):
@@ -77,6 +80,11 @@ class MainWindow(QtWidgets.QMainWindow):
        
         
         self.loaded_images = []
+
+        self.corner_image = None
+        self.corner_gray_img = None
+        self.harris_threshold = 0.01
+        self.lambda_threshold = 0.01
         
         self.SNR = 0.01
         self.Kernel = 3
@@ -117,6 +125,65 @@ class MainWindow(QtWidgets.QMainWindow):
 
         for radio_btn in [self.line_hough_radio_btn, self.circle_hough_radio_btn]:
             radio_btn.clicked.connect(self.hough_radio_btn_clicked)
+        
+
+        self.corner_upload_btn.clicked.connect(self.browse_corner_image)
+        self.harris_slider.valueChanged.connect(self.change_corner_threshold)
+        self.Lambda_slider.valueChanged.connect(self.change_corner_threshold)
+
+        self.harris_slider.sliderReleased.connect(lambda: self.apply_corner(self.corner_gray_img))
+        self.Lambda_slider.sliderReleased.connect(lambda: self.apply_corner(self.corner_gray_img))
+    
+
+    def browse_corner_image(self):
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        initial_folder = os.path.join(script_directory, "Images")
+        path, _ = QFileDialog.getOpenFileName(self, "Open Image", initial_folder, "Image Files (*.png *.jpg *.jpeg *.bmp *.gif)")
+
+        self.corner_image = cv2.imread(path, cv2.IMREAD_ANYCOLOR)
+        self.corner_gray_img = convert_to_grayscale(self.corner_image)
+
+        self.original_corner_image_widget.setImage(np.rot90(self.corner_image, k=-1))
+
+        self.apply_corner(self.corner_gray_img)
+    
+    def change_corner_threshold(self):
+        self.harris_threshold = self.harris_slider.value() / 100
+        self.harris_thr.setText(f"Threshold: {self.harris_threshold:.2f}")
+        self.lambda_threshold = self.Lambda_slider.value() / 100
+        self.lambda_thr.setText(f"Threshold: {self.lambda_threshold:.2f}")
+        
+    
+    def apply_corner(self, gray_img):
+        harris_start_time = time.time()
+
+        detected_corners = harris_corner_detection(gray_img, threshold=self.harris_threshold)
+
+        harris_end_time = time.time()
+        harris_computation_time = harris_end_time - harris_start_time
+        self.harris_comp_time.setText(f"Harris Computation Time: {harris_computation_time:.4f} s")
+
+        img_with_harris_corners = self.corner_image.copy()
+        img_with_harris_corners[detected_corners != 0] = [255, 0, 0]  # Mark corners in red
+        
+        self.harris_corner_widget.setImage(np.rot90(img_with_harris_corners, k=-1))
+
+
+
+        lambda_start_time = time.time()
+
+        detected_corners = lambda_minus_corner_detection(gray_img, threshold=self.lambda_threshold)
+
+        lambda_end_time = time.time()
+        lambda_computation_time = lambda_end_time - lambda_start_time
+        self.lambda_comp_time.setText(f"Lambda Computation Time: {lambda_computation_time:.4f} s")
+
+        img_with_lambda_corners = self.corner_image.copy()
+        img_with_lambda_corners[detected_corners != 0] = [255, 0, 0]  # Mark corners in red
+
+        self.lambda_corner_widget.setImage(np.rot90(img_with_lambda_corners, k=-1))
+
+
 
     
     def apply_line_hough_transform(self, hough_image, num_peaks=15, calculate_accumlator = True):
@@ -611,6 +678,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.hough_transform_view_widget, self.original_image_view_widget_hough = pg.ImageItem(), pg.ImageItem()
         self.hough_transformed_image.addItem(self.hough_transform_view_widget)
         self.original_image_6.addItem(self.original_image_view_widget_hough)
+
+
+        self.original_corner_image_widget, self.harris_corner_widget, self.lambda_corner_widget = pg.ImageItem(), pg.ImageItem(), pg.ImageItem()
+        self.corner_original_image.addItem(self.original_corner_image_widget)
+        self.Harris_image.addItem(self.harris_corner_widget)
+        self.Lambda_image.addItem(self.lambda_corner_widget)
         
 def main():
     app = QtWidgets.QApplication(sys.argv)

@@ -15,6 +15,7 @@ from ImageMatching import ImageMatching
 from PyQt5.QtGui import QImage
 from Corner_detection import harris_corner_detection, lambda_minus_corner_detection, convert_to_grayscale
 from SIFT import SIFT
+import thresholding
 
 
 
@@ -36,7 +37,8 @@ class MainWindow(QtWidgets.QMainWindow):
                             self.filtered_hybrid_image_2, self.filtered_hybrid_image_3, self.original_image_3, self.normalized_image,
                             self.local_thresholding_image, self.global_thresholding_image, self.original_image, self.equalized_image,
                             self.hough_transformed_image, self.original_image_5, self.manipulated_image_4, self.original_image_6 ,
-                            self.original_image_match , self.template_image_match , self.ssd_match_image, self.ncc_match_image]
+                            self.original_image_match , self.template_image_match , self.ssd_match_image, self.ncc_match_image,
+                            self.original_image_8, self.thresh_image]
         self.plot_widgets = [self.histograme_plot, self.distribution_curve_plot, self.R_Curve, self.G_Curve, self.B_Curve]
     
         for container in self.view_widgets:
@@ -74,6 +76,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.plotting_typr_combobox.currentIndexChanged.connect(self.display_hist_dist)
         self.filter_type_combobox_1.currentIndexChanged.connect(lambda: self.display_images_page6(1))
         self.filter_type_combobox_2.currentIndexChanged.connect(lambda: self.display_images_page6(2))
+        self.thresholding_mode_combobox.currentIndexChanged.connect(self.apply_thresholding)
+
+        self.spectral_thresh_slider.sliderReleased.connect(self.apply_thresholding)
+        self.spectral_range_slider.sliderReleased.connect(self.apply_thresholding)
+        self.thresh_block_size_slider.sliderReleased.connect(self.apply_thresholding)
+
         self.match_apply_btn.clicked.connect(self.apply_image_matching)
        
         
@@ -119,6 +127,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.browse_btn_4.clicked.connect(self.browse_hough_image)
         self.hough_apply_btn.clicked.connect(self.apply_hough)
 
+        self.select_img_thresh_btn.clicked.connect(self.browse_thresh_image)
+
+        self.global_thresh_radio_btn.clicked.connect(self.apply_thresholding)
+        self.local_thresh_radio_btn.clicked.connect(self.apply_thresholding)
+
+        self.global_thresh_radio_btn.setChecked(True)
         self.line_hough_radio_btn.setChecked(True)
 
         for radio_btn in [self.line_hough_radio_btn, self.circle_hough_radio_btn]:
@@ -623,7 +637,56 @@ class MainWindow(QtWidgets.QMainWindow):
         q_img = QImage(cv_img.data, width, height, bytes_per_line, QImage.Format_RGB888)
         q_img = q_img.rgbSwapped()
         return q_img
-      
+    
+    def browse_thresh_image(self):
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        initial_folder = os.path.join(script_directory, "Images")
+        path, _ = QFileDialog.getOpenFileName(self, "Open Image", initial_folder, "Image Files (*.png *.jpg *.jpeg *.bmp *.gif)")
+        self.original_thresh_image = ImageProcessor(path)
+        self.original_thresh_image_widget.setImage(np.rot90(self.original_thresh_image.image, k=-1))
+
+        self.apply_thresholding()
+
+    def apply_thresholding(self):
+        self.update_thresh_ui()
+        thresh_mode = self.thresholding_mode_combobox.currentText()
+        block_size = self.thresh_block_size_slider.value()
+        spectral_peaks_range = self.spectral_range_slider.value()
+        spectral_peaks_threshold = self.spectral_thresh_slider.value() / 1000
+        if thresh_mode == "Optimal Thresholding":
+            if self.global_thresh_radio_btn.isChecked():
+                _, thresh_output_image = thresholding.optimal_thresholding(self.original_thresh_image.image)
+            elif self.local_thresh_radio_btn.isChecked():
+                thresh_output_image = thresholding.optimal_local_thresholding(self.original_thresh_image.image, block_size)
+        elif thresh_mode == "Otsu Thresholding":
+            if self.global_thresh_radio_btn.isChecked():
+                _, thresh_output_image = thresholding.otsu_thresholding(self.original_thresh_image.image)
+            elif self.local_thresh_radio_btn.isChecked():
+                thresh_output_image = thresholding.otsu_local_thresholding(self.original_thresh_image.image, block_size)
+        elif thresh_mode == "Spectral Thresholding":
+            if self.global_thresh_radio_btn.isChecked():
+                thresh_output_image = thresholding.spectral_thresholding(self.original_thresh_image.image, peaks_range=spectral_peaks_range, min_peak_threshold=spectral_peaks_threshold)
+            elif self.local_thresh_radio_btn.isChecked():
+                thresh_output_image = thresholding.spectral_local_thresholding(self.original_thresh_image.image, block_size, peaks_range=spectral_peaks_range, min_peak_threshold=spectral_peaks_threshold)
+
+        self.output_thresh_image.setImage(np.rot90(thresh_output_image, k=-1))
+
+    def update_thresh_ui(self):
+        if self.local_thresh_radio_btn.isChecked():
+            self.thresh_block_size_frame.setVisible(True)
+            self.thresh_block_size_label.setText(f"Block Size: {str(self.thresh_block_size_slider.value())}")
+        else:
+            self.thresh_block_size_frame.setVisible(False)
+
+        if self.thresholding_mode_combobox.currentText() == "Spectral Thresholding":
+            for container in [self.spectral_thresh_frame, self.spectral_range_frame]:
+                container.setVisible(True)
+            self.spectral_thresh_label.setText(f"Thresh: {str(self.spectral_thresh_slider.value() / 1000)}")
+            self.spectral_range_label.setText(f"Range: {str(self.spectral_range_slider.value())}")
+        else:
+            for container in [self.spectral_thresh_frame, self.spectral_range_frame]:
+                container.setVisible(False)
+
     # utility function just to remove the bachground color of the pyqtgraph widgets and hide the axies
     def set_view_widget_settings(self, container):
         container.setBackground('#dddddd')
@@ -685,6 +748,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.corner_original_image.addItem(self.original_corner_image_widget)
         self.Harris_image.addItem(self.harris_corner_widget)
         self.Lambda_image.addItem(self.lambda_corner_widget)
+
+        self.original_thresh_image_widget, self.output_thresh_image = pg.ImageItem(), pg.ImageItem()
+        self.original_image_8.addItem(self.original_thresh_image_widget)
+        self.thresh_image.addItem(self.output_thresh_image)
         
 def main():
     app = QtWidgets.QApplication(sys.argv)

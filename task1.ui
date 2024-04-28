@@ -6862,7 +6862,7 @@ QGroupBox::indicator {
                   </widget>
                  </item>
                  <item row="1" column="0">
-                  <widget class="PlotWidget" name="hough_transformed_image_3" native="true">
+                  <widget class="PlotWidget" name="thresh_image" native="true">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                      <horstretch>0</horstretch>
@@ -6954,7 +6954,7 @@ QRadioButton::indicator:!checked {
                   <item row="0" column="0">
                    <layout class="QVBoxLayout" name="verticalLayout_60">
                     <item>
-                     <widget class="QPushButton" name="browse_btn_6">
+                     <widget class="QPushButton" name="select_img_thresh_btn">
                       <property name="minimumSize">
                        <size>
                         <width>0</width>
@@ -7072,14 +7072,14 @@ QComboBox QAbstractItemView {
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_64">
                  <item>
-                  <widget class="QRadioButton" name="radioButton">
+                  <widget class="QRadioButton" name="local_thresh_radio_btn">
                    <property name="text">
                     <string>Local</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QRadioButton" name="radioButton_2">
+                  <widget class="QRadioButton" name="global_thresh_radio_btn">
                    <property name="text">
                     <string>Global</string>
                    </property>
@@ -7095,7 +7095,7 @@ QComboBox QAbstractItemView {
                 </widget>
                </item>
                <item>
-                <spacer name="verticalSpacer_27">
+                <spacer name="thresh_block_size_spacer">
                  <property name="orientation">
                   <enum>Qt::Vertical</enum>
                  </property>
@@ -7108,7 +7108,7 @@ QComboBox QAbstractItemView {
                 </spacer>
                </item>
                <item>
-                <widget class="QFrame" name="frame_67">
+                <widget class="QFrame" name="thresh_block_size_frame">
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -7123,7 +7123,7 @@ QComboBox QAbstractItemView {
                  </property>
                  <layout class="QGridLayout" name="gridLayout_172">
                   <item row="0" column="1">
-                   <widget class="QSlider" name="block_size_slider">
+                   <widget class="QSlider" name="thresh_block_size_slider">
                     <property name="styleSheet">
                      <string notr="true">QSlider::groove {
     border: 1px solid #bbbbbb;
@@ -7167,13 +7167,16 @@ QSlider::sub-page:horizontal {
 }
 </string>
                     </property>
+                    <property name="sliderPosition">
+                     <number>10</number>
+                    </property>
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="0">
-                   <widget class="QLabel" name="SNR_label_11">
+                   <widget class="QLabel" name="thresh_block_size_label">
                     <property name="maximumSize">
                      <size>
                       <width>16777215</width>
@@ -7213,7 +7216,7 @@ QSlider::sub-page:horizontal {
                 </spacer>
                </item>
                <item>
-                <widget class="QFrame" name="frame_69">
+                <widget class="QFrame" name="spectral_thresh_frame">
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -7228,7 +7231,7 @@ QSlider::sub-page:horizontal {
                  </property>
                  <layout class="QGridLayout" name="gridLayout_175">
                   <item row="0" column="0">
-                   <widget class="QLabel" name="SNR_label_13">
+                   <widget class="QLabel" name="spectral_thresh_label">
                     <property name="maximumSize">
                      <size>
                       <width>16777215</width>
@@ -7296,6 +7299,12 @@ QSlider::sub-page:horizontal {
 }
 </string>
                     </property>
+                    <property name="maximum">
+                     <number>500</number>
+                    </property>
+                    <property name="sliderPosition">
+                     <number>200</number>
+                    </property>
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>
                     </property>
@@ -7318,7 +7327,7 @@ QSlider::sub-page:horizontal {
                 </spacer>
                </item>
                <item>
-                <widget class="QFrame" name="frame_70">
+                <widget class="QFrame" name="spectral_range_frame">
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -7333,7 +7342,7 @@ QSlider::sub-page:horizontal {
                  </property>
                  <layout class="QGridLayout" name="gridLayout_176">
                   <item row="0" column="0">
-                   <widget class="QLabel" name="SNR_label_14">
+                   <widget class="QLabel" name="spectral_range_label">
                     <property name="maximumSize">
                      <size>
                       <width>16777215</width>
@@ -7400,6 +7409,9 @@ QSlider::sub-page:horizontal {
     background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
 }
 </string>
+                    </property>
+                    <property name="sliderPosition">
+                     <number>17</number>
                     </property>
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>

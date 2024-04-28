@@ -13,7 +13,7 @@ class ImageMatching:
         # self.result = self.match_images()
 
     def compute_ssd(self, descriptor1, descriptor2):
-        ssd = -(np.sqrt(np.sum((descriptor1 - descriptor2)**2)))  # try without -sqrt
+        ssd = -(np.sqrt(np.sum((descriptor1 - descriptor2)**2)))
         return ssd
 
     def compute_ncc(self, descriptor1, descriptor2):

@@ -11,6 +11,7 @@ import numpy as np
 from PIL import Image as PILImage
 from Active_contour import Snake
 import cv2
+from cv2 import imread, IMREAD_ANYCOLOR
 from ImageMatching import ImageMatching
 from PyQt5.QtGui import QImage
 from Corner_detection import harris_corner_detection, lambda_minus_corner_detection, convert_to_grayscale
@@ -38,7 +39,7 @@ class MainWindow(QtWidgets.QMainWindow):
                             self.local_thresholding_image, self.global_thresholding_image, self.original_image, self.equalized_image,
                             self.hough_transformed_image, self.original_image_5, self.manipulated_image_4, self.original_image_6 ,
                             self.original_image_match , self.template_image_match , self.ssd_match_image, self.ncc_match_image,
-                            self.original_image_8, self.thresh_image]
+                            self.original_image_8, self.thresh_image, self.segmentation_original_image, self.segmented_image]
         self.plot_widgets = [self.histograme_plot, self.distribution_curve_plot, self.R_Curve, self.G_Curve, self.B_Curve]
     
         for container in self.view_widgets:
@@ -49,7 +50,8 @@ class MainWindow(QtWidgets.QMainWindow):
             container.setLimits(yMin = 0)
 
 
-        for button in [self.browse_btn, self.upload_btn_1, self.upload_btn_2,self.upload_original_btn_match,self.upload_template_btn_match]:
+        for button in [self.browse_btn, self.upload_btn_1, self.upload_btn_2,self.upload_original_btn_match,
+                       self.upload_template_btn_match, self.segmentation_browse_btn]:
             button.clicked.connect(lambda checked, btn=button: self.browse_image(btn))
         self.create_hybrid_btn.clicked.connect(self.hybrid_images)
         
@@ -289,6 +291,11 @@ class MainWindow(QtWidgets.QMainWindow):
             self.uploaded_image_matching_list.append(ImageProcessor(path))
             self.display_images_page9(2)
 
+        elif button == self.segmentation_browse_btn:
+            self.segmented_image.clear()
+            image = imread(path, IMREAD_ANYCOLOR)
+            self.original_segmentation_img_widget.setImage(np.rot90(image, k=-1))
+
         else:
             self.loaded_images.append(ImageProcessor(path))
             del self.loaded_images[1:-1]
@@ -314,6 +321,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     msg_box.setWindowTitle("Error")
                     msg_box.setText("please upload original img first")
                     msg_box.exec_()
+
     def select_image_for_contour(self):
         script_directory = os.path.dirname(os.path.abspath(__file__))
         initial_folder = os.path.join(script_directory, "Images")
@@ -347,7 +355,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Plot the new contour
         self.contour_plot = self.manipulated_image_4.plot(np.r_[cont_x, cont_x[0]], np.r_[cont_y, cont_y[0]], symbol='o', symbolSize=5, pen=pg.mkPen(color='r'))  # 'r' for red color
-
 
     def apply_contour(self):
         alpha, beta, gamma, iterations = self.get_lineEdit_val()
@@ -385,13 +392,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Kernel = self.Kernel_slider.value()
         self.kernel_label.setText("Kernel Size: " + str(self.Kernel))
 
-
     def SNR_slider_value_changed(self):
         self.SNR = self.NSR_Slider.value() / 100
         snr_value_text = self.label_texts.get(self.noise_type_cb.currentText(), "")
         self.SNR_label.setText(f"{snr_value_text}: {str(self.SNR)}" )
-
-
 
     def apply_edge_detection(self):
         method_name = self.edge_method_mapping.get(self.edge_filter_combobox.currentText())
@@ -752,6 +756,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.original_thresh_image_widget, self.output_thresh_image = pg.ImageItem(), pg.ImageItem()
         self.original_image_8.addItem(self.original_thresh_image_widget)
         self.thresh_image.addItem(self.output_thresh_image)
+
+        self.original_segmentation_img_widget, self.segmented_img_widget = pg.ImageItem(), pg.ImageItem()
+        self.segmentation_original_image.addItem(self.original_segmentation_img_widget)
+        self.segmented_image.addItem(self.segmented_img_widget)
         
 def main():
     app = QtWidgets.QApplication(sys.argv)

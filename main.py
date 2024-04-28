@@ -283,11 +283,11 @@ class MainWindow(QtWidgets.QMainWindow):
             self.apply_noise()
             self.apply_edge_detection()
             self.display_images_page4()
-        elif button== self.upload_original_btn_match:
+        elif button == self.upload_original_btn_match:
             self.uploaded_image_matching_list=[]
             self.uploaded_image_matching_list.append(ImageProcessor(path))
             self.display_images_page9(1)
-        elif button== self.upload_template_btn_match:
+        elif button == self.upload_template_btn_match:
             self.uploaded_image_matching_list.append(ImageProcessor(path))
             self.display_images_page9(2)
 
@@ -301,7 +301,7 @@ class MainWindow(QtWidgets.QMainWindow):
             del self.loaded_images[1:-1]
             self.display_images_page6(2)
 
-    def display_images_page9(self,target=1):
+    def display_images_page9(self, target=1):
         if self.uploaded_image_matching_list:
             if target == 1:
                 self.original_match_img.clear()
@@ -327,7 +327,7 @@ class MainWindow(QtWidgets.QMainWindow):
         initial_folder = os.path.join(script_directory, "Images")
         path, _ = QFileDialog.getOpenFileName(self, "Open Image", initial_folder, "Image Files (*.png *.jpg *.jpeg *.bmp *.gif)")
         image = ImageProcessor(path).image
-        self.image_contour =(image,path)
+        self.image_contour = (image, path)
         return image
 
     def display_images_page_contour(self):
@@ -335,14 +335,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.output_image_contour.clear()
         image = self.select_image_for_contour()
         for view_widget in [self.original_image_contour, self.output_image_contour]:
-            view_widget.setImage(np.rot90(image, k = -1))
+            view_widget.setImage(np.rot90(image, k=-1))
         
     def get_lineEdit_val(self):
         alpha = float(self.Alpha_lineEdit.text())
-        beta  = float(self.Beta_lineEdit.text())
-        gamma  = float(self.Gamma_lineEdit.text())
-        itirations  = int(self.Iteration_lineEdit.text())
-        return alpha,beta,gamma,itirations
+        beta = float(self.Beta_lineEdit.text())
+        gamma = float(self.Gamma_lineEdit.text())
+        itirations = int(self.Iteration_lineEdit.text())
+        return alpha, beta, gamma, itirations
     
     def plot_contour(self, cont_x, cont_y):
         # Extract contour coordinates
@@ -362,9 +362,9 @@ class MainWindow(QtWidgets.QMainWindow):
         snake_instance = Snake(self.image_contour[0], self.image_contour[1], alpha, beta, gamma, iterations)
         source = snake_instance.image
         contour_x = snake_instance.contour_x
-        contour_y= snake_instance.contour_y
+        contour_y = snake_instance.contour_y
         external_energy = snake_instance.external_energy
-        window_coordinates =snake_instance.window
+        window_coordinates = snake_instance.window
         for i in range(iterations):
         # Start Applying Active Contour Algorithm
             cont_x, cont_y = snake_instance.update_contour(source, contour_x, contour_y,

@@ -1,8 +1,8 @@
 import numpy as np
 import cv2
+from scipy.signal import find_peaks
 
 def optimal_thresholding(image):
-    # Set the Image center
     threshold = 128
     
     # Get the image histogram
@@ -118,5 +118,46 @@ def otsu_local_thresholding(image, block_size):
 
             # Assign the block to the result image
             local_thresholded_image[y:y + block_size, x:x + block_size] = thresholded_block
+
+    return local_thresholded_image
+
+
+def spectral_thresholding(img, num_bins=256, peaks_range=17, min_peak_threshold=0.2):
+    peaks = []
+    raw_hist = np.histogram(img, bins=num_bins)[0]
+
+    hist = cv2.blur(raw_hist, (10, 10))
+    hist_flat = hist.flatten()
+
+    peaks, _ = find_peaks(hist_flat, distance=peaks_range)
+    peaks = [(i, hist_flat[i]) for i in peaks if hist_flat[i] > max(hist_flat) * min_peak_threshold]
+    # print(len(peaks))
+
+    threshold_list = []
+    for i in range(len(peaks) - 1):
+        current_peak = peaks[i]
+        next_peak = peaks[i + 1]
+
+        valley_index = np.argmin(hist[current_peak[0]:next_peak[0]]) + current_peak[0]
+
+        if hist[valley_index] < current_peak[1] and hist[valley_index] < next_peak[1]:
+            threshold_list.append(valley_index)
+
+    segmented_img = np.zeros_like(img)
+    for i in range(len(threshold_list)):
+        segmented_img[(img >= threshold_list[i]) & (img < (threshold_list[i + 1] if i < len(threshold_list) - 1 else 256))] = i + 1
+
+    return segmented_img
+
+
+def spectral_local_thresholding(image, block_size, peaks_range=17, min_peak_threshold=0.2):
+    height, width = image.shape
+    local_thresholded_image = np.zeros((height, width), dtype=np.uint8)
+
+    for y in range(0, height, block_size):
+        for x in range(0, width, block_size):
+            block = image[y:y + block_size, x:x + block_size]
+
+            local_thresholded_image[y:y + block_size, x:x + block_size] = spectral_thresholding(block, peaks_range=peaks_range, min_peak_threshold=min_peak_threshold)
 
     return local_thresholded_image

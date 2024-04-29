@@ -59,7 +59,6 @@ class ImageSegmentation:
 
         return rgb_image
 
-
     def mean_shift(self, bandwidth):
         # Load the input image in BGR format
 
@@ -111,7 +110,56 @@ class ImageSegmentation:
             ms_color_image[mask] = np.mean(self.image[mask], axis=0)
 
         return ms_color_image
-    
 
+    def region_growing(self, seed, threshold):
+        # Initialize the output image as a black image
+        lab_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2LAB).astype(np.float32)
+        # image_copy = self.image.copy()
+        rows, cols = lab_image.shape[:2]
+        segmented = np.full(lab_image.shape, np.inf)
+        # print(segmented[0, 0])
+
+        # Create a queue to keep track of pixels to be checked
+        queue = []
+        queue.append(seed)
+
+        # Define the intensity of the seed point
+        seed_intensity = lab_image[seed[0], seed[1]][0]
+
+        # Define the connectivity (8-connectivity in this case)
+        connectivity = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]
+
+        # Iterate through the queue until it's empty
+        while queue:
+            # Get the current pixel from the queue
+            print("3 bbbbb")
+
+            current_pixel = queue.pop(0)
+            x, y = current_pixel
+
+            # Check the intensity difference between the current pixel and the seed
+            current_intensity = lab_image[x, y][0]
+            intensity_diff = np.linalg.norm(current_intensity - seed_intensity)  # Euclidean distance
+
+            # If the intensity difference is less than the threshold, add the pixel to the segmented region
+            if intensity_diff <= threshold:
+                segmented[x, y] = [255, 255, 255]  # Color the segmented region in red
+
+                # Check the connectivity of the current pixel with its neighbors
+                for dx, dy in connectivity:
+                    nx, ny = x + dx, y + dy
+
+                    # Check if the neighbor is within the image boundaries
+                    if 0 <= nx < rows and 0 <= ny < cols:
+                        print(segmented[nx, ny])
+                        # Check if the neighbor pixel is not already segmented and add it to the queue
+                        if np.array_equal(segmented[nx, ny], [np.inf, np.inf, np.inf]):
+                            print("llllll")
+                            queue.append((nx, ny))
+
+            else:
+                segmented[x, y] = lab_image[x, y]
+
+        return segmented
 
    

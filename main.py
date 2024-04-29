@@ -25,6 +25,7 @@ import matplotlib.pyplot as plt
 class MainWindow(QtWidgets.QMainWindow):    
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
+        self.selected_point_reg_grow = None
         uic.loadUi(r'task1.ui', self)
         self.image_contour =()
         self.img_match_instance = None 
@@ -51,12 +52,10 @@ class MainWindow(QtWidgets.QMainWindow):
             container.setBackground('w')
             container.setLimits(yMin = 0)
 
-
         for button in [self.browse_btn, self.upload_btn_1, self.upload_btn_2,self.upload_original_btn_match,
                        self.upload_template_btn_match, self.segmentation_browse_btn]:
             button.clicked.connect(lambda checked, btn=button: self.browse_image(btn))
         self.create_hybrid_btn.clicked.connect(self.hybrid_images)
-        
 
         self.global_thresholding_slider.sliderReleased.connect(self.global_threshold_slider_value_changed)
         self.local_thresholding_slider.sliderReleased.connect(self.local_threshold_sliders_value_changed)
@@ -88,7 +87,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.match_apply_btn.clicked.connect(self.apply_image_matching)
         self.segmentation_combobox.currentIndexChanged.connect(self.Segmentation_ComboBox_changed)
-        
+        self.original_segmentation_img_widget.mouseDoubleClickEvent = lambda event: self.onMouseClicked(event)
+
         self.loaded_images = []
 
         self.corner_image = None
@@ -141,7 +141,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Segmentation_apply_btn.clicked.connect(self.apply_segmentation)
         for radio_btn in [self.line_hough_radio_btn, self.circle_hough_radio_btn]:
             radio_btn.clicked.connect(self.hough_radio_btn_clicked)
-        
+
         self.corner_upload_btn.clicked.connect(self.browse_corner_image)
         self.harris_slider.valueChanged.connect(self.change_corner_threshold)
         self.Lambda_slider.valueChanged.connect(self.change_corner_threshold)
@@ -221,7 +221,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.original_image_view_widget_hough.setImage(np.rot90(image.image, k=-1))
         
     def Segmentation_ComboBox_changed(self):
-        method= self.segmentation_combobox.currentText()
+        method = self.segmentation_combobox.currentText()
         match method:
             case "K-means":
                 self.Segmentation_label2.setVisible(True)
@@ -237,9 +237,15 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.Segmentation_label1.setText("Bandwidth")
                 self.segmentation_line_edit1.clear()
 
+            case "Region Growing":
+                self.Segmentation_label2.setVisible(False)
+                self.segmentation_line_edit2.setVisible(False)
+                self.Segmentation_label1.setText("Threshold")
+                self.segmentation_line_edit1.clear()
+
     def apply_segmentation(self):
         if self.image_segmentation_instance :
-            method= self.segmentation_combobox.currentText()
+            method = self.segmentation_combobox.currentText()
             match method:
                 case "K-means":
                     k= self.segmentation_line_edit1.text()
@@ -253,6 +259,34 @@ class MainWindow(QtWidgets.QMainWindow):
                     bandwidth= self.segmentation_line_edit1.text()
                     image_ms=self.image_segmentation_instance.mean_shift(int(bandwidth))
                     self.segmented_img_widget.setImage(np.rot90(image_ms, k=-1))
+
+                case "Region Growing":
+                    threshold = self.segmentation_line_edit1.text()
+                    data = self.selected_point_reg_grow.data
+                    x = int(data['x'][0])  # Assuming only one point is plotted
+                    y = int(data['y'][0])
+                    y_inv = self.image_segmentation_instance.image.shape[0] - y
+                    image_rg = self.image_segmentation_instance.region_growing((x, y_inv), int(threshold))
+                    self.segmented_img_widget.setImage(np.rot90(image_rg, k=-1))
+
+    def onMouseClicked(self, event):
+        if self.segmentation_combobox.currentText() == "Region Growing":
+            self.segmentation_original_image.removeItem(self.selected_point_reg_grow)
+            pos = self.segmentation_original_image.mapFromScene(event.pos())
+            x, y = int(pos.x()), int(pos.y())
+            print(f"Selected point coordinates: ({x}, {y})")
+
+            scatter = pg.ScatterPlotItem()
+            # Set the data for the scatter plot (just the selected point)
+            scatter.setData(x=[x], y=[y], symbol='x', size=10, pen=pg.mkPen('r'))
+            # Add the scatter plot to the ImageView
+            self.segmentation_original_image.addItem(scatter)
+            self.selected_point_reg_grow = scatter
+
+            # data = self.selected_point_reg_grow.data
+            # x = data['x'][0]  # Assuming only one point is plotted
+            # y = data['y'][0]
+            # print(f"Selected point coordinates: ({x}, {y})")
 
     def number_of_peaks_slider_value_changed(self):
         value = self.no_of_peaks_slider.value()

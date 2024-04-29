@@ -142,14 +142,12 @@ class MainWindow(QtWidgets.QMainWindow):
         for radio_btn in [self.line_hough_radio_btn, self.circle_hough_radio_btn]:
             radio_btn.clicked.connect(self.hough_radio_btn_clicked)
         
-
         self.corner_upload_btn.clicked.connect(self.browse_corner_image)
         self.harris_slider.valueChanged.connect(self.change_corner_threshold)
         self.Lambda_slider.valueChanged.connect(self.change_corner_threshold)
 
         self.harris_slider.sliderReleased.connect(lambda: self.apply_harris_corner(self.corner_gray_img))
         self.Lambda_slider.sliderReleased.connect(lambda: self.apply_lambda_corner(self.corner_gray_img))
-    
 
     def browse_corner_image(self):
         script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -183,7 +181,6 @@ class MainWindow(QtWidgets.QMainWindow):
         img_with_harris_corners[detected_corners != 0] = [255, 0, 0]  # Mark corners in red
         
         self.harris_corner_widget.setImage(np.rot90(img_with_harris_corners, k=-1))
-    
 
     def apply_lambda_corner(self, gray_img):
         lambda_start_time = time.time()
@@ -198,9 +195,6 @@ class MainWindow(QtWidgets.QMainWindow):
         img_with_lambda_corners[detected_corners != 0] = [255, 0, 0]  # Mark corners in red
         
         self.lambda_corner_widget.setImage(np.rot90(img_with_lambda_corners, k=-1))
-
-
-
     
     def apply_line_hough_transform(self, hough_image, num_peaks=15, calculate_accumlator = True):
         image = hough_image
@@ -215,8 +209,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.hough_transform_view_widget.setImage(np.rot90(detected_image, k=-1))
         self.original_image_view_widget_hough.setImage(np.rot90(image.image, k=-1))
 
-
-    def apply_circle_hough_transform(self, hough_image, num_peaks=15, calculate_accumlator = True):
+    def apply_circle_hough_transform(self, hough_image, num_peaks=15, calculate_accumlator=True):
         image = hough_image
         if calculate_accumlator:
             self.circle_hough_parameters['Hough Space'] = image.circle_hough_transform(self.circle_hough_parameters['min radius'], self.circle_hough_parameters['max radius'])
@@ -259,8 +252,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 case "Mean Shift":
                     bandwidth= self.segmentation_line_edit1.text()
                     image_ms=self.image_segmentation_instance.mean_shift(int(bandwidth))
-                    self.segmented_img_widget.setImage(np.rot90(image_ms, k=-1))                   
-
+                    self.segmented_img_widget.setImage(np.rot90(image_ms, k=-1))
 
     def number_of_peaks_slider_value_changed(self):
         value = self.no_of_peaks_slider.value()
@@ -274,7 +266,6 @@ class MainWindow(QtWidgets.QMainWindow):
             calculate_accumlator_flag = self.circle_hough_parameters['Hough Space'] is None
             self.apply_circle_hough_transform(self.original_hough_image, num_peaks=value, calculate_accumlator=calculate_accumlator_flag)
 
-    
     def browse_hough_image(self):
         script_directory = os.path.dirname(os.path.abspath(__file__))
         initial_folder = os.path.join(script_directory, "Images")
@@ -298,7 +289,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.circle_hough_parameters['min radius'] = int(self.min_radius_line_edit.text())
             self.circle_hough_parameters['max radius'] = int(self.max_radius_line_edit.text())
             self.apply_circle_hough_transform(self.original_hough_image, num_peaks=self.no_of_peaks_slider.value(), calculate_accumlator=True)
-
 
     def browse_image(self, button):
         script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -402,7 +392,7 @@ class MainWindow(QtWidgets.QMainWindow):
         external_energy = snake_instance.external_energy
         window_coordinates = snake_instance.window
         for i in range(iterations):
-        # Start Applying Active Contour Algorithm
+            # Start Applying Active Contour Algorithm
             cont_x, cont_y = snake_instance.update_contour(source, contour_x, contour_y,
                                             external_energy, window_coordinates)
 
@@ -440,8 +430,6 @@ class MainWindow(QtWidgets.QMainWindow):
             direction=self.State_combobox.currentText()
         )
         self.edge_manipulated_image_view_widget.setImage(np.rot90(out, k=-1))
-    
-
 
     def apply_filter(self):
         method_name = self.filter_method_mapping.get(self.filter_type_cb.currentText())
@@ -449,8 +437,6 @@ class MainWindow(QtWidgets.QMainWindow):
             method = getattr(self.loaded_images[0], method_name)
             out = method(image=self.loaded_images[0].noisy_image, kernel_size=self.Kernel)
             self.filter_manipulated_image_view_widget.setImage(np.rot90(out, k=-1))
-
-
 
     def apply_noise(self):
         self.noise_method_mapping = {
@@ -469,14 +455,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.original_image_view_widget.setImage(np.rot90(out, k=-1))
 
         self.apply_filter()
-    
-
 
     def display_images_page1(self):
         for view_widget in [self.original_image_view_widget, self.original_image_view_widget_edge]:
             view_widget.setImage(np.rot90(self.loaded_images[0].image, k = -1))
-
-
 
     def local_threshold_sliders_value_changed(self):
         block_size=self.local_block_size_slider.value()
@@ -484,13 +466,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.local_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].local_thresholding( block_size, local_thresholding_val), k=-1))
 
-
-
     def global_threshold_slider_value_changed(self):
         global_thresholding_val=self.global_thresholding_slider.value()
         self.global_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].global_thresholding(global_thresholding_val), k=-1))
-
-
 
     def display_images_page3(self):
         self.local_block_size_slider.setMinimum(1)
@@ -510,12 +488,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.local_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].local_thresholding( block_size, local_thresholding_val), k=-1))
 
-
     def display_images_page4(self):
         self.original_image_view_widget_eq.setImage(np.rot90(self.loaded_images[0].image, k=-1))
         self.equalized_image_view_widget.setImage(
             np.rot90(self.loaded_images[0].histogram_equalization(self.loaded_images[0].image, np.amax(self.loaded_images[0].image.flatten())), k=-1))
-
 
     def display_hist_dist(self):
         hist = self.loaded_images[0].get_histogram(self.loaded_images[0].image, 256)
@@ -533,14 +509,11 @@ class MainWindow(QtWidgets.QMainWindow):
             plot_widget.clear()
             plot_widget.plot(histogram, pen=color, fillLevel=-0.3, fillBrush=color + (80,))
 
-
-
     def display_histogram(self, hist):
         self.histograme_plot.clear()
         self.histograme_plot.plot(hist, pen='r')
         self.histograme_plot.setLabel('left', 'Frequency')
         self.histograme_plot.setLabel('bottom', 'Pixel Intensity')
-
 
     def display_distribution_curve(self):
         cdf = self.loaded_images[0].get_cdf(self.loaded_images[0].get_histogram(self.loaded_images[0].image.flatten(), 256), self.loaded_images[0].image.shape)
@@ -548,7 +521,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.distribution_curve_plot.plot(cdf, pen='r')
         self.distribution_curve_plot.setLabel('left', 'Probability')
         self.distribution_curve_plot.setLabel('bottom', 'Pixel Intensity')
-
 
     def hybrid_images(self):
         alpha = 0.5
@@ -566,8 +538,6 @@ class MainWindow(QtWidgets.QMainWindow):
         hybrid_image = (alpha * image1 + (1 - alpha) * image2).astype(np.uint8)
         self.hybrid_result_image.setImage(np.rot90(hybrid_image, k=-1))
 
-
-
     def display_images_page6(self, target):
         if self.loaded_images:
             target_image = self.loaded_images[0] if target == 1 else self.loaded_images[-1]
@@ -584,8 +554,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.hybrid_image_2.setImage(np.rot90(target_image.image, k=-1))
                 self.hybrid_image_2_filtered.setImage(np.rot90(self.image_to_be_mixed_2, k=-1))
 
-
-
     def filter_radius_slider_value_changed(self, target):
         filter_combobox = self.filter_type_combobox_1 if target == 1 else self.filter_type_combobox_2
         filter_type = filter_combobox.currentText()
@@ -599,8 +567,6 @@ class MainWindow(QtWidgets.QMainWindow):
         setattr(self, radius_attribute, getattr(self, f"hybrid_filter_slider_{target}").value())
 
         self.display_images_page6(target)
-
-
 
     def get_frequency_domain_filters(self, target_image, radius_lp, radius_hp):
         f_transform = np.fft.fft2(target_image.image)
@@ -630,12 +596,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def apply_image_matching(self):
         self.img_match_instance.downsample_images(scale_factor=0.5)
 
-        # sift_original = cv2.SIFT_create()
-        # sift_template = cv2.SIFT_create()
-        
-        # keypoints_original, descriptors_original = sift_original.detectAndCompute(self.img_match_instance.original_image_gray, None)
-        # keypoints_template, descriptors_template = sift_template.detectAndCompute(self.img_match_instance.template_image_gray, None)
-        
         keypoints_original, descriptors_original = SIFT(self.img_match_instance.original_image_gray).sift()
         keypoints_template, descriptors_template = SIFT(self.img_match_instance.template_image_gray).sift()
         
@@ -644,9 +604,9 @@ class MainWindow(QtWidgets.QMainWindow):
         ssd_matches_list=self.img_match_instance.match_images(descriptors_original,descriptors_template,'ssd')
         end_time_ssd = time.time()
         match_time_ssd = end_time_ssd - start_time_ssd
-        print("SSD computation time: ",match_time_ssd)
-        matched_features_ssd = sorted(ssd_matches_list, key=lambda x: x.distance, reverse=True) #contain top 30 matched features between 2 images 
-        #converting these matches to an image contaning both original and target with lines of matching 
+        print("SSD computation time: ", match_time_ssd)
+        matched_features_ssd = sorted(ssd_matches_list, key=lambda x: x.distance, reverse=True)  # contain top 30 matched features between 2 images
+        # converting these matches to an image contaning both original and target with lines of matching
         matched_image_ssd = cv2.drawMatches( img1=self.img_match_instance.original_image_gray,
                                         keypoints1=keypoints_original,
                                         img2= self.img_match_instance.template_image_gray, 
@@ -669,14 +629,13 @@ class MainWindow(QtWidgets.QMainWindow):
                                         keypoints1=keypoints_original,img2= self.img_match_instance.template_image_gray, 
                                         keypoints2=keypoints_template,matches1to2= matched_features_ncc[:5], outImg= self.img_match_instance.template_image_gray, flags=2)
         self.ncc_match_img.setImage(np.rot90(matched_image_ncc, k=-1))
-
             
-    def convert_cv_to_qimage(self,cv_img):
-        height, width, channel = cv_img.shape
-        bytes_per_line = 3 * width
-        q_img = QImage(cv_img.data, width, height, bytes_per_line, QImage.Format_RGB888)
-        q_img = q_img.rgbSwapped()
-        return q_img
+    # def convert_cv_to_qimage(self, cv_img):
+    #     height, width, channel = cv_img.shape
+    #     bytes_per_line = 3 * width
+    #     q_img = QImage(cv_img.data, width, height, bytes_per_line, QImage.Format_RGB888)
+    #     q_img = q_img.rgbSwapped()
+    #     return q_img
     
     def browse_thresh_image(self):
         script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -727,7 +686,7 @@ class MainWindow(QtWidgets.QMainWindow):
             for container in [self.spectral_thresh_frame, self.spectral_range_frame]:
                 container.setVisible(False)
 
-    # utility function just to remove the bachground color of the pyqtgraph widgets and hide the axies
+    # utility function just to remove the background color of the pyqtgraph widgets and hide the axies
     def set_view_widget_settings(self, container):
         container.setBackground('#dddddd')
         container.setAspectLocked(True)
@@ -760,7 +719,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.original_image_match.addItem(self.original_match_img)
         self.template_image_match.addItem(self.template_match_img)
 
-
         self.ssd_match_img, self.ncc_match_img = pg.ImageItem(), pg.ImageItem()
         self.ssd_match_image.addItem(self.ssd_match_img)
         self.ncc_match_image.addItem(self.ncc_match_img)
@@ -783,7 +741,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.hough_transformed_image.addItem(self.hough_transform_view_widget)
         self.original_image_6.addItem(self.original_image_view_widget_hough)
 
-
         self.original_corner_image_widget, self.harris_corner_widget, self.lambda_corner_widget = pg.ImageItem(), pg.ImageItem(), pg.ImageItem()
         self.corner_original_image.addItem(self.original_corner_image_widget)
         self.Harris_image.addItem(self.harris_corner_widget)
@@ -802,6 +759,7 @@ def main():
     main = MainWindow()
     main.show()
     sys.exit(app.exec_())
+
 
 if __name__ == '__main__':
     main()

@@ -87,7 +87,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.thresh_block_size_slider.sliderReleased.connect(self.apply_thresholding)
 
         self.match_apply_btn.clicked.connect(self.apply_image_matching)
-       
+        self.segmentation_combobox.currentIndexChanged.connect(self.Segmentation_ComboBox_changed)
         
         self.loaded_images = []
 
@@ -226,6 +226,23 @@ class MainWindow(QtWidgets.QMainWindow):
         
         self.hough_transform_view_widget.setImage(np.rot90(detected_image, k=-1))
         self.original_image_view_widget_hough.setImage(np.rot90(image.image, k=-1))
+        
+    def Segmentation_ComboBox_changed(self):
+        method= self.segmentation_combobox.currentText()
+        match method:
+            case "K-means":
+                self.Segmentation_label2.setVisible(True)
+                self.segmentation_line_edit2.setVisible(True)
+                self.Segmentation_label1.setText("K Value")
+                self.Segmentation_label2.setText("Iterations")
+                self.segmentation_line_edit1.clear()
+                self.segmentation_line_edit2.clear()
+                
+            case "Mean Shift":
+                self.Segmentation_label2.setVisible(False)
+                self.segmentation_line_edit2.setVisible(False)
+                self.Segmentation_label1.setText("Bandwidth")
+                self.segmentation_line_edit1.clear()
 
     def apply_segmentation(self):
         if self.image_segmentation_instance :
@@ -234,22 +251,16 @@ class MainWindow(QtWidgets.QMainWindow):
                 case "K-means":
                     k= self.segmentation_line_edit1.text()
                     iterations=self.segmentation_line_edit2.text()
-                    labels  =self.image_segmentation_instance.kmeans_segmentation(int(k),int(iterations))
-                    # Display the segmented image
-                    unique_labels = np.unique(labels)
-                    num_labels = len(unique_labels)
-                    colormap = plt.cm.viridis  # Choose a colormap
-                    
-                    # Normalize labels to [0, 1] for colormap
-                    normalized_labels = labels / (num_labels )
-                    
-                    # Map labels to colors
-                    rgb_image = colormap(normalized_labels)
-                    # Display the segmented image using self.segmented_img_widget
-                    self.segmented_img_widget.setImage(np.rot90(rgb_image, k=-1))                   
+                    k_means_color_image  =self.image_segmentation_instance.kmeans_segmentation(int(k),int(iterations))
 
-                
-                 
+                    # Display the segmented image using self.segmented_img_widget
+                    self.segmented_img_widget.setImage(np.rot90(k_means_color_image, k=-1))                   
+
+                case "Mean Shift":
+                    bandwidth= self.segmentation_line_edit1.text()
+                    image_ms=self.image_segmentation_instance.mean_shift(int(bandwidth))
+                    self.segmented_img_widget.setImage(np.rot90(image_ms, k=-1))                   
+
 
     def number_of_peaks_slider_value_changed(self):
         value = self.no_of_peaks_slider.value()

@@ -7589,7 +7589,6 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
                       <property name="font">
                        <font>
                         <pointsize>11</pointsize>
-                        <weight>75</weight>
                         <bold>true</bold>
                        </font>
                       </property>
@@ -7855,7 +7854,7 @@ QComboBox QAbstractItemView {
                    <property name="frameShadow">
                     <enum>QFrame::Raised</enum>
                    </property>
-                   <widget class="QLineEdit" name="Alpha_lineEdit_2">
+                   <widget class="QLineEdit" name="segmentation_line_edit1">
                     <property name="geometry">
                      <rect>
                       <x>101</x>
@@ -7948,7 +7947,7 @@ QComboBox QAbstractItemView {
                    </widget>
                   </item>
                   <item row="2" column="1">
-                   <widget class="QLineEdit" name="Alpha_lineEdit_4">
+                   <widget class="QLineEdit" name="segmentation_line_edit2">
                     <property name="maximumSize">
                      <size>
                       <width>110</width>
@@ -8019,7 +8018,7 @@ QComboBox QAbstractItemView {
                         <number>0</number>
                        </property>
                        <item>
-                        <widget class="QPushButton" name="Apply_btn_2">
+                        <widget class="QPushButton" name="Segmentation_apply_btn">
                          <property name="minimumSize">
                           <size>
                            <width>0</width>
@@ -8212,7 +8211,7 @@ QGroupBox::indicator {
      <x>0</x>
      <y>0</y>
      <width>1196</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

@@ -17,7 +17,9 @@ from PyQt5.QtGui import QImage
 from Corner_detection import harris_corner_detection, lambda_minus_corner_detection, convert_to_grayscale
 from SIFT import SIFT
 import thresholding
-
+from Segmentation import ImageSegmentation
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
 
 
 class MainWindow(QtWidgets.QMainWindow):    
@@ -41,7 +43,7 @@ class MainWindow(QtWidgets.QMainWindow):
                             self.original_image_match , self.template_image_match , self.ssd_match_image, self.ncc_match_image,
                             self.original_image_8, self.thresh_image, self.segmentation_original_image, self.segmented_image]
         self.plot_widgets = [self.histograme_plot, self.distribution_curve_plot, self.R_Curve, self.G_Curve, self.B_Curve]
-    
+        self.image_segmentation_instance=None 
         for container in self.view_widgets:
             self.set_view_widget_settings(container)
     
@@ -136,7 +138,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.global_thresh_radio_btn.setChecked(True)
         self.line_hough_radio_btn.setChecked(True)
-
+        self.Segmentation_apply_btn.clicked.connect(self.apply_segmentation)
         for radio_btn in [self.line_hough_radio_btn, self.circle_hough_radio_btn]:
             radio_btn.clicked.connect(self.hough_radio_btn_clicked)
         
@@ -168,7 +170,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.lambda_threshold = self.Lambda_slider.value() / 100
         self.lambda_thr.setText(f"Threshold: {self.lambda_threshold:.2f}")
     
-
     def apply_harris_corner(self, gray_img):
         harris_start_time = time.time()
 
@@ -226,6 +227,29 @@ class MainWindow(QtWidgets.QMainWindow):
         self.hough_transform_view_widget.setImage(np.rot90(detected_image, k=-1))
         self.original_image_view_widget_hough.setImage(np.rot90(image.image, k=-1))
 
+    def apply_segmentation(self):
+        if self.image_segmentation_instance :
+            method= self.segmentation_combobox.currentText()
+            match method:
+                case "K-means":
+                    k= self.segmentation_line_edit1.text()
+                    iterations=self.segmentation_line_edit2.text()
+                    labels  =self.image_segmentation_instance.kmeans_segmentation(int(k),int(iterations))
+                    # Display the segmented image
+                    unique_labels = np.unique(labels)
+                    num_labels = len(unique_labels)
+                    colormap = plt.cm.viridis  # Choose a colormap
+                    
+                    # Normalize labels to [0, 1] for colormap
+                    normalized_labels = labels / (num_labels )
+                    
+                    # Map labels to colors
+                    rgb_image = colormap(normalized_labels)
+                    # Display the segmented image using self.segmented_img_widget
+                    self.segmented_img_widget.setImage(np.rot90(rgb_image, k=-1))                   
+
+                
+                 
 
     def number_of_peaks_slider_value_changed(self):
         value = self.no_of_peaks_slider.value()
@@ -292,9 +316,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.display_images_page9(2)
 
         elif button == self.segmentation_browse_btn:
-            self.segmented_image.clear()
             image = imread(path, IMREAD_ANYCOLOR)
+            self.image_segmentation_instance=ImageSegmentation(image)
             self.original_segmentation_img_widget.setImage(np.rot90(image, k=-1))
+            # self.segmented_image.clear()
 
         else:
             self.loaded_images.append(ImageProcessor(path))

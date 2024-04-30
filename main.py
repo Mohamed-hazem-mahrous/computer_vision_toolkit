@@ -17,7 +17,7 @@ from PyQt5.QtGui import QImage
 from Corner_detection import harris_corner_detection, lambda_minus_corner_detection, convert_to_grayscale
 from SIFT import SIFT
 import thresholding
-from Segmentation import ImageSegmentation
+from Segmentation import ImageSegmentation, AgglomerativeClustering
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 
@@ -25,6 +25,7 @@ import matplotlib.pyplot as plt
 class MainWindow(QtWidgets.QMainWindow):    
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
+        self.selected_point_reg_grow = None
         uic.loadUi(r'task1.ui', self)
         self.image_contour =()
         self.img_match_instance = None 
@@ -51,12 +52,10 @@ class MainWindow(QtWidgets.QMainWindow):
             container.setBackground('w')
             container.setLimits(yMin = 0)
 
-
         for button in [self.browse_btn, self.upload_btn_1, self.upload_btn_2,self.upload_original_btn_match,
                        self.upload_template_btn_match, self.segmentation_browse_btn]:
             button.clicked.connect(lambda checked, btn=button: self.browse_image(btn))
         self.create_hybrid_btn.clicked.connect(self.hybrid_images)
-        
 
         self.global_thresholding_slider.sliderReleased.connect(self.global_threshold_slider_value_changed)
         self.local_thresholding_slider.sliderReleased.connect(self.local_threshold_sliders_value_changed)
@@ -87,9 +86,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.thresh_block_size_slider.sliderReleased.connect(self.apply_thresholding)
 
         self.match_apply_btn.clicked.connect(self.apply_image_matching)
-       
-        
+        self.segmentation_combobox.currentIndexChanged.connect(self.Segmentation_ComboBox_changed)
+        self.original_segmentation_img_widget.mouseDoubleClickEvent = lambda event: self.onMouseClicked(event)
+
         self.loaded_images = []
+
+        self.pixels_agglo = None
+        self.img_agglo = None
 
         self.corner_image = None
         self.corner_gray_img = None
@@ -141,7 +144,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Segmentation_apply_btn.clicked.connect(self.apply_segmentation)
         for radio_btn in [self.line_hough_radio_btn, self.circle_hough_radio_btn]:
             radio_btn.clicked.connect(self.hough_radio_btn_clicked)
-        
 
         self.corner_upload_btn.clicked.connect(self.browse_corner_image)
         self.harris_slider.valueChanged.connect(self.change_corner_threshold)
@@ -149,7 +151,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.harris_slider.sliderReleased.connect(lambda: self.apply_harris_corner(self.corner_gray_img))
         self.Lambda_slider.sliderReleased.connect(lambda: self.apply_lambda_corner(self.corner_gray_img))
-    
 
     def browse_corner_image(self):
         script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -183,7 +184,6 @@ class MainWindow(QtWidgets.QMainWindow):
         img_with_harris_corners[detected_corners != 0] = [255, 0, 0]  # Mark corners in red
         
         self.harris_corner_widget.setImage(np.rot90(img_with_harris_corners, k=-1))
-    
 
     def apply_lambda_corner(self, gray_img):
         lambda_start_time = time.time()
@@ -198,9 +198,6 @@ class MainWindow(QtWidgets.QMainWindow):
         img_with_lambda_corners[detected_corners != 0] = [255, 0, 0]  # Mark corners in red
         
         self.lambda_corner_widget.setImage(np.rot90(img_with_lambda_corners, k=-1))
-
-
-
     
     def apply_line_hough_transform(self, hough_image, num_peaks=15, calculate_accumlator = True):
         image = hough_image
@@ -215,8 +212,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.hough_transform_view_widget.setImage(np.rot90(detected_image, k=-1))
         self.original_image_view_widget_hough.setImage(np.rot90(image.image, k=-1))
 
-
-    def apply_circle_hough_transform(self, hough_image, num_peaks=15, calculate_accumlator = True):
+    def apply_circle_hough_transform(self, hough_image, num_peaks=15, calculate_accumlator=True):
         image = hough_image
         if calculate_accumlator:
             self.circle_hough_parameters['Hough Space'] = image.circle_hough_transform(self.circle_hough_parameters['min radius'], self.circle_hough_parameters['max radius'])
@@ -226,30 +222,98 @@ class MainWindow(QtWidgets.QMainWindow):
         
         self.hough_transform_view_widget.setImage(np.rot90(detected_image, k=-1))
         self.original_image_view_widget_hough.setImage(np.rot90(image.image, k=-1))
+        
+    def Segmentation_ComboBox_changed(self):
+        method = self.segmentation_combobox.currentText()
+        match method:
+            case "K-means":
+                self.Segmentation_label2.setVisible(True)
+                self.segmentation_line_edit2.setVisible(True)
+                self.Segmentation_label1.setText("K Value")
+                self.Segmentation_label2.setText("Iterations")
+                self.segmentation_line_edit1.clear()
+                self.segmentation_line_edit2.clear()
+                
+            case "Mean Shift":
+                self.Segmentation_label2.setVisible(False)
+                self.segmentation_line_edit2.setVisible(False)
+                self.Segmentation_label1.setText("Bandwidth")
+                self.segmentation_line_edit1.clear()
+
+            case "Region Growing":
+                self.Segmentation_label2.setVisible(False)
+                self.segmentation_line_edit2.setVisible(False)
+                self.Segmentation_label1.setText("Threshold")
+                self.segmentation_line_edit1.clear()
+            
+            case "Agglomerative":
+                self.Segmentation_label2.setVisible(True)
+                self.segmentation_line_edit2.setVisible(True)
+                self.Segmentation_label1.setText("K")
+                self.Segmentation_label2.setText("Initial K")
+                self.segmentation_line_edit1.clear()
+                self.segmentation_line_edit2.clear()
 
     def apply_segmentation(self):
         if self.image_segmentation_instance :
-            method= self.segmentation_combobox.currentText()
+            method = self.segmentation_combobox.currentText()
             match method:
                 case "K-means":
                     k= self.segmentation_line_edit1.text()
                     iterations=self.segmentation_line_edit2.text()
-                    labels  =self.image_segmentation_instance.kmeans_segmentation(int(k),int(iterations))
-                    # Display the segmented image
-                    unique_labels = np.unique(labels)
-                    num_labels = len(unique_labels)
-                    colormap = plt.cm.viridis  # Choose a colormap
-                    
-                    # Normalize labels to [0, 1] for colormap
-                    normalized_labels = labels / (num_labels )
-                    
-                    # Map labels to colors
-                    rgb_image = colormap(normalized_labels)
-                    # Display the segmented image using self.segmented_img_widget
-                    self.segmented_img_widget.setImage(np.rot90(rgb_image, k=-1))                   
+                    k_means_color_image  =self.image_segmentation_instance.kmeans_segmentation(int(k),int(iterations))
 
+                    # Display the segmented image using self.segmented_img_widget
+                    self.segmented_img_widget.setImage(np.rot90(k_means_color_image, k=-1))                   
+
+                case "Mean Shift":
+                    bandwidth= self.segmentation_line_edit1.text()
+                    image_ms=self.image_segmentation_instance.mean_shift(int(bandwidth))
+                    self.segmented_img_widget.setImage(np.rot90(image_ms, k=-1))
+
+                case "Region Growing":
+                    threshold = self.segmentation_line_edit1.text()
+                    data = self.selected_point_reg_grow.data
+                    x = int(data['x'][0])  # Assuming only one point is plotted
+                    y = int(data['y'][0])
+                    y_inv = self.image_segmentation_instance.image.shape[0] - y
+                    image_rg = self.image_segmentation_instance.region_growing((x, y_inv), int(threshold))
+                    self.segmented_img_widget.setImage(np.rot90(image_rg, k=-1))
                 
-                 
+                case "Agglomerative":
+                    k = int(self.segmentation_line_edit1.text())
+                    initial_k = int(self.segmentation_line_edit2.text())
+                    agglo = AgglomerativeClustering(k = k, initial_k = initial_k)
+                    agglo.fit(self.pixels_agglo)
+
+                    new_img = []
+                    for row in self.img_agglo.tolist():
+                        new_row = []
+                        for pixel in row:
+                            new_row.append(agglo.predict_center([pixel]))
+                        new_img.append(new_row)
+                    new_img = np.array(new_img, dtype=np.uint8) 
+
+                    self.segmented_img_widget.setImage(np.rot90(new_img, k=-1))
+
+    def onMouseClicked(self, event):
+        if self.segmentation_combobox.currentText() == "Region Growing":
+            self.segmentation_original_image.removeItem(self.selected_point_reg_grow)
+            pos = self.segmentation_original_image.mapFromScene(event.pos())
+            x, y = int(pos.x()), int(pos.y())
+            print(f"Selected point coordinates: ({x}, {y})")
+
+            scatter = pg.ScatterPlotItem()
+            # Set the data for the scatter plot (just the selected point)
+            scatter.setData(x=[x], y=[y], symbol='x', size=10, pen=pg.mkPen('r'))
+            # Add the scatter plot to the ImageView
+            self.segmentation_original_image.addItem(scatter)
+            self.selected_point_reg_grow = scatter
+
+            # data = self.selected_point_reg_grow.data
+            # x = data['x'][0]  # Assuming only one point is plotted
+            # y = data['y'][0]
+            # print(f"Selected point coordinates: ({x}, {y})")
 
     def number_of_peaks_slider_value_changed(self):
         value = self.no_of_peaks_slider.value()
@@ -263,7 +327,6 @@ class MainWindow(QtWidgets.QMainWindow):
             calculate_accumlator_flag = self.circle_hough_parameters['Hough Space'] is None
             self.apply_circle_hough_transform(self.original_hough_image, num_peaks=value, calculate_accumlator=calculate_accumlator_flag)
 
-    
     def browse_hough_image(self):
         script_directory = os.path.dirname(os.path.abspath(__file__))
         initial_folder = os.path.join(script_directory, "Images")
@@ -287,7 +350,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.circle_hough_parameters['min radius'] = int(self.min_radius_line_edit.text())
             self.circle_hough_parameters['max radius'] = int(self.max_radius_line_edit.text())
             self.apply_circle_hough_transform(self.original_hough_image, num_peaks=self.no_of_peaks_slider.value(), calculate_accumlator=True)
-
 
     def browse_image(self, button):
         script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -319,7 +381,9 @@ class MainWindow(QtWidgets.QMainWindow):
             image = imread(path, IMREAD_ANYCOLOR)
             self.image_segmentation_instance=ImageSegmentation(image)
             self.original_segmentation_img_widget.setImage(np.rot90(image, k=-1))
-            # self.segmented_image.clear()
+            
+            self.img_agglo = imread(path, cv2.IMREAD_GRAYSCALE)
+            self.pixels_agglo = self.img_agglo.reshape((-1,1))
 
         else:
             self.loaded_images.append(ImageProcessor(path))
@@ -391,7 +455,7 @@ class MainWindow(QtWidgets.QMainWindow):
         external_energy = snake_instance.external_energy
         window_coordinates = snake_instance.window
         for i in range(iterations):
-        # Start Applying Active Contour Algorithm
+            # Start Applying Active Contour Algorithm
             cont_x, cont_y = snake_instance.update_contour(source, contour_x, contour_y,
                                             external_energy, window_coordinates)
 
@@ -429,8 +493,6 @@ class MainWindow(QtWidgets.QMainWindow):
             direction=self.State_combobox.currentText()
         )
         self.edge_manipulated_image_view_widget.setImage(np.rot90(out, k=-1))
-    
-
 
     def apply_filter(self):
         method_name = self.filter_method_mapping.get(self.filter_type_cb.currentText())
@@ -438,8 +500,6 @@ class MainWindow(QtWidgets.QMainWindow):
             method = getattr(self.loaded_images[0], method_name)
             out = method(image=self.loaded_images[0].noisy_image, kernel_size=self.Kernel)
             self.filter_manipulated_image_view_widget.setImage(np.rot90(out, k=-1))
-
-
 
     def apply_noise(self):
         self.noise_method_mapping = {
@@ -458,14 +518,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.original_image_view_widget.setImage(np.rot90(out, k=-1))
 
         self.apply_filter()
-    
-
 
     def display_images_page1(self):
         for view_widget in [self.original_image_view_widget, self.original_image_view_widget_edge]:
             view_widget.setImage(np.rot90(self.loaded_images[0].image, k = -1))
-
-
 
     def local_threshold_sliders_value_changed(self):
         block_size=self.local_block_size_slider.value()
@@ -473,13 +529,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.local_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].local_thresholding( block_size, local_thresholding_val), k=-1))
 
-
-
     def global_threshold_slider_value_changed(self):
         global_thresholding_val=self.global_thresholding_slider.value()
         self.global_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].global_thresholding(global_thresholding_val), k=-1))
-
-
 
     def display_images_page3(self):
         self.local_block_size_slider.setMinimum(1)
@@ -499,12 +551,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.local_threshold_image_view_widget.setImage(np.rot90(self.loaded_images[0].local_thresholding( block_size, local_thresholding_val), k=-1))
 
-
     def display_images_page4(self):
         self.original_image_view_widget_eq.setImage(np.rot90(self.loaded_images[0].image, k=-1))
         self.equalized_image_view_widget.setImage(
             np.rot90(self.loaded_images[0].histogram_equalization(self.loaded_images[0].image, np.amax(self.loaded_images[0].image.flatten())), k=-1))
-
 
     def display_hist_dist(self):
         hist = self.loaded_images[0].get_histogram(self.loaded_images[0].image, 256)
@@ -522,14 +572,11 @@ class MainWindow(QtWidgets.QMainWindow):
             plot_widget.clear()
             plot_widget.plot(histogram, pen=color, fillLevel=-0.3, fillBrush=color + (80,))
 
-
-
     def display_histogram(self, hist):
         self.histograme_plot.clear()
         self.histograme_plot.plot(hist, pen='r')
         self.histograme_plot.setLabel('left', 'Frequency')
         self.histograme_plot.setLabel('bottom', 'Pixel Intensity')
-
 
     def display_distribution_curve(self):
         cdf = self.loaded_images[0].get_cdf(self.loaded_images[0].get_histogram(self.loaded_images[0].image.flatten(), 256), self.loaded_images[0].image.shape)
@@ -537,7 +584,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.distribution_curve_plot.plot(cdf, pen='r')
         self.distribution_curve_plot.setLabel('left', 'Probability')
         self.distribution_curve_plot.setLabel('bottom', 'Pixel Intensity')
-
 
     def hybrid_images(self):
         alpha = 0.5
@@ -555,8 +601,6 @@ class MainWindow(QtWidgets.QMainWindow):
         hybrid_image = (alpha * image1 + (1 - alpha) * image2).astype(np.uint8)
         self.hybrid_result_image.setImage(np.rot90(hybrid_image, k=-1))
 
-
-
     def display_images_page6(self, target):
         if self.loaded_images:
             target_image = self.loaded_images[0] if target == 1 else self.loaded_images[-1]
@@ -573,8 +617,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.hybrid_image_2.setImage(np.rot90(target_image.image, k=-1))
                 self.hybrid_image_2_filtered.setImage(np.rot90(self.image_to_be_mixed_2, k=-1))
 
-
-
     def filter_radius_slider_value_changed(self, target):
         filter_combobox = self.filter_type_combobox_1 if target == 1 else self.filter_type_combobox_2
         filter_type = filter_combobox.currentText()
@@ -588,8 +630,6 @@ class MainWindow(QtWidgets.QMainWindow):
         setattr(self, radius_attribute, getattr(self, f"hybrid_filter_slider_{target}").value())
 
         self.display_images_page6(target)
-
-
 
     def get_frequency_domain_filters(self, target_image, radius_lp, radius_hp):
         f_transform = np.fft.fft2(target_image.image)
@@ -619,12 +659,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def apply_image_matching(self):
         self.img_match_instance.downsample_images(scale_factor=0.5)
 
-        # sift_original = cv2.SIFT_create()
-        # sift_template = cv2.SIFT_create()
-        
-        # keypoints_original, descriptors_original = sift_original.detectAndCompute(self.img_match_instance.original_image_gray, None)
-        # keypoints_template, descriptors_template = sift_template.detectAndCompute(self.img_match_instance.template_image_gray, None)
-        
         keypoints_original, descriptors_original = SIFT(self.img_match_instance.original_image_gray).sift()
         keypoints_template, descriptors_template = SIFT(self.img_match_instance.template_image_gray).sift()
         
@@ -633,9 +667,9 @@ class MainWindow(QtWidgets.QMainWindow):
         ssd_matches_list=self.img_match_instance.match_images(descriptors_original,descriptors_template,'ssd')
         end_time_ssd = time.time()
         match_time_ssd = end_time_ssd - start_time_ssd
-        print("SSD computation time: ",match_time_ssd)
-        matched_features_ssd = sorted(ssd_matches_list, key=lambda x: x.distance, reverse=True) #contain top 30 matched features between 2 images 
-        #converting these matches to an image contaning both original and target with lines of matching 
+        print("SSD computation time: ", match_time_ssd)
+        matched_features_ssd = sorted(ssd_matches_list, key=lambda x: x.distance, reverse=True)  # contain top 30 matched features between 2 images
+        # converting these matches to an image contaning both original and target with lines of matching
         matched_image_ssd = cv2.drawMatches( img1=self.img_match_instance.original_image_gray,
                                         keypoints1=keypoints_original,
                                         img2= self.img_match_instance.template_image_gray, 
@@ -658,14 +692,13 @@ class MainWindow(QtWidgets.QMainWindow):
                                         keypoints1=keypoints_original,img2= self.img_match_instance.template_image_gray, 
                                         keypoints2=keypoints_template,matches1to2= matched_features_ncc[:5], outImg= self.img_match_instance.template_image_gray, flags=2)
         self.ncc_match_img.setImage(np.rot90(matched_image_ncc, k=-1))
-
             
-    def convert_cv_to_qimage(self,cv_img):
-        height, width, channel = cv_img.shape
-        bytes_per_line = 3 * width
-        q_img = QImage(cv_img.data, width, height, bytes_per_line, QImage.Format_RGB888)
-        q_img = q_img.rgbSwapped()
-        return q_img
+    # def convert_cv_to_qimage(self, cv_img):
+    #     height, width, channel = cv_img.shape
+    #     bytes_per_line = 3 * width
+    #     q_img = QImage(cv_img.data, width, height, bytes_per_line, QImage.Format_RGB888)
+    #     q_img = q_img.rgbSwapped()
+    #     return q_img
     
     def browse_thresh_image(self):
         script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -716,7 +749,7 @@ class MainWindow(QtWidgets.QMainWindow):
             for container in [self.spectral_thresh_frame, self.spectral_range_frame]:
                 container.setVisible(False)
 
-    # utility function just to remove the bachground color of the pyqtgraph widgets and hide the axies
+    # utility function just to remove the background color of the pyqtgraph widgets and hide the axies
     def set_view_widget_settings(self, container):
         container.setBackground('#dddddd')
         container.setAspectLocked(True)
@@ -749,7 +782,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.original_image_match.addItem(self.original_match_img)
         self.template_image_match.addItem(self.template_match_img)
 
-
         self.ssd_match_img, self.ncc_match_img = pg.ImageItem(), pg.ImageItem()
         self.ssd_match_image.addItem(self.ssd_match_img)
         self.ncc_match_image.addItem(self.ncc_match_img)
@@ -772,7 +804,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.hough_transformed_image.addItem(self.hough_transform_view_widget)
         self.original_image_6.addItem(self.original_image_view_widget_hough)
 
-
         self.original_corner_image_widget, self.harris_corner_widget, self.lambda_corner_widget = pg.ImageItem(), pg.ImageItem(), pg.ImageItem()
         self.corner_original_image.addItem(self.original_corner_image_widget)
         self.Harris_image.addItem(self.harris_corner_widget)
@@ -791,6 +822,7 @@ def main():
     main = MainWindow()
     main.show()
     sys.exit(app.exec_())
+
 
 if __name__ == '__main__':
     main()

@@ -7720,125 +7720,18 @@ QComboBox QAbstractItemView {
                    <property name="frameShadow">
                     <enum>QFrame::Raised</enum>
                    </property>
-                   <layout class="QGridLayout" name="gridLayout_135">
-                    <item row="0" column="0">
-                     <widget class="QLabel" name="label_13">
-                      <property name="maximumSize">
-                       <size>
-                        <width>16777215</width>
-                        <height>40</height>
-                       </size>
-                      </property>
-                      <property name="font">
-                       <font>
-                        <pointsize>14</pointsize>
-                       </font>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true"/>
-                      </property>
-                      <property name="text">
-                       <string>Filter</string>
-                      </property>
-                      <property name="textFormat">
-                       <enum>Qt::AutoText</enum>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
+                   <layout class="QGridLayout" name="gridLayout_135"/>
                   </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <layout class="QHBoxLayout" name="horizontalLayout_62">
-                   <property name="leftMargin">
-                    <number>5</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="rightMargin">
-                    <number>5</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QComboBox" name="filter_type_cb_2">
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">QComboBox, QFontComboBox {
-    border-width: 2px;
-    border-radius: 8px;
-    border-style: solid;
-    border-top-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd);
-    border-right-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd);
-    border-bottom-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #c1c9cf, stop:1 #d2d8dd);
-    border-left-color: qlineargradient(spread:pad, x1:1, y1:0, x2:0, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd);
-    background-color: #f4f4f4;
-    color: #272727;
-    padding-left: 5px;
-}
-QComboBox:editable, QComboBox:!editable, QComboBox::drop-down:editable, QComboBox:!editable:on, QComboBox::drop-down:editable:on {
-    background: rgb(255, 255, 255);
-}
-QComboBox::drop-down {
-    subcontrol-origin: padding;
-    subcontrol-position: top right;
-    width: 15px;
-    color: #272727;
-    border-left-width: 1px;
-    border-left-color: darkgray;
-    border-left-style: solid;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-}
-QComboBox::down-arrow {
-    image: url(/usr/share/icons/Adwaita/16x16/actions/go-down-symbolic.symbolic.png); /*Adawaita icon thene*/
-}
-
-QComboBox::down-arrow:on {
-    top: 1px;
-    left: 1px;
-}
-QComboBox QAbstractItemView {
-    border: 1px solid darkgray;
-    border-radius: 8px;
-    selection-background-color: #dadada;
-    selection-color: #272727;
-    color: #272727;
-    background: white;
-}</string>
-                     </property>
-                     <item>
-                      <property name="text">
-                       <string>Average</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Gaussian</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Median</string>
-                      </property>
-                     </item>
-                    </widget>
-                   </item>
-                  </layout>
                  </item>
                 </layout>
                </item>
                <item>
                 <layout class="QGridLayout" name="gridLayout_136">
                  <property name="topMargin">
-                  <number>20</number>
+                  <number>0</number>
+                 </property>
+                 <property name="horizontalSpacing">
+                  <number>8</number>
                  </property>
                  <item row="0" column="0">
                   <widget class="QFrame" name="frame_18">
@@ -7854,55 +7747,48 @@ QComboBox QAbstractItemView {
                    <property name="frameShadow">
                     <enum>QFrame::Raised</enum>
                    </property>
-                   <widget class="QLineEdit" name="segmentation_line_edit1">
-                    <property name="geometry">
-                     <rect>
-                      <x>101</x>
-                      <y>20</y>
-                      <width>110</width>
-                      <height>30</height>
-                     </rect>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>110</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">border-radius: 10px;</string>
-                    </property>
-                   </widget>
-                   <widget class="QLabel" name="label_17">
-                    <property name="geometry">
-                     <rect>
-                      <x>20</x>
-                      <y>20</y>
-                      <width>75</width>
-                      <height>30</height>
-                     </rect>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>10</pointsize>
-                     </font>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true"/>
-                    </property>
-                    <property name="text">
-                     <string>K</string>
-                    </property>
-                    <property name="textFormat">
-                     <enum>Qt::AutoText</enum>
-                    </property>
-                   </widget>
+                   <layout class="QGridLayout" name="gridLayout_16">
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="Segmentation_label1">
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>10</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true"/>
+                      </property>
+                      <property name="text">
+                       <string>K</string>
+                      </property>
+                      <property name="textFormat">
+                       <enum>Qt::AutoText</enum>
+                      </property>
+                      <property name="indent">
+                       <number>-11</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QLineEdit" name="segmentation_line_edit1">
+                      <property name="maximumSize">
+                       <size>
+                        <width>110</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">border-radius: 10px;</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </widget>
                  </item>
                 </layout>
@@ -7923,7 +7809,7 @@ QComboBox QAbstractItemView {
                  </property>
                  <layout class="QGridLayout" name="gridLayout_143">
                   <item row="2" column="0">
-                   <widget class="QLabel" name="label_33">
+                   <widget class="QLabel" name="Segmentation_label2">
                     <property name="maximumSize">
                      <size>
                       <width>16777215</width>

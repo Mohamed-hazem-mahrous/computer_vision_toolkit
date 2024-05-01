@@ -279,6 +279,8 @@ class MainWindow(QtWidgets.QMainWindow):
                     y_inv = self.image_segmentation_instance.image.shape[0] - y
                     image_rg = self.image_segmentation_instance.region_growing((x, y_inv), int(threshold))
                     self.segmented_img_widget.setImage(np.rot90(image_rg, k=-1))
+  
+                    
                 
                 case "Agglomerative":
                     k = int(self.segmentation_line_edit1.text())

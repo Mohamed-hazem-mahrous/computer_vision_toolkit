@@ -253,6 +253,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.segmentation_line_edit1.clear()
                 self.segmentation_line_edit2.clear()
 
+    
     def apply_segmentation(self):
         if self.image_segmentation_instance :
             method = self.segmentation_combobox.currentText()
@@ -260,43 +261,83 @@ class MainWindow(QtWidgets.QMainWindow):
                 case "K-means":
                     k= self.segmentation_line_edit1.text()
                     iterations=self.segmentation_line_edit2.text()
-                    k_means_color_image  =self.image_segmentation_instance.kmeans_segmentation(int(k),int(iterations))
+                    if not k or not iterations:
+                        msg_box = QMessageBox()
+                        msg_box.setIcon(QMessageBox.Critical)
+                        msg_box.setWindowTitle("Error")
+                        msg_box.setText("Enter K and iterations values first")
+                        msg_box.exec_()
+                    else :
+                        k_means_color_image  =self.image_segmentation_instance.kmeans_segmentation(int(k),int(iterations))
 
-                    # Display the segmented image using self.segmented_img_widget
-                    self.segmented_img_widget.setImage(np.rot90(k_means_color_image, k=-1))                   
+                        # Display the segmented image using self.segmented_img_widget
+                        self.segmented_img_widget.setImage(np.rot90(k_means_color_image, k=-1))                   
 
                 case "Mean Shift":
                     bandwidth= self.segmentation_line_edit1.text()
-                    image_ms=self.image_segmentation_instance.mean_shift(int(bandwidth))
-                    self.segmented_img_widget.setImage(np.rot90(image_ms, k=-1))
+                    if not bandwidth :
+                        msg_box = QMessageBox()
+                        msg_box.setIcon(QMessageBox.Critical)
+                        msg_box.setWindowTitle("Error")
+                        msg_box.setText("Enter Bandwidth first!")
+                        msg_box.exec_()
+                    else :
+                        image_ms=self.image_segmentation_instance.mean_shift(int(bandwidth))
+                        self.segmented_img_widget.setImage(np.rot90(image_ms, k=-1))
 
                 case "Region Growing":
                     threshold = self.segmentation_line_edit1.text()
-                    data = self.selected_point_reg_grow.data
-                    x = int(data['x'][0])  # Assuming only one point is plotted
-                    y = int(data['y'][0])
-                    y_inv = self.image_segmentation_instance.image.shape[0] - y
-                    image_rg = self.image_segmentation_instance.region_growing((x, y_inv), int(threshold))
-                    self.segmented_img_widget.setImage(np.rot90(image_rg, k=-1))
-  
-                    
+                    if not threshold:
+                        msg_box = QMessageBox()
+                        msg_box.setIcon(QMessageBox.Critical)
+                        msg_box.setWindowTitle("Error")
+                        msg_box.setText("enter threshold first")
+                        msg_box.exec_()
+                    else :
+                        if self.selected_point_reg_grow:
+                            data = self.selected_point_reg_grow.data
+                            x = int(data['x'][0])  # Assuming only one point is plotted
+                            y = int(data['y'][0])
+                            y_inv = self.image_segmentation_instance.image.shape[0] - y
+                            image_rg = self.image_segmentation_instance.region_growing((x, y_inv), int(threshold))
+                            self.segmented_img_widget.setImage(np.rot90(image_rg, k=-1))
+                        else :
+                            msg_box = QMessageBox()
+                            msg_box.setIcon(QMessageBox.Critical)
+                            msg_box.setWindowTitle("Error")
+                            msg_box.setText("Please select the point!")
+                            msg_box.exec_()
+                                        
                 
                 case "Agglomerative":
-                    k = int(self.segmentation_line_edit1.text())
-                    initial_k = int(self.segmentation_line_edit2.text())
-                    agglo = AgglomerativeClustering(k = k, initial_k = initial_k)
-                    agglo.fit(self.pixels_agglo)
+                    k = self.segmentation_line_edit1.text()
+                    initial_k = self.segmentation_line_edit2.text()
+                    
+                    if not k or not initial_k:
+                        msg_box = QMessageBox()
+                        msg_box.setIcon(QMessageBox.Critical)
+                        msg_box.setWindowTitle("Error")
+                        msg_box.setText("Enter K and initial_k values first")
+                        msg_box.exec_()
+                    else :
+                        agglo = AgglomerativeClustering(k = int(k), initial_k =int( initial_k ) )
+                        agglo.fit(self.pixels_agglo)
 
-                    new_img = []
-                    for row in self.img_agglo.tolist():
-                        new_row = []
-                        for pixel in row:
-                            new_row.append(agglo.predict_center([pixel]))
-                        new_img.append(new_row)
-                    new_img = np.array(new_img, dtype=np.uint8) 
+                        new_img = []
+                        for row in self.img_agglo.tolist():
+                            new_row = []
+                            for pixel in row:
+                                new_row.append(agglo.predict_center([pixel]))
+                            new_img.append(new_row)
+                        new_img = np.array(new_img, dtype=np.uint8) 
 
-                    self.segmented_img_widget.setImage(np.rot90(new_img, k=-1))
-
+                        self.segmented_img_widget.setImage(np.rot90(new_img, k=-1))
+        else :
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Critical)
+            msg_box.setWindowTitle("Error")
+            msg_box.setText("Please insert image first !")
+            msg_box.exec_()
     def onMouseClicked(self, event):
         if self.segmentation_combobox.currentText() == "Region Growing":
             self.segmentation_original_image.removeItem(self.selected_point_reg_grow)

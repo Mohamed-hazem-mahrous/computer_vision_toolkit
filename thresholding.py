@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 from scipy.signal import find_peaks
+import matplotlib.pyplot as plt
 
 def optimal_thresholding(image):
     threshold = 128
@@ -122,7 +123,7 @@ def otsu_local_thresholding(image, block_size):
     return local_thresholded_image
 
 
-def spectral_thresholding(img, num_bins=256, peaks_range=17, min_peak_threshold=0.2):
+def spectral_thresholding(img, num_bins=256, peaks_range=17, min_peak_threshold=0):
     peaks = []
     raw_hist = np.histogram(img, bins=num_bins)[0]
 
@@ -159,5 +160,61 @@ def spectral_local_thresholding(image, block_size, peaks_range=17, min_peak_thre
             block = image[y:y + block_size, x:x + block_size]
 
             local_thresholded_image[y:y + block_size, x:x + block_size] = spectral_thresholding(block, peaks_range=peaks_range, min_peak_threshold=min_peak_threshold)
+
+    return local_thresholded_image
+
+
+def multilevel_spectral_thresholding(image, num_classes=4):
+    histogram = np.histogram(image, bins=256)[0]
+    normalized_histogram = histogram.ravel() / histogram.sum()
+
+    cumulative_sum = np.cumsum(normalized_histogram)
+
+    thresholds = np.zeros(num_classes - 1)
+
+    def calculate_threshold(class_index, normalized_histogram, cumulative_sum):
+        max_variance, best_threshold = 0, 0
+        for t in range(class_index * 256 // num_classes, (class_index + 1) * 256 // num_classes):
+            weight_0 = cumulative_sum[t] if t > 0 else 0
+            weight_1 = cumulative_sum[-1] - weight_0
+
+            if (weight_0 + weight_1) < 1e-5:
+                continue
+
+            mean_0 = np.sum(np.arange(0, t + 1) * normalized_histogram[:t + 1]) / weight_0
+            mean_1 = np.sum(np.arange(t + 1, 256) * normalized_histogram[t + 1:]) / weight_1
+
+            variance = weight_0 * weight_1 * ((mean_0 - mean_1) ** 2)
+
+            if variance > max_variance:
+                max_variance = variance
+                best_threshold = t
+
+        return best_threshold
+
+    for i in range(num_classes - 1):
+        thresholds[i] = calculate_threshold(i, normalized_histogram, cumulative_sum)
+
+    segmented_image = np.zeros_like(image, dtype=np.uint8)
+
+    for i in range(num_classes):
+        if i == 0:
+            segmented_image[image <= thresholds[0]] = i
+        elif i == num_classes - 1:
+            segmented_image[image > thresholds[i - 1]] = i
+        else:
+            segmented_image[(image > thresholds[i - 1]) & (image <= thresholds[i])] = i
+
+    return segmented_image
+
+def multilevel_spectral_local_thresholding(image, block_size):
+    height, width = image.shape
+    local_thresholded_image = np.zeros((height, width), dtype=np.uint8)
+
+    for y in range(0, height, block_size):
+        for x in range(0, width, block_size):
+            block = image[y:y + block_size, x:x + block_size]
+
+            local_thresholded_image[y:y + block_size, x:x + block_size] = multilevel_spectral_thresholding(block)
 
     return local_thresholded_image

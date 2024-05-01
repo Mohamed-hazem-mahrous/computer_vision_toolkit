@@ -24,7 +24,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;gg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>11</number>
+       <number>10</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -7203,117 +7203,6 @@ QSlider::sub-page:horizontal {
                 </widget>
                </item>
                <item>
-                <spacer name="verticalSpacer_30">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
-                <widget class="QFrame" name="spectral_thresh_frame">
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>80</height>
-                  </size>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout_175">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="spectral_thresh_label">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>10</pointsize>
-                     </font>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true"/>
-                    </property>
-                    <property name="text">
-                     <string>Thresh</string>
-                    </property>
-                    <property name="textFormat">
-                     <enum>Qt::AutoText</enum>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QSlider" name="spectral_thresh_slider">
-                    <property name="styleSheet">
-                     <string notr="true">QSlider::groove {
-    border: 1px solid #bbbbbb;
-    background-color: #52595d;
-    border-radius: 4px;
-}
-QSlider::groove:horizontal {
-    height: 6px;
-}
-QSlider::groove:vertical {
-    width: 6px;
-}
-QSlider::handle:horizontal {
-    background: #ffffff;
-    border-style: solid;
-    border-width: 1px;
-    border-color: rgb(207,207,207);
-    width: 12px;
-    margin: -5px 0;
-    border-radius: 7px;
-}
-QSlider::handle:vertical {
-    background: #ffffff;
-    border-style: solid;
-    border-width: 1px;
-    border-color: rgb(207,207,207);
-    height: 12px;
-    margin: 0 -5px;
-    border-radius: 7px;
-}
-QSlider::add-page, QSlider::sub-page {
-    border: 1px transparent;
-    background-color: #52595d;
-    border-radius: 4px;
-}
-QSlider::add-page:horizontal {
-    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #ddd5d5, stop:0.5 #dad3d3, stop:1 #ddd5d5);
-}
-QSlider::sub-page:horizontal {
-    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
-}
-</string>
-                    </property>
-                    <property name="maximum">
-                     <number>500</number>
-                    </property>
-                    <property name="sliderPosition">
-                     <number>200</number>
-                    </property>
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
                 <spacer name="verticalSpacer_31">
                  <property name="orientation">
                   <enum>Qt::Vertical</enum>
@@ -7409,6 +7298,9 @@ QSlider::sub-page:horizontal {
     background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgb(182, 13, 13), stop:0.5  rgb(182, 13, 13), stop:1  rgb(182, 13, 13));
 }
 </string>
+                    </property>
+                    <property name="maximum">
+                     <number>255</number>
                     </property>
                     <property name="sliderPosition">
                      <number>17</number>
@@ -7589,6 +7481,7 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
                       <property name="font">
                        <font>
                         <pointsize>11</pointsize>
+                        <weight>75</weight>
                         <bold>true</bold>
                        </font>
                       </property>
@@ -8097,7 +7990,7 @@ QGroupBox::indicator {
      <x>0</x>
      <y>0</y>
      <width>1196</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

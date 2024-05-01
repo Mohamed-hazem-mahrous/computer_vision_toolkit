@@ -81,7 +81,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.filter_type_combobox_2.currentIndexChanged.connect(lambda: self.display_images_page6(2))
         self.thresholding_mode_combobox.currentIndexChanged.connect(self.apply_thresholding)
 
-        self.spectral_thresh_slider.sliderReleased.connect(self.apply_thresholding)
         self.spectral_range_slider.sliderReleased.connect(self.apply_thresholding)
         self.thresh_block_size_slider.sliderReleased.connect(self.apply_thresholding)
 
@@ -716,7 +715,6 @@ class MainWindow(QtWidgets.QMainWindow):
         thresh_mode = self.thresholding_mode_combobox.currentText()
         block_size = self.thresh_block_size_slider.value()
         spectral_peaks_range = self.spectral_range_slider.value()
-        spectral_peaks_threshold = self.spectral_thresh_slider.value() / 1000
         if thresh_mode == "Optimal Thresholding":
             if self.global_thresh_radio_btn.isChecked():
                 _, thresh_output_image = thresholding.optimal_thresholding(self.original_thresh_image.image)
@@ -729,9 +727,12 @@ class MainWindow(QtWidgets.QMainWindow):
                 thresh_output_image = thresholding.otsu_local_thresholding(self.original_thresh_image.image, block_size)
         elif thresh_mode == "Spectral Thresholding":
             if self.global_thresh_radio_btn.isChecked():
-                thresh_output_image = thresholding.spectral_thresholding(self.original_thresh_image.image, peaks_range=spectral_peaks_range, min_peak_threshold=spectral_peaks_threshold)
+                # thresh_output_image = thresholding.spectral_thresholding(self.original_thresh_image.image, peaks_range=spectral_peaks_range)
+                thresh_output_image = thresholding.multilevel_spectral_thresholding(self.original_thresh_image.image, spectral_peaks_range)
+                self.spectral_range_slider.setMaximum(30)
             elif self.local_thresh_radio_btn.isChecked():
-                thresh_output_image = thresholding.spectral_local_thresholding(self.original_thresh_image.image, block_size, peaks_range=spectral_peaks_range, min_peak_threshold=spectral_peaks_threshold)
+                # thresh_output_image = thresholding.spectral_local_thresholding(self.original_thresh_image.image, block_size, peaks_range=spectral_peaks_range)
+                thresh_output_image = thresholding.multilevel_spectral_local_thresholding(self.original_thresh_image.image, block_size)
 
         self.output_thresh_image.setImage(np.rot90(thresh_output_image, k=-1))
 
@@ -743,13 +744,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.thresh_block_size_frame.setVisible(False)
 
         if self.thresholding_mode_combobox.currentText() == "Spectral Thresholding":
-            for container in [self.spectral_thresh_frame, self.spectral_range_frame]:
-                container.setVisible(True)
-            self.spectral_thresh_label.setText(f"Thresh: {str(self.spectral_thresh_slider.value() / 1000)}")
+            self.spectral_range_frame.setVisible(True)
             self.spectral_range_label.setText(f"Range: {str(self.spectral_range_slider.value())}")
         else:
-            for container in [self.spectral_thresh_frame, self.spectral_range_frame]:
-                container.setVisible(False)
+            self.spectral_range_frame.setVisible(False)
 
     # utility function just to remove the background color of the pyqtgraph widgets and hide the axies
     def set_view_widget_settings(self, container):

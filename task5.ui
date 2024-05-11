@@ -28,19 +28,33 @@
 QTabBar::tab {
     color: white;
     border: none; /* Remove border */
-    padding: 10px 20px; /* Adjust padding */
-    margin-right: 2px; /* Adjust margin */
+    padding: 10px 50px; /* Adjust padding */
+font-size:8pt;
+font-weight:800 ;
+    margin: 0px; /* Adjust margin */
 }
 
 QTabBar::tab:selected {
   
     border-bottom: 1px solid #fff; /* Add border to bottom when selected */
-    color: rgb(255, 0, 0);
- border-bottom: 3px solid  rgb(255, 0, 0);
+    color: rgb(2, 201, 178);
+ border-bottom: 3px solid  rgb(2, 201, 178);
 }</string>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
        <number>0</number>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>50</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="elideMode">
+       <enum>Qt::ElideNone</enum>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -79,6 +93,22 @@ QTabBar::tab:selected {
                <number>0</number>
               </property>
               <item>
+               <spacer name="horizontalSpacer_5">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>60</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QPushButton" name="detection_browse_button">
                 <property name="minimumSize">
                  <size>
@@ -94,9 +124,11 @@ QTabBar::tab:selected {
                 </property>
                 <property name="styleSheet">
                  <string notr="true">QPushButton {
-    width: 50%;
-    background-color: rgb(182, 13, 13); /* Replace with the corresponding color value for --dark-grey in your application */
+    width: 90%;
+    Height: 40%;
+    background-color: rgb(2, 184, 163); /* Replace with the corresponding color value for --dark-grey in your application */
     color: white;
+font-weight:800 ;
     border-radius: 10px;
     text-align: center;
 
@@ -104,7 +136,7 @@ QTabBar::tab:selected {
 
 QPushButton:hover {
     background-color: white;
-color:red /* Replace with the corresponding color value for --darkest-color in your application */
+color:rgb(2, 184, 163); /* Replace with the corresponding color value for --darkest-color in your application */
 }
 </string>
                 </property>
@@ -112,6 +144,22 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
                  <string>Upload</string>
                 </property>
                </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_6">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>60</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </item>
@@ -220,6 +268,22 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
                <number>0</number>
               </property>
               <item>
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>60</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QPushButton" name="upload_btn">
                 <property name="minimumSize">
                  <size>
@@ -235,9 +299,12 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
                 </property>
                 <property name="styleSheet">
                  <string notr="true">QPushButton {
-    width: 50%;
-    background-color: rgb(182, 13, 13); /* Replace with the corresponding color value for --dark-grey in your application */
+    width: 90%;
+    Height: 40%;
+
+    background-color: rgb(2, 184, 163); /* Replace with the corresponding color value for --dark-grey in your application */
     color: white;
+font-weight:800 ;
     border-radius: 10px;
     text-align: center;
 
@@ -245,14 +312,39 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
 
 QPushButton:hover {
     background-color: white;
-color:red /* Replace with the corresponding color value for --darkest-color in your application */
+color:rgb(2, 184, 163); /* Replace with the corresponding color value for --darkest-color in your application */
 }
 </string>
                 </property>
                 <property name="text">
                  <string>Upload</string>
                 </property>
+                <property name="iconSize">
+                 <size>
+                  <width>14</width>
+                  <height>16</height>
+                 </size>
+                </property>
+                <property name="autoRepeatInterval">
+                 <number>91</number>
+                </property>
                </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>60</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </item>
@@ -284,6 +376,22 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
                <number>10</number>
               </property>
               <item>
+               <spacer name="horizontalSpacer_3">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>60</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QPushButton" name="recognize_btn">
                 <property name="minimumSize">
                  <size>
@@ -299,9 +407,11 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
                 </property>
                 <property name="styleSheet">
                  <string notr="true">QPushButton {
-    width: 50%;
-    background-color: rgb(182, 13, 13); /* Replace with the corresponding color value for --dark-grey in your application */
+    width: 90%;
+height: 40%;
+    background-color: rgb(2, 184, 163); /* Replace with the corresponding color value for --dark-grey in your application */
     color: white;
+font-weight:800 ;
     border-radius: 10px;
     text-align: center;
 
@@ -309,7 +419,7 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
 
 QPushButton:hover {
     background-color: white;
-color:red /* Replace with the corresponding color value for --darkest-color in your application */
+color:rgb(2, 184, 163); /* Replace with the corresponding color value for --darkest-color in your application */
 }
 </string>
                 </property>
@@ -317,6 +427,22 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
                  <string>Recognize</string>
                 </property>
                </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_4">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>60</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </item>
@@ -358,6 +484,9 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
              <string/>
             </property>
             <layout class="QGridLayout" name="gridLayout_127">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMinimumSize</enum>
+             </property>
              <item row="1" column="0">
               <layout class="QVBoxLayout" name="verticalLayout_41">
                <item>
@@ -422,7 +551,7 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

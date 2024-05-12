@@ -1,11 +1,12 @@
 import glob
-import math
 import cv2
 import numpy as np
 from sklearn import preprocessing
 import os
 import matplotlib.pyplot as plt
 import shutil
+from sklearn.metrics import roc_curve, auc
+
 
 def create_dataset(dataset_path, fixed_window_size=(62, 47)):
     class_labels = []
@@ -36,23 +37,26 @@ def create_dataset(dataset_path, fixed_window_size=(62, 47)):
                 shutil.copy(image, testing_image_path)
                 continue
             
-            img = detect_largest_face(cv2.imread(image, cv2.IMREAD_GRAYSCALE))
+            image = detect_largest_face(cv2.imread(image, cv2.IMREAD_GRAYSCALE))
             
-            if img is None:
+            if image is None:
                 continue
             
             class_labels.append(folder.split("/")[-1])
 
-            resized_image = cv2.resize(img, (fixed_window_size[1], fixed_window_size[0]))
+            resized_image = cv2.resize(image, (fixed_window_size[1], fixed_window_size[0]))
             images_dataset[i] = np.array(resized_image)
             i += 1
+
+    # print(len(class_labels))
+    # print(class_labels)
 
     np.save('./dataset/images_dataset.npy', images_dataset)
     np.save('./dataset/class_labels.npy', class_labels)
 
 
 def pca(images_dataset):
-    flattened_data = np.reshape(images_dataset, (images_dataset.shape[0], -1))  # -1 for product of remaining dims
+    flattened_data = np.reshape(images_dataset, (images_dataset.shape[0], -1))
 
     mean_image = np.mean(flattened_data, axis=0, dtype='float64')
 
@@ -63,8 +67,7 @@ def pca(images_dataset):
     eigenvalues, eigenvectors = np.linalg.eig(covariance_matrix)
 
     # Sort eigenvalues and eigenvectors by descending order
-    sorted_eigenvalue_indices = eigenvalues.argsort()[::-1]
-    sorted_eigenvectors = eigenvectors[:, sorted_eigenvalue_indices]
+    sorted_eigenvectors = eigenvectors[:, eigenvalues.argsort()[::-1]]
 
     # Projecting the dataset onto principal components
     principal_components = centered_data.T @ sorted_eigenvectors
@@ -75,6 +78,8 @@ def pca(images_dataset):
     normalized_real = preprocessing.normalize(real_part)
     normalized_imaginary = preprocessing.normalize(imaginary_part)
     eigenfaces = normalized_real + 1j * normalized_imaginary
+
+    print(eigenfaces.shape)
 
 
     return eigenfaces, centered_data, mean_image
@@ -101,22 +106,18 @@ def detect_largest_face(image):
         return None
 
     
-def recognize_face(test_image, eigenfaces, training_data, mean_image, class_labels, num_eigenfaces=350, fixed_size=(62, 47)):
+def recognize_face(test_image, eigenfaces, training_data, mean_image, class_labels, num_eigenfaces=150, fixed_size=(62, 47)):
     face_image = detect_largest_face(test_image)
 
     if face_image is None:
         return "Not A Face"
 
     resized_face = cv2.resize(face_image, fixed_size[::-1])
-
-    # Subtract the mean image from the resized face
+    
     face_vector = np.reshape(resized_face, (resized_face.shape[0] * resized_face.shape[1])) - mean_image
 
     # Project the face vector onto the subspace of the chosen eigenfaces
     projected_face = eigenfaces[:num_eigenfaces].dot(face_vector)
-
-    # Threshold for face recognition
-    recognition_threshold = 1500
 
     # Variables to store the minimum distance and corresponding class index
     min_distance = None
@@ -124,19 +125,21 @@ def recognize_face(test_image, eigenfaces, training_data, mean_image, class_labe
 
     # Calculate distances between the projected test image and each training image
     for i in range(training_data.shape[0]):
-        # Project the training image onto the subspace of the chosen eigenfaces
+        training_data.shape[0]
+
         projected_training_face = eigenfaces[:num_eigenfaces].dot(training_data[i])
-        # Calculate the Euclidean distance between the projected vectors
+
         distance = np.sqrt(np.sum((projected_face - projected_training_face)**2))
 
-        # Update minimum distance and class index if a closer face is found
         if min_distance is None or distance < min_distance:
             min_distance = distance
             closest_class_index = i
 
-    # Recognize the face if the minimum distance is below the threshold
-    if min_distance < recognition_threshold:
+    if min_distance < 1300:
+        print(min_distance)
         return class_labels[closest_class_index]
     else:
         print(f"Face not recognized. Minimum distance: {min_distance}")
         return "Unknown"
+    
+# create_dataset("./gt_db Half/")

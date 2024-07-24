@@ -19,7 +19,7 @@ This project is a computer vision toolkit, which implements various computer vis
 ### 1. Image Filter and Noise
 Users can add and remove noise from images using various methods. The toolkit supports noise addition such as **Uniform**, **Gaussian**, and **Salt and Pepper** noise. For filtering, users can choose from different methods like **Average**, **Median**, and **Gaussian** filters to clean and enhance image quality.
 
-![Filter](./assets/filter.png)
+![Filter](./assets/Filter.png)
 
 ### 2. Edge Detection
 Edge detection is crucial for understanding the structure within images. Users can detect edges using techniques such as **Sobel**, **Roberts**, **Prewitt**, and **Canny**. These methods are applicable along both the vertical and horizontal axes, allowing for precise edge identification.
@@ -73,7 +73,7 @@ The toolkit supports image matching using two methods: **Sum of Squared Differen
 
 Advanced thresholding techniques such as **Optimal Thresholding**, **Otsu's Method**, and **Spectral Thresholding** are available to segment images based on intensity values, providing better contrast and object separation.
 
-![Thresholding](./assets/Thresholding.png)
+![Thresholding](./assets/thresholding.png)
 
 
 ### 11. Segmentation
